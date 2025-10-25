@@ -1,6 +1,5 @@
-import Link from "next/link";
 import { auth } from "@/lib/auth/auth";
-import { ArrowLeft, Users } from "lucide-react";
+import { Users } from "lucide-react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { UserRow } from "./_components/user-row";
@@ -34,12 +33,7 @@ export default async function AdminPage() {
   });
 
   return (
-    <div className="my-6 px-4">
-      <Link href={"/"} className="inline-flex items-center gap-2 mb-6">
-        <ArrowLeft className="size-4" />
-        Back to Home
-      </Link>
-
+    <section>
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -71,6 +65,6 @@ export default async function AdminPage() {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </section>
   );
 }

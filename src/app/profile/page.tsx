@@ -1,7 +1,6 @@
 import Image from "next/image";
-import Link from "next/link";
 import { auth } from "@/lib/auth/auth";
-import { ArrowLeft, Key, LinkIcon, Shield, Trash2, User } from "lucide-react";
+import { Key, LinkIcon, Shield, Trash2, User } from "lucide-react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { ProfileUpdateForm } from "./_components/profile-update-form";
@@ -45,12 +44,8 @@ export default async function ProfilePage() {
   ]);
 
   return (
-    <div className="max-w-4xl mx-auto my-6 px-4">
+    <section>
       <div className="mb-8">
-        <Link href={"/"} className="inline-flex items-center gap-2 mb-6">
-          <ArrowLeft className="size-4" />
-          Back to Home
-        </Link>
         <div className="flex items-center space-x-4">
           <div className="size-16 bg-muted rounded-full flex items-center justify-center overflow-hidden">
             {session.user.image ? (
@@ -141,6 +136,6 @@ export default async function ProfilePage() {
           </Card>
         </TabsContent>
       </Tabs>
-    </div>
+    </section>
   );
 }
