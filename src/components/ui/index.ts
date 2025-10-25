@@ -17,3 +17,6 @@ export * from "./sonner";
 export * from "./table";
 export * from "./tabs";
 export * from "./tooltip";
+export * from "./navigation-menu";
+export * from "./avatar";
+export * from "./progress";
