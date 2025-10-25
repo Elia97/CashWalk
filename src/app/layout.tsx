@@ -38,8 +38,8 @@ export type NavbarItem = {
 
 const NAVBAR_ITEMS: NavbarItem[] = [
   { href: "/dashboard", label: "Dashboard", Icon: LayoutDashboard },
-  { href: "/transactions", label: "Transactions", Icon: ArrowRightLeft },
   { href: "/accounts", label: "Accounts", Icon: Wallet },
+  { href: "/transactions", label: "Transactions", Icon: ArrowRightLeft },
   { href: "/analytics", label: "Analytics", Icon: ChartColumn },
 ];
 
