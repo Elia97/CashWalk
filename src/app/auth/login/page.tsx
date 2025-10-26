@@ -9,17 +9,14 @@ import { SocialAuthButtons } from "./_components/social-auth-buttons";
 import { EmailVerification } from "./_components/email-verification";
 import { ForgotPasswordForm } from "./_components/forgot-password-form";
 import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
   Card,
   CardHeader,
   CardTitle,
   CardContent,
   CardFooter,
-  Separator,
-} from "@/components/ui";
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 type Tab = "signin" | "signup" | "email-verification" | "forgot-password";
 

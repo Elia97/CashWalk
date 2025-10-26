@@ -1,5 +1,5 @@
 import type { Account } from "../page";
-import { Card, CardContent } from "@/components/ui";
+import { Card, CardContent } from "@/components/ui/card";
 import { AccountLinking } from "./account-linking";
 
 export async function LinkedAccountsTab({ accounts }: { accounts: Account[] }) {

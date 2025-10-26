@@ -1,20 +1,21 @@
 import { auth } from "@/lib/auth/auth";
-import { Users } from "lucide-react";
+import { Table, Users } from "lucide-react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { UserRow } from "./_components/user-row";
 import {
   Card,
-  CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
-  Table,
-  TableBody,
-  TableHead,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+import {
   TableHeader,
   TableRow,
-} from "@/components/ui";
+  TableHead,
+  TableBody,
+} from "@/components/ui/table";
 
 export default async function AdminPage() {
   const session = await auth.api.getSession({ headers: await headers() });

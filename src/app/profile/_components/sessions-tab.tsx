@@ -1,6 +1,6 @@
 import type { Session } from "../page";
 import { SessionManagement } from "./session-management";
-import { Card, CardContent } from "@/components/ui";
+import { Card, CardContent } from "@/components/ui/card";
 
 export async function SessionsTab({
   sessions,

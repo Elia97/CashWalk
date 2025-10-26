@@ -4,16 +4,11 @@ import type { Session } from "better-auth";
 import { UAParser } from "ua-parser-js";
 import { Monitor, Smartphone, Trash2 } from "lucide-react";
 import { formatDate } from "@/lib/utils";
-import { BetterAuthActionButton } from "@/components/auth";
+import { BetterAuthActionButton } from "@/components/auth/better-auth-action-button";
 import { authClient } from "@/lib/auth/auth-client";
 import { useRouter } from "next/navigation";
-import {
-  Badge,
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 export function SessionCard({
   session,

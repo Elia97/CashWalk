@@ -3,27 +3,27 @@
 import Link from "next/link";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Form, useForm } from "react-hook-form";
 import { authClient } from "@/lib/auth/auth-client";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-  Button,
-  Form,
-  FormControl,
+  CardContent,
+} from "@/components/ui/card";
+import {
   FormField,
   FormItem,
   FormLabel,
+  FormControl,
   FormMessage,
-  PasswordInput,
-  LoadingSwap,
-  LoadingSuspense,
-} from "@/components/ui";
+} from "@/components/ui/form";
+import { LoadingSwap } from "@/components/ui/loading-swap";
+import { PasswordInput } from "@/components/ui/password-input";
 
 const resetPasswordSchema = z.object({
   password: z.string().min(6),
@@ -71,88 +71,84 @@ export function ResetPasswordForm() {
 
   if (token === null || error !== null) {
     return (
-      <LoadingSuspense>
-        <div className="my-6 px-4">
-          <Card className="mx-auto max-w-md">
-            <CardHeader>
-              <CardTitle className="text-2xl font-bold">
-                Invalid Reset Link
-              </CardTitle>
-              <CardDescription>
-                The reset link is either invalid or has expired.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button asChild className="w-full">
-                <Link href={"/auth/login"}>Back to Login</Link>
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </LoadingSuspense>
+      <div className="my-6 px-4">
+        <Card className="mx-auto max-w-md">
+          <CardHeader>
+            <CardTitle className="text-2xl font-bold">
+              Invalid Reset Link
+            </CardTitle>
+            <CardDescription>
+              The reset link is either invalid or has expired.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button asChild className="w-full">
+              <Link href={"/auth/login"}>Back to Login</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
   return (
-    <LoadingSuspense>
-      <div className="my-6 px-4">
-        <Card className="mx-auto max-w-md">
-          <CardHeader>
-            <CardTitle className="text-2xl font-bold">Reset Password</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Form {...form}>
-              <form
-                className="space-y-4"
-                onSubmit={form.handleSubmit(handleResetPassword)}
+    <div className="my-6 px-4">
+      <Card className="mx-auto max-w-md">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold">Reset Password</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form
+              className="space-y-4"
+              onSubmit={form.handleSubmit(handleResetPassword)}
+            >
+              {/* Password Field */}
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <PasswordInput placeholder="Your Password" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Confirm Password Field */}
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Confirm Password</FormLabel>
+                    <FormControl>
+                      <PasswordInput
+                        placeholder="Confirm Your Password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={form.formState.isSubmitting}
               >
-                {/* Password Field */}
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <PasswordInput placeholder="Your Password" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                {/* Confirm Password Field */}
-                <FormField
-                  control={form.control}
-                  name="confirmPassword"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Confirm Password</FormLabel>
-                      <FormControl>
-                        <PasswordInput
-                          placeholder="Confirm Your Password"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <Button
-                  type="submit"
-                  className="w-full"
-                  disabled={form.formState.isSubmitting}
-                >
-                  <LoadingSwap isLoading={form.formState.isSubmitting}>
-                    Reset Password
-                  </LoadingSwap>
-                </Button>
-              </form>
-            </Form>
-          </CardContent>
-        </Card>
-      </div>
-    </LoadingSuspense>
+                <LoadingSwap isLoading={form.formState.isSubmitting}>
+                  Reset Password
+                </LoadingSwap>
+              </Button>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

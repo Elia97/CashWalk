@@ -12,9 +12,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTrigger,
-  Button,
-  LoadingSwap,
-} from ".";
+} from "./alert-dialog";
+import { Button } from "./button";
+import { LoadingSwap } from "./loading-swap";
 
 export function ActionButton({
   action,

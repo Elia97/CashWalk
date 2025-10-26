@@ -14,7 +14,9 @@ import {
   useMemo,
 } from "react";
 import { zxcvbn, zxcvbnOptions } from "@zxcvbn-ts/core";
-import { Tooltip, TooltipContent, TooltipTrigger, Input, Button } from ".";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip";
+import { Input } from "./input";
+import { Button } from "./button";
 
 const PasswordInputContext = createContext<{ password: string } | null>(null);
 

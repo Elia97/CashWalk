@@ -3,28 +3,31 @@
 import { authClient } from "@/lib/auth/auth-client";
 import { UserWithRole } from "better-auth/plugins";
 import { MoreHorizontal } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import {
+  AlertDialogHeader,
+  AlertDialogFooter,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { TableRow, TableCell } from "@/components/ui/table";
+import {
   AlertDialog,
   AlertDialogTrigger,
-  AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
   AlertDialogTitle,
-  Badge,
-  Button,
+  AlertDialogDescription,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
+import {
   DropdownMenu,
+  DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
-  TableCell,
-  TableRow,
-} from "@/components/ui";
+} from "@/components/ui/dropdown-menu";
 
 export function UserRow({
   user,

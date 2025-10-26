@@ -1,11 +1,11 @@
 "use client";
 
 import type { Session } from "better-auth";
-import { BetterAuthActionButton } from "@/components/auth";
+import { BetterAuthActionButton } from "@/components/auth/better-auth-action-button";
 import { authClient } from "@/lib/auth/auth-client";
 import { useRouter } from "next/navigation";
 import { SessionCard } from "./session-card";
-import { Card, CardContent } from "@/components/ui";
+import { Card, CardContent } from "@/components/ui/card";
 
 export function SessionManagement({
   sessions,

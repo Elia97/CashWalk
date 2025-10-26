@@ -3,7 +3,7 @@
 import { authClient } from "@/lib/auth/auth-client";
 import { UserX } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { BetterAuthActionButton } from ".";
+import { BetterAuthActionButton } from "./better-auth-action-button";
 
 export function ImpersonationIndicator() {
   const router = useRouter();

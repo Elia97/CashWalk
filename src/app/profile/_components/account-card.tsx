@@ -6,10 +6,10 @@ import {
   SUPPORTED_O_AUTH_PROVIDER_DETAILS,
   SupportedOAuthProviders,
 } from "@/lib/auth/o-auth-providers";
-import { BetterAuthActionButton } from "@/components/auth";
+import { BetterAuthActionButton } from "@/components/auth/better-auth-action-button";
 import { authClient } from "@/lib/auth/auth-client";
 import { useRouter } from "next/navigation";
-import { Card, CardContent } from "@/components/ui";
+import { Card, CardContent } from "@/components/ui/card";
 
 export function AccountCard({
   provider,

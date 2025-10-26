@@ -4,13 +4,13 @@ import { SetPasswordButton } from "./set-password-button";
 import { TwoFactorAuthForm } from "./two-factor-auth-form";
 import { PasskeyManagement } from "./passkey-management";
 import {
-  Badge,
   Card,
-  CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui";
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 export async function SecurityTab({
   accounts,

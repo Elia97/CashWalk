@@ -2,20 +2,20 @@
 
 import React from "react";
 import { useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  Card,
-  DialogTitle,
-  DialogDescription,
-  DialogTrigger,
-  Button,
-} from "@/components/ui";
 import type { ClientBankAccount } from "@/types/bank-account";
 import { Plus } from "lucide-react";
 import { BankAccountCard } from "./bank-account-card";
 import { CreateBankAccountForm } from "./create-bank-account-form";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import {
+  DialogHeader,
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 export function BankAccountManagement({
   accounts,

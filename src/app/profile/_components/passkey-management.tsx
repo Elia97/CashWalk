@@ -3,34 +3,37 @@
 import z from "zod";
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Form, useForm } from "react-hook-form";
 import { authClient } from "@/lib/auth/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Passkey } from "better-auth/plugins/passkey";
-import { BetterAuthActionButton } from "@/components/auth";
+import { BetterAuthActionButton } from "@/components/auth/better-auth-action-button";
 import { Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
   Card,
   CardHeader,
   CardTitle,
   CardDescription,
-  DialogTitle,
-  DialogDescription,
-  DialogTrigger,
-  Button,
-  Form,
-  FormControl,
+} from "@/components/ui/card";
+import { DialogHeader } from "@/components/ui/dialog";
+import {
   FormField,
   FormItem,
   FormLabel,
+  FormControl,
   FormMessage,
-  Input,
-  LoadingSwap,
-} from "@/components/ui";
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { LoadingSwap } from "@/components/ui/loading-swap";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 const passkeySchema = z.object({
   name: z.string().min(1),

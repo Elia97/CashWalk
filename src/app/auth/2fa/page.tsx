@@ -3,16 +3,8 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { BackupCodeForm } from "./_components/backup-code-form";
 import { TotpForm } from "./_components/totp-form";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 export default async function TwoFactorPage() {
   const session = await auth.api.getSession({ headers: await headers() });

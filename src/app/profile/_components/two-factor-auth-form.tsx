@@ -2,23 +2,22 @@
 
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Form, useForm } from "react-hook-form";
 import { authClient } from "@/lib/auth/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { QrCodeVerify } from "./qr-code-verify";
+import { Button } from "@/components/ui/button";
 import {
-  Form,
-  FormControl,
   FormField,
   FormItem,
   FormLabel,
+  FormControl,
   FormMessage,
-  Button,
-  LoadingSwap,
-  PasswordInput,
-} from "@/components/ui";
+} from "@/components/ui/form";
+import { LoadingSwap } from "@/components/ui/loading-swap";
+import { PasswordInput } from "@/components/ui/password-input";
 
 const twoFactorAuthSchema = z.object({
   password: z.string().min(1),

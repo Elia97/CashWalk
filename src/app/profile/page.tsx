@@ -8,18 +8,10 @@ import { SecurityTab } from "./_components/security-tab";
 import { SessionsTab } from "./_components/sessions-tab";
 import { LinkedAccountsTab } from "./_components/linked-accounts-tab";
 import { AccountDeletion } from "./_components/account-deletion";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-  Badge,
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  LoadingSuspense,
-} from "@/components/ui";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { LoadingSuspense } from "@/components/ui/loading-suspence";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 export type Passkey = Awaited<ReturnType<typeof auth.api.listPasskeys>>[number];
 

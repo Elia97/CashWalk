@@ -1,18 +1,6 @@
 "use client";
 
 import {
-  Input,
-  NumberInput,
-  DialogFooter,
-  Button,
-  LoadingSwap,
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui";
-import {
   FieldGroup,
   Field,
   FieldLabel,
@@ -24,6 +12,18 @@ import z from "zod";
 import { ClientBankAccount } from "@/types/bank-account";
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button";
+import { DialogFooter } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { LoadingSwap } from "@/components/ui/loading-swap";
+import { NumberInput } from "@/components/ui/number-input";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 
 const bankAccountSchema = z.object({
   name: z.string().min(1, "Name is required").max(50, "Name is too long"),

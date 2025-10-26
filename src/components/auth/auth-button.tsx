@@ -3,19 +3,17 @@
 import { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth/auth-client";
 import { Loader2 } from "lucide-react";
+import Link from "next/link";
+import { BetterAuthActionButton } from "./better-auth-action-button";
+import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
 import {
-  Button,
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuSeparator,
   DropdownMenuItem,
-} from "../ui";
-import Link from "next/link";
-import { BetterAuthActionButton } from "./better-auth-action-button";
+} from "@/components/ui/dropdown-menu";
+import { Button } from "../ui/button";
 
 export function AuthButton() {
   const { data: session, isPending } = authClient.useSession();

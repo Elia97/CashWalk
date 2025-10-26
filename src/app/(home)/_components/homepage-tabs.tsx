@@ -1,20 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  Avatar,
-  AvatarFallback,
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-  Separator,
-  Tabs,
-  TabsContent,
-} from "@/components/ui";
 import { Progress } from "@/components/ui/progress";
 import { PiggyBank, TrendingUp } from "lucide-react";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 
 type Tab = "checking" | "cash" | "savings";
 

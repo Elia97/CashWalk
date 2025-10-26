@@ -5,7 +5,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   navigationMenuTriggerStyle,
-} from "../ui";
+} from "../ui/navigation-menu";
 import Link from "next/link";
 import { LucideIcon } from "lucide-react";
 

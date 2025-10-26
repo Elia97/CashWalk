@@ -3,23 +3,6 @@
 import React, { useState } from "react";
 import type { ClientBankAccount } from "@/types/bank-account";
 import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-  Button,
-  Badge,
-  ActionButton,
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui";
-import {
   getAccountIcon,
   getAccountTypeLabel,
   formatCurrency,
@@ -31,6 +14,25 @@ import {
   setUserPrimaryBankAccount,
 } from "../actions/bank-account-actions";
 import { UpdateBankAccountForm } from "./update-bank-account-form";
+import { ActionButton } from "@/components/ui/action-button";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { DialogHeader } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
 
 export function BankAccountCard({ account }: { account: ClientBankAccount }) {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);

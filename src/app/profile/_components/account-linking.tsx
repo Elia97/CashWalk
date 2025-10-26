@@ -1,5 +1,5 @@
 import type { Account } from "../page";
-import { Card, CardContent } from "@/components/ui";
+import { Card, CardContent } from "@/components/ui/card";
 import { SUPPORTED_O_AUTH_PROVIDERS } from "@/lib/auth/o-auth-providers";
 import { AccountCard } from "./account-card";
 
