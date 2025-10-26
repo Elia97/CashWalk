@@ -15,7 +15,7 @@ export const accountTypeEnum = pgEnum("type", ["checking", "cash", "savings"]);
 export const bankAccount = pgTable(
   "bank_account",
   {
-    id: uuid("id").primaryKey(),
+    id: uuid("id").primaryKey().defaultRandom(),
     userId: text("user_id")
       .notNull()
       .references(() => user.id),

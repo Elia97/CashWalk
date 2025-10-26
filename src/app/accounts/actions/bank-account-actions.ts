@@ -1,8 +1,52 @@
 "use server";
 
 import { BankAccountService } from "@/services/bank-account-service";
+import {
+  BankAccountActionResponse,
+  ClientBankAccount,
+} from "@/types/bank-account";
+import { revalidatePath } from "next/cache";
 
-export async function getUserBankAccounts(userId: string) {
+export async function getUserBankAccounts(
+  userId: string,
+): Promise<BankAccountActionResponse<ClientBankAccount[]>> {
   if (!userId || typeof userId !== "string") throw new Error("Invalid user ID");
   return await BankAccountService.findUserBankAccounts(userId);
+}
+
+export async function createUserBankAccount(
+  data: ClientBankAccount,
+): Promise<BankAccountActionResponse> {
+  if (!data.userId || typeof data.userId !== "string")
+    throw new Error("Invalid user ID");
+  revalidatePath("/accounts");
+  return await BankAccountService.createBankAccount(data);
+}
+
+export async function deleteUserBankAccount(
+  accountId: string,
+): Promise<BankAccountActionResponse> {
+  if (!accountId) throw new Error("Invalid account ID");
+  revalidatePath("/accounts");
+  return await BankAccountService.deleteBankAccount(accountId);
+}
+
+export async function updateUserBankAccount(
+  accountId: string,
+  data: Partial<ClientBankAccount>,
+): Promise<BankAccountActionResponse> {
+  if (!accountId) throw new Error("Invalid account ID");
+  revalidatePath("/accounts");
+  return await BankAccountService.updateBankAccount(accountId, data);
+}
+
+export async function setUserPrimaryBankAccount(
+  userId: string,
+  accountId: string,
+): Promise<BankAccountActionResponse> {
+  if (!userId || typeof userId !== "string") throw new Error("Invalid user ID");
+  if (!accountId || typeof accountId !== "string")
+    throw new Error("Invalid account ID");
+  revalidatePath("/accounts");
+  return await BankAccountService.setPrimaryBankAccount(userId, accountId);
 }
