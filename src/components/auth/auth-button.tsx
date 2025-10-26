@@ -22,12 +22,13 @@ export function AuthButton() {
   const [hasAdminPermission, setHasAdminPermission] = useState<boolean>(false);
 
   useEffect(() => {
+    if (!session) return;
     authClient.admin
       .hasPermission({ permission: { user: ["list"] } })
       .then(({ data }) => {
         setHasAdminPermission(data?.success ?? false);
       });
-  }, []);
+  }, [session]);
 
   if (isPending) return <Loader2 className="animate-spin" />;
 
