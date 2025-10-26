@@ -1,0 +1,201 @@
+"use client";
+
+import {
+  Input,
+  NumberInput,
+  DialogFooter,
+  Button,
+  LoadingSwap,
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui";
+import {
+  FieldGroup,
+  Field,
+  FieldLabel,
+  FieldError,
+} from "@/components/ui/field";
+import { Controller, useForm } from "react-hook-form";
+import { updateUserBankAccount } from "../actions/bank-account-actions";
+import z from "zod";
+import { ClientBankAccount } from "@/types/bank-account";
+import { toast } from "sonner";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const bankAccountSchema = z.object({
+  name: z.string().min(1, "Name is required").max(50, "Name is too long"),
+  balance: z
+    .number()
+    .min(0, "Balance must be at least 0")
+    .max(10_000_000, "Balance is too high"),
+  type: z.enum(["checking", "savings", "cash"], {
+    message: "Type is required",
+  }),
+  currency: z.enum(["USD", "EUR", "GBP"], {
+    message: "Currency is required",
+  }),
+  accountNumber: z.string().max(18, "Account number is too long").optional(),
+});
+
+type BankAccountFormData = z.infer<typeof bankAccountSchema>;
+
+export function UpdateBankAccountForm({
+  account,
+  closeDialog,
+}: {
+  account: ClientBankAccount;
+  closeDialog: () => void;
+}) {
+  const form = useForm<BankAccountFormData>({
+    resolver: zodResolver(bankAccountSchema),
+    defaultValues: {
+      name: account.name,
+      balance: account.balance,
+      type: account.type,
+      currency: account.currency as BankAccountFormData["currency"],
+      accountNumber: account.accountNumber ?? "",
+    },
+  });
+
+  const handleUpdateBankAccount = async (data: BankAccountFormData) => {
+    const res = await updateUserBankAccount(
+      account.id,
+      data as Partial<ClientBankAccount>,
+    );
+    if (res.error) {
+      toast.error(res.message || "Failed to update bank account");
+    } else {
+      toast.success("Bank account updated successfully");
+      closeDialog();
+    }
+  };
+
+  return (
+    <form onSubmit={form.handleSubmit(handleUpdateBankAccount)}>
+      <FieldGroup className="gap-4">
+        <Controller
+          name="name"
+          control={form.control}
+          render={({ field }) => (
+            <Field>
+              <div className="flex items-center gap-2">
+                <FieldLabel htmlFor="name">Name</FieldLabel>
+                <FieldError errors={[form.formState.errors.name]} />
+              </div>
+              <Input
+                id="name"
+                placeholder="Your Account Name"
+                autoComplete="additional-name"
+                {...field}
+              />
+            </Field>
+          )}
+        />
+
+        <Controller
+          name="balance"
+          control={form.control}
+          render={({ field }) => (
+            <Field>
+              <div className="flex items-center gap-2">
+                <FieldLabel htmlFor="balance">Balance</FieldLabel>
+                <FieldError errors={[form.formState.errors.balance]} />
+              </div>
+              <NumberInput
+                id="balance"
+                placeholder="Balance"
+                value={field.value}
+                onChange={field.onChange}
+              />
+            </Field>
+          )}
+        />
+
+        <Controller
+          name="type"
+          control={form.control}
+          render={({ field }) => (
+            <Field>
+              <FieldLabel htmlFor="type">Type</FieldLabel>
+              <Select value={field.value} onValueChange={field.onChange}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="checking">Checking</SelectItem>
+                  <SelectItem value="cash">Cash</SelectItem>
+                  <SelectItem value="savings">Savings</SelectItem>
+                </SelectContent>
+              </Select>
+            </Field>
+          )}
+        />
+
+        <Controller
+          name="currency"
+          control={form.control}
+          render={({ field }) => (
+            <Field>
+              <FieldLabel htmlFor="currency">Currency</FieldLabel>
+              <Select value={field.value} onValueChange={field.onChange}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select currency" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="EUR">EUR</SelectItem>
+                  <SelectItem value="USD">USD</SelectItem>
+                  <SelectItem value="GBP">GBP</SelectItem>
+                </SelectContent>
+              </Select>
+            </Field>
+          )}
+        />
+
+        <Controller
+          name="accountNumber"
+          control={form.control}
+          render={({ field }) => (
+            <Field>
+              <div className="flex items-center gap-2">
+                <FieldLabel htmlFor="accountNumber">Account Number</FieldLabel>
+                <FieldError errors={[form.formState.errors.accountNumber]} />
+              </div>
+
+              <Input
+                id="accountNumber"
+                placeholder="Your Account Number"
+                autoComplete="off"
+                {...field}
+              />
+            </Field>
+          )}
+        />
+
+        <DialogFooter>
+          <Field orientation="horizontal" className="mt-4">
+            <Button
+              variant="outline"
+              className="flex-1"
+              type="reset"
+              onClick={() => closeDialog()}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              className="flex-1"
+              disabled={form.formState.isSubmitting}
+            >
+              <LoadingSwap isLoading={form.formState.isSubmitting}>
+                Update
+              </LoadingSwap>
+            </Button>
+          </Field>
+        </DialogFooter>
+      </FieldGroup>
+    </form>
+  );
+}
