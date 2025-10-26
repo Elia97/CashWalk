@@ -20,3 +20,5 @@ export * from "./tooltip";
 export * from "./navigation-menu";
 export * from "./avatar";
 export * from "./progress";
+export * from "./number-input";
+export * from "./select";
