@@ -2,27 +2,29 @@
 
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { BetterAuthActionButton } from "@/components/auth/better-auth-action-button";
 import { authClient } from "@/lib/auth/auth-client";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { PasswordInput } from "@/components/ui/password-input";
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 
 const signInSchema = z.object({
-  email: z.email().min(1),
-  password: z.string().min(6),
+  email: z.email().min(1, "Email is required").max(100, "Email is too long"),
+  password: z
+    .string()
+    .min(6, "Password must be at least 6 characters long")
+    .max(100, "Password is too long"),
 });
 
 type SignInFormData = z.infer<typeof signInSchema>;
@@ -35,6 +37,7 @@ export function SignInForm({
   openForgotPasswordTab: () => void;
 }) {
   const router = useRouter();
+  const { refetch } = authClient.useSession();
   const form = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -42,8 +45,6 @@ export function SignInForm({
       password: "",
     },
   });
-
-  const { refetch } = authClient.useSession();
 
   useEffect(() => {
     authClient.signIn.passkey(
@@ -77,36 +78,45 @@ export function SignInForm({
 
   return (
     <div className="space-y-4">
-      <Form {...form}>
-        <form className="space-y-4" onSubmit={form.handleSubmit(handleSignIn)}>
+      <form onSubmit={form.handleSubmit(handleSignIn)}>
+        <FieldGroup className="gap-4">
           {/* Email Field */}
-          <FormField
-            control={form.control}
+          <Controller
             name="email"
+            control={form.control}
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input
-                    type="email"
-                    placeholder="Your Email"
-                    autoComplete="email webauthn"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+              <Field>
+                <div className="flex items-center gap-2">
+                  <FieldLabel htmlFor="email">Email</FieldLabel>
+                  <FieldError errors={[form.formState.errors.email]} />
+                </div>
+                <Input
+                  id="email"
+                  placeholder="Your Email"
+                  autoComplete="email webauthn"
+                  {...field}
+                />
+              </Field>
             )}
           />
 
           {/* Password Field */}
-          <FormField
-            control={form.control}
+          <Controller
             name="password"
+            control={form.control}
             render={({ field }) => (
-              <FormItem>
-                <div className="flex justify-between items-center">
-                  <FormLabel>Password</FormLabel>
+              <Field>
+                <div className="flex items-center gap-2">
+                  <FieldLabel htmlFor="password">Password</FieldLabel>
+                  <FieldError errors={[form.formState.errors.password]} />
+                </div>
+                <PasswordInput
+                  id="password"
+                  placeholder="Your Password"
+                  autoComplete="current-password webauthn"
+                  {...field}
+                />
+                <div className="flex justify-end">
                   <Button
                     type="button"
                     variant="link"
@@ -117,29 +127,23 @@ export function SignInForm({
                     Forgot Password?
                   </Button>
                 </div>
-                <FormControl>
-                  <PasswordInput
-                    placeholder="Your Password"
-                    autoComplete="current-password webauthn"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+              </Field>
             )}
           />
 
-          <Button
-            type="submit"
-            className="w-full mt-4"
-            disabled={form.formState.isSubmitting}
-          >
-            <LoadingSwap isLoading={form.formState.isSubmitting}>
-              Sign In
-            </LoadingSwap>
-          </Button>
-        </form>
-      </Form>
+          <Field orientation="horizontal">
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={form.formState.isSubmitting}
+            >
+              <LoadingSwap isLoading={form.formState.isSubmitting}>
+                Sign In
+              </LoadingSwap>
+            </Button>
+          </Field>
+        </FieldGroup>
+      </form>
       <BetterAuthActionButton
         variant={"outline"}
         className="w-full"

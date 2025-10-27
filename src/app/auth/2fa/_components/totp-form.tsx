@@ -2,23 +2,22 @@
 
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { authClient } from "@/lib/auth/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import {
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { LoadingSwap } from "@/components/ui/loading-swap";
+import {
+  FieldGroup,
+  Field,
+  FieldLabel,
+  FieldError,
+} from "@/components/ui/field";
 
 const totpFormSchema = z.object({
-  code: z.string().length(6),
+  code: z.string().length(6, "Code must be 6 digits long"),
 });
 
 type TotpFormData = z.infer<typeof totpFormSchema>;
@@ -44,36 +43,40 @@ export function TotpForm() {
   };
 
   return (
-    <Form {...form}>
-      <form
-        className="space-y-4"
-        onSubmit={form.handleSubmit(handleTotpSubmit)}
-      >
+    <form className="space-y-4" onSubmit={form.handleSubmit(handleTotpSubmit)}>
+      <FieldGroup className="gap-4">
         {/* Code Field */}
-        <FormField
-          control={form.control}
+        <Controller
           name="code"
+          control={form.control}
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Code</FormLabel>
-              <FormControl>
-                <Input placeholder="Your Code" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+            <Field>
+              <div className="flex items-center gap-2">
+                <FieldLabel htmlFor="code">Backup Code</FieldLabel>
+                <FieldError errors={[form.formState.errors.code]} />
+              </div>
+              <Input
+                id="code"
+                placeholder="Your Code"
+                autoComplete="off"
+                {...field}
+              />
+            </Field>
           )}
         />
 
-        <Button
-          type="submit"
-          className="w-full mt-4"
-          disabled={form.formState.isSubmitting}
-        >
-          <LoadingSwap isLoading={form.formState.isSubmitting}>
-            Verify
-          </LoadingSwap>
-        </Button>
-      </form>
-    </Form>
+        <Field orientation="horizontal">
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={form.formState.isSubmitting}
+          >
+            <LoadingSwap isLoading={form.formState.isSubmitting}>
+              Verify
+            </LoadingSwap>
+          </Button>
+        </Field>
+      </FieldGroup>
+    </form>
   );
 }

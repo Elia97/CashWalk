@@ -2,22 +2,21 @@
 
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { authClient } from "@/lib/auth/auth-client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import {
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { LoadingSwap } from "@/components/ui/loading-swap";
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 
 const forgotPasswordSchema = z.object({
-  email: z.email().min(1),
+  email: z.email().min(1, "Email is required").max(100, "Email is too long"),
 });
 
 type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
@@ -55,27 +54,32 @@ export function ForgotPasswordForm({
   };
 
   return (
-    <Form {...form}>
-      <form
-        className="space-y-4"
-        onSubmit={form.handleSubmit(handleForgotPassword)}
-      >
+    <form
+      className="space-y-4"
+      onSubmit={form.handleSubmit(handleForgotPassword)}
+    >
+      <FieldGroup className="gap-4">
         {/* Email Field */}
-        <FormField
-          control={form.control}
+        <Controller
           name="email"
+          control={form.control}
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input type="email" placeholder="Your Email" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+            <Field>
+              <div className="flex items-center gap-2">
+                <FieldLabel htmlFor="email">Email</FieldLabel>
+                <FieldError errors={[form.formState.errors.email]} />
+              </div>
+              <Input
+                id="email"
+                placeholder="Your Email"
+                autoComplete="email webauthn"
+                {...field}
+              />
+            </Field>
           )}
         />
 
-        <div className="flex gap-2">
+        <Field orientation={"horizontal"}>
           <Button type="button" variant={"outline"} onClick={openSignInTab}>
             Back to Sign In
           </Button>
@@ -88,8 +92,8 @@ export function ForgotPasswordForm({
               Send Reset Link
             </LoadingSwap>
           </Button>
-        </div>
-      </form>
-    </Form>
+        </Field>
+      </FieldGroup>
+    </form>
   );
 }

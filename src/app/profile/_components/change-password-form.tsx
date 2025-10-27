@@ -2,28 +2,28 @@
 
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { authClient } from "@/lib/auth/auth-client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import {
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from "@/components/ui/form";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { PasswordInput } from "@/components/ui/password-input";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  FieldGroup,
+  Field,
+  FieldLabel,
+  FieldError,
+} from "@/components/ui/field";
 
 const changePasswordSchema = z
   .object({
-    currentPassword: z.string().min(1),
+    currentPassword: z.string().min(1, "Current Password is required"),
     newPassword: z
       .string()
-      .min(8, "Password must be at least 8 characters long"),
-    confirmNewPassword: z.string().min(1),
+      .min(6, "Password must be at least 6 characters long")
+      .max(100, "Password is too long"),
+    confirmNewPassword: z.string().min(1, "Confirm New Password is required"),
     revokeOtherSessions: z.boolean(),
   })
   .refine((data) => data.newPassword === data.confirmNewPassword, {
@@ -56,74 +56,92 @@ export function ChangePasswordForm() {
   };
 
   return (
-    <Form {...form}>
-      <form
-        className="space-y-4"
-        onSubmit={form.handleSubmit(handleProfileUpdate)}
-      >
+    <form
+      className="space-y-4"
+      onSubmit={form.handleSubmit(handleProfileUpdate)}
+    >
+      <FieldGroup className="gap-4">
         {/* Current Password Field */}
-        <FormField
-          control={form.control}
+        <Controller
           name="currentPassword"
+          control={form.control}
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Current Password</FormLabel>
-              <FormControl>
-                <PasswordInput placeholder="Your Current Password" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+            <Field>
+              <div className="flex items-center gap-2">
+                <FieldLabel htmlFor="currentPassword">
+                  Current Password
+                </FieldLabel>
+                <FieldError errors={[form.formState.errors.currentPassword]} />
+              </div>
+              <PasswordInput
+                id="currentPassword"
+                placeholder="Your Current Password"
+                autoComplete="current-password webauthn"
+                {...field}
+              />
+            </Field>
           )}
         />
 
         {/* New Password Field */}
-        <FormField
-          control={form.control}
+        <Controller
           name="newPassword"
+          control={form.control}
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <PasswordInput placeholder="Your Password" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+            <Field>
+              <div className="flex items-center gap-2">
+                <FieldLabel htmlFor="newPassword">New Password</FieldLabel>
+                <FieldError errors={[form.formState.errors.newPassword]} />
+              </div>
+              <PasswordInput
+                id="newPassword"
+                placeholder="Your New Password"
+                autoComplete="new-password webauthn"
+                {...field}
+              />
+            </Field>
           )}
         />
 
         {/* Confirm New Password Field */}
-        <FormField
-          control={form.control}
+        <Controller
           name="confirmNewPassword"
+          control={form.control}
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Confirm New Password</FormLabel>
-              <FormControl>
-                <PasswordInput
-                  placeholder="Confirm Your New Password"
-                  {...field}
+            <Field>
+              <div className="flex items-center gap-2">
+                <FieldLabel htmlFor="confirmNewPassword">
+                  Confirm New Password
+                </FieldLabel>
+                <FieldError
+                  errors={[form.formState.errors.confirmNewPassword]}
                 />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+              </div>
+              <PasswordInput
+                id="confirmNewPassword"
+                placeholder="Confirm Your New Password"
+                autoComplete="new-password webauthn"
+                {...field}
+              />
+            </Field>
           )}
         />
 
         {/* Revoke Other Sessions Field */}
-        <FormField
-          control={form.control}
+        <Controller
           name="revokeOtherSessions"
+          control={form.control}
           render={({ field }) => (
-            <FormItem className="flex flex-row-reverse items-center gap-2">
-              <FormLabel>Log Out Other Sessions</FormLabel>
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+            <Field orientation={"horizontal"}>
+              <Checkbox
+                id="revokeOtherSessions"
+                checked={field.value}
+                onCheckedChange={field.onChange}
+              />
+              <FieldLabel htmlFor="revokeOtherSessions">
+                Revoke other sessions
+              </FieldLabel>
+            </Field>
           )}
         />
 
@@ -136,7 +154,7 @@ export function ChangePasswordForm() {
             Change Password
           </LoadingSwap>
         </Button>
-      </form>
-    </Form>
+      </FieldGroup>
+    </form>
   );
 }

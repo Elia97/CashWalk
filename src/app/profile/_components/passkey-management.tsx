@@ -3,7 +3,7 @@
 import z from "zod";
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { authClient } from "@/lib/auth/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -18,13 +18,6 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { DialogHeader } from "@/components/ui/dialog";
-import {
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import {
@@ -34,9 +27,15 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 
 const passkeySchema = z.object({
-  name: z.string().min(1),
+  name: z.string().min(1, "Name is required").max(100, "Name is too long"),
 });
 
 type PasskeyFormData = z.infer<typeof passkeySchema>;
@@ -123,37 +122,44 @@ export function PasskeyManagement({ passkeys }: { passkeys: Passkey[] }) {
               Create a new passkey for secure, passwordless authentication
             </DialogDescription>
           </DialogHeader>
-          <Form {...form}>
-            <form
-              className="space-y-4"
-              onSubmit={form.handleSubmit(handleAddPasskey)}
-            >
+          <form
+            className="space-y-4"
+            onSubmit={form.handleSubmit(handleAddPasskey)}
+          >
+            <FieldGroup className="gap-4">
               {/* Name Field */}
-              <FormField
-                control={form.control}
+              <Controller
                 name="name"
+                control={form.control}
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+                  <Field>
+                    <div className="flex items-center gap-2">
+                      <FieldLabel htmlFor="name">Name</FieldLabel>
+                      <FieldError errors={[form.formState.errors.name]} />
+                    </div>
+                    <Input
+                      id="name"
+                      placeholder="Your Name"
+                      autoComplete="name"
+                      {...field}
+                    />
+                  </Field>
                 )}
               />
 
-              <Button
-                type="submit"
-                className="w-full mt-4"
-                disabled={form.formState.isSubmitting}
-              >
-                <LoadingSwap isLoading={form.formState.isSubmitting}>
-                  Add
-                </LoadingSwap>
-              </Button>
-            </form>
-          </Form>
+              <Field orientation="horizontal">
+                <Button
+                  type="submit"
+                  className="w-full mt-4"
+                  disabled={form.formState.isSubmitting}
+                >
+                  <LoadingSwap isLoading={form.formState.isSubmitting}>
+                    Add
+                  </LoadingSwap>
+                </Button>
+              </Field>
+            </FieldGroup>
+          </form>
         </DialogContent>
       </Dialog>
     </div>

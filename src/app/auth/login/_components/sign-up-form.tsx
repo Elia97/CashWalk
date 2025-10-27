@@ -2,27 +2,32 @@
 
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { authClient } from "@/lib/auth/auth-client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import {
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { PasswordInput } from "@/components/ui/password-input";
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 
 const signUpSchema = z
   .object({
-    name: z.string().min(1),
-    email: z.email().min(1),
-    password: z.string().min(6),
-    confirmPassword: z.string().min(6),
+    name: z.string().min(1, "Name is required").max(100, "Name is too long"),
+    email: z.email().min(1, "Email is required").max(100, "Email is too long"),
+    password: z
+      .string()
+      .min(6, "Password must be at least 6 characters long")
+      .max(100, "Password is too long"),
+    confirmPassword: z
+      .string()
+      .min(6, "Confirm Password is required")
+      .max(100, "Confirm Password is too long"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -62,78 +67,102 @@ export function SignUpForm({
   };
 
   return (
-    <Form {...form}>
-      <form className="space-y-4" onSubmit={form.handleSubmit(handleSignUp)}>
+    <form className="space-y-4" onSubmit={form.handleSubmit(handleSignUp)}>
+      <FieldGroup className="gap-4">
         {/* Name Field */}
-        <FormField
-          control={form.control}
+        <Controller
           name="name"
+          control={form.control}
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input placeholder="Your Name" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+            <Field>
+              <div className="flex items-center gap-2">
+                <FieldLabel htmlFor="name">Name</FieldLabel>
+                <FieldError errors={[form.formState.errors.name]} />
+              </div>
+              <Input
+                id="name"
+                placeholder="Your Name"
+                autoComplete="name webauthn"
+                {...field}
+              />
+            </Field>
           )}
         />
 
         {/* Email Field */}
-        <FormField
-          control={form.control}
+        <Controller
           name="email"
+          control={form.control}
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input type="email" placeholder="Your Email" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+            <Field>
+              <div className="flex items-center gap-2">
+                <FieldLabel htmlFor="email">Email</FieldLabel>
+                <FieldError errors={[form.formState.errors.email]} />
+              </div>
+              <Input
+                id="email"
+                placeholder="Your Email"
+                autoComplete="email webauthn"
+                {...field}
+              />
+            </Field>
           )}
         />
 
         {/* Password Field */}
-        <FormField
-          control={form.control}
+        <Controller
           name="password"
+          control={form.control}
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <PasswordInput placeholder="Your Password" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+            <Field>
+              <div className="flex items-center gap-2">
+                <FieldLabel htmlFor="password">Password</FieldLabel>
+                <FieldError errors={[form.formState.errors.password]} />
+              </div>
+              <PasswordInput
+                id="password"
+                placeholder="Your Password"
+                autoComplete="new-password webauthn"
+                {...field}
+              />
+            </Field>
           )}
         />
 
         {/* Confirm Password Field */}
-        <FormField
-          control={form.control}
+        <Controller
           name="confirmPassword"
+          control={form.control}
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Confirm Password</FormLabel>
-              <FormControl>
-                <PasswordInput placeholder="Confirm Your Password" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+            <Field>
+              <div className="flex items-center gap-2">
+                <FieldLabel htmlFor="confirmPassword">
+                  Confirm Password
+                </FieldLabel>
+                <FieldError errors={[form.formState.errors.confirmPassword]} />
+              </div>
+              <PasswordInput
+                id="confirmPassword"
+                placeholder="Confirm Your Password"
+                autoComplete="new-password webauthn"
+                {...field}
+              />
+            </Field>
           )}
         />
 
-        <Button
-          type="submit"
-          className="w-full mt-4"
-          disabled={form.formState.isSubmitting}
-        >
-          <LoadingSwap isLoading={form.formState.isSubmitting}>
-            Sign Up
-          </LoadingSwap>
-        </Button>
-      </form>
-    </Form>
+        <Field orientation="horizontal">
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={form.formState.isSubmitting}
+          >
+            <LoadingSwap isLoading={form.formState.isSubmitting}>
+              Sign Up
+            </LoadingSwap>
+          </Button>
+        </Field>
+      </FieldGroup>
+    </form>
   );
 }
