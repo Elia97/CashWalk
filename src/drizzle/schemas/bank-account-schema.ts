@@ -11,7 +11,11 @@ import {
 import { user } from "./auth-schema";
 import { InferSelectModel } from "drizzle-orm";
 
-export const accountTypeEnum = pgEnum("type", ["checking", "cash", "savings"]);
+export const accountTypeEnum = pgEnum("account_type", [
+  "checking",
+  "cash",
+  "savings",
+]);
 
 export const bankAccount = pgTable(
   "bank_account",
@@ -22,7 +26,7 @@ export const bankAccount = pgTable(
       .references(() => user.id),
     name: text("name").notNull(),
     accountNumber: text("account_number"),
-    type: accountTypeEnum("type").notNull(),
+    accountType: accountTypeEnum("account_type").notNull(),
     currency: text("currency").notNull().default("EUR"),
     balance: decimal("balance", { precision: 14, scale: 2 })
       .notNull()
