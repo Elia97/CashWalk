@@ -1,10 +1,10 @@
 "use server";
 
-import { BankAccountService } from "@/services/bank-account-service";
+import { ClientBankAccount } from "@/drizzle/schema";
 import {
-  BankAccountActionResponse,
-  ClientBankAccount,
-} from "@/types/bank-account";
+  type BankAccountActionResponse,
+  BankAccountService,
+} from "@/services/bank-account-service";
 import { revalidatePath } from "next/cache";
 
 export async function getUserBankAccounts(

@@ -6,10 +6,13 @@ import {
   updateBankAccountById,
 } from "@/repo/bank-account-repository";
 import { getUserById } from "@/repo/user-repository";
-import type {
-  BankAccountActionResponse,
-  ClientBankAccount,
-} from "@/types/bank-account";
+import type { ClientBankAccount } from "@/drizzle/schema";
+
+export type BankAccountActionResponse<T = void> = {
+  error: boolean;
+  data?: T;
+  message?: string;
+};
 
 export class BankAccountService {
   static async findUserBankAccounts(

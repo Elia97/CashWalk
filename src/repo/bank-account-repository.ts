@@ -1,6 +1,6 @@
 import { db } from "@/drizzle/db";
 import { bankAccount } from "@/drizzle/schema";
-import type { BankAccount } from "@/types/bank-account";
+import type { BankAccount } from "@/drizzle/schemas/bank-account-schema";
 import { eq } from "drizzle-orm";
 
 export function getAllBankAccountsByUserId(userId: string) {

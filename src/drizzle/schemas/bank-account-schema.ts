@@ -9,6 +9,7 @@ import {
   unique,
 } from "drizzle-orm/pg-core";
 import { user } from "./auth-schema";
+import { InferSelectModel } from "drizzle-orm";
 
 export const accountTypeEnum = pgEnum("type", ["checking", "cash", "savings"]);
 
@@ -39,3 +40,8 @@ export const bankAccount = pgTable(
     },
   ],
 );
+
+export type BankAccount = InferSelectModel<typeof bankAccount>;
+export type ClientBankAccount = Omit<BankAccount, "balance"> & {
+  balance: number;
+};

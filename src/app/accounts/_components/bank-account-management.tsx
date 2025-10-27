@@ -32,7 +32,7 @@ export function BankAccountManagement({
         ))}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
-          <Card className="flex justify-center items-center h-80 border-2 border-dashed cursor-pointer hover:bg-muted">
+          <Card className="flex justify-center items-center h-80 border-2 border-dashed cursor-pointer bg-transparent hover:bg-card">
             <Button variant="link" asChild>
               <Plus className="w-full h-full text-white" />
             </Button>
