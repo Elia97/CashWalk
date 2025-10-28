@@ -7,7 +7,7 @@ import {
   AnyPgColumn,
 } from "drizzle-orm/pg-core";
 import { user } from "./auth-schema";
-import { InferSelectModel } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 
 export const categoryTypeEnum = pgEnum("category_type", ["income", "expense"]);
 
@@ -27,4 +27,22 @@ export const category = pgTable("categories", {
     .$onUpdate(() => /* @__PURE__ */ new Date()),
 });
 
+export const categoryRelations = relations(category, ({ one, many }) => ({
+  parent: one(category, {
+    fields: [category.parentId],
+    references: [category.id],
+    relationName: "category_children",
+  }),
+  children: many(category, {
+    relationName: "category_children",
+  }),
+  user: one(user, {
+    fields: [category.userId],
+    references: [user.id],
+  }),
+}));
+
 export type Category = InferSelectModel<typeof category>;
+export type CategoryWithChildren = Category & {
+  children: Category[];
+};
