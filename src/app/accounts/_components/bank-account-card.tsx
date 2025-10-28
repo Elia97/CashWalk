@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import type { ClientBankAccount } from "@/types/bank-account";
+import type { ClientBankAccount } from "@/drizzle/schema";
 import {
   getAccountIcon,
   getAccountTypeLabel,
@@ -46,7 +46,7 @@ export function BankAccountCard({ account }: { account: ClientBankAccount }) {
       )}
       <CardHeader className="flex justify-between items-center">
         <div className="flex gap-3 items-center">
-          {React.createElement(getAccountIcon(account.type))}
+          {React.createElement(getAccountIcon(account.accountType))}
           <div>
             <CardTitle className="text-lg">{account.name}</CardTitle>
             <CardDescription>{account.currency}</CardDescription>
@@ -88,7 +88,9 @@ export function BankAccountCard({ account }: { account: ClientBankAccount }) {
           {formatCurrency(account.balance, account.currency)}
         </div>
         <div className="flex justify-between mt-4">
-          <Badge variant="outline">{getAccountTypeLabel(account.type)}</Badge>
+          <Badge variant="outline">
+            {getAccountTypeLabel(account.accountType)}
+          </Badge>
           <div className="text-sm text-muted-foreground">
             ...{account.accountNumber?.slice(-4)}
           </div>

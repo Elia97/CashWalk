@@ -9,7 +9,7 @@ import {
 import { Controller, useForm } from "react-hook-form";
 import { createUserBankAccount } from "../actions/bank-account-actions";
 import z from "zod";
-import { ClientBankAccount } from "@/types/bank-account";
+import { ClientBankAccount } from "@/drizzle/schema";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -35,7 +35,7 @@ const bankAccountSchema = z.object({
     .number()
     .min(0, "Balance must be at least 0")
     .max(10_000_000, "Balance is too high"),
-  type: z.enum(["checking", "savings", "cash"], {
+  accountType: z.enum(["checking", "savings", "cash"], {
     message: "Type is required",
   }),
   currency: z.enum(["USD", "EUR", "GBP"], {
@@ -58,7 +58,7 @@ export function CreateBankAccountForm({
       name: "",
       userId: "",
       balance: 0,
-      type: "checking",
+      accountType: "checking",
       currency: "EUR",
       accountNumber: "",
     },
@@ -72,7 +72,9 @@ export function CreateBankAccountForm({
   }, [form, session?.user.id]);
 
   const handleAddBankAccount = async (data: BankAccountFormData) => {
-    const res = await createUserBankAccount(data as ClientBankAccount);
+    const res = await createUserBankAccount(
+      data as unknown as ClientBankAccount,
+    );
     if (res.error) {
       toast.error(res.message || "Failed to create bank account");
     } else {
@@ -131,11 +133,11 @@ export function CreateBankAccountForm({
         />
 
         <Controller
-          name="type"
+          name="accountType"
           control={form.control}
           render={({ field }) => (
             <Field>
-              <FieldLabel htmlFor="type">Type</FieldLabel>
+              <FieldLabel htmlFor="accountType">Type</FieldLabel>
               <Select value={field.value} onValueChange={field.onChange}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select type" />

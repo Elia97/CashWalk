@@ -9,7 +9,7 @@ import {
 import { Controller, useForm } from "react-hook-form";
 import { updateUserBankAccount } from "../actions/bank-account-actions";
 import z from "zod";
-import { ClientBankAccount } from "@/types/bank-account";
+import { ClientBankAccount } from "@/drizzle/schema";
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
@@ -54,7 +54,7 @@ export function UpdateBankAccountForm({
     defaultValues: {
       name: account.name,
       balance: account.balance,
-      type: account.type,
+      type: account.accountType as BankAccountFormData["type"],
       currency: account.currency as BankAccountFormData["currency"],
       accountNumber: account.accountNumber ?? "",
     },

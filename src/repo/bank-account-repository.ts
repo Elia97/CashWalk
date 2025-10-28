@@ -3,7 +3,9 @@ import { bankAccount } from "@/drizzle/schema";
 import type { BankAccount } from "@/drizzle/schemas/bank-account-schema";
 import { eq } from "drizzle-orm";
 
-export function getAllBankAccountsByUserId(userId: string) {
+export async function getAllBankAccountsByUserId(
+  userId: string,
+): Promise<BankAccount[]> {
   return db.query.bankAccount.findMany({
     where(fields, operators) {
       return operators.eq(fields.userId, userId);
@@ -16,7 +18,7 @@ export function getAllBankAccountsByUserId(userId: string) {
       userId: true,
       name: true,
       accountNumber: true,
-      type: true,
+      accountType: true,
       currency: true,
       balance: true,
       isPrimary: true,
@@ -26,22 +28,25 @@ export function getAllBankAccountsByUserId(userId: string) {
   });
 }
 
-export async function createBankAccount(data: BankAccount) {
+export async function createBankAccount(data: BankAccount): Promise<void> {
   await db.insert(bankAccount).values(data);
 }
 
-export async function deleteBankAccountById(id: string) {
+export async function deleteBankAccountById(id: string): Promise<void> {
   await db.delete(bankAccount).where(eq(bankAccount.id, id));
 }
 
 export async function updateBankAccountById(
   id: string,
   data: Partial<BankAccount>,
-) {
+): Promise<void> {
   await db.update(bankAccount).set(data).where(eq(bankAccount.id, id));
 }
 
-export async function setPrimaryBankAccount(userId: string, accountId: string) {
+export async function setPrimaryBankAccount(
+  userId: string,
+  accountId: string,
+): Promise<void> {
   await db.transaction(async (tx) => {
     await tx
       .update(bankAccount)

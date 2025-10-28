@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useState } from "react";
-import type { ClientBankAccount } from "@/types/bank-account";
+import type { ClientBankAccount } from "@/drizzle/schema";
 import { Plus } from "lucide-react";
 import { BankAccountCard } from "./bank-account-card";
 import { CreateBankAccountForm } from "./create-bank-account-form";
