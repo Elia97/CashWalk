@@ -1,5 +1,11 @@
-import { ClientTransaction } from "@/drizzle/schema";
-import { getAllUserTransactions } from "@/repo/transaction-repository";
+import { ClientTransaction, Transaction } from "@/drizzle/schema";
+import {
+  getAllUserTransactions,
+  createTransaction,
+  deleteTransactionById,
+  updateTransactionById,
+  getTransactionFormData,
+} from "@/repo/transaction-repository";
 import { getUserById } from "@/repo/user-repository";
 
 export type TransactionActionResponse<T = void> = {
@@ -21,6 +27,46 @@ export class TransactionService {
         amount: Number(transaction.amount),
       })) as ClientTransaction[];
     }, "Failed to retrieve transactions");
+  }
+
+  static async getTransactionFormData(userId: string): Promise<
+    TransactionActionResponse<{
+      bankAccounts: { id: string; name: string }[];
+      categories: { id: string; name: string }[];
+    }>
+  > {
+    return this.handleErrors(async () => {
+      const { bankAccounts, categories } = await getTransactionFormData(userId);
+      return { bankAccounts, categories };
+    }, "Failed to retrieve transaction form data");
+  }
+
+  static async createTransaction(
+    data: Transaction,
+  ): Promise<TransactionActionResponse> {
+    return this.handleErrors(async () => {
+      await createTransaction(data);
+    }, "Failed to create transaction");
+  }
+
+  static async deleteTransaction(
+    id: string,
+  ): Promise<TransactionActionResponse> {
+    return this.handleErrors(async () => {
+      await deleteTransactionById(id);
+    }, "Failed to delete transaction");
+  }
+
+  static async updateTransaction(
+    id: string,
+    data: Partial<ClientTransaction>,
+  ): Promise<TransactionActionResponse> {
+    return this.handleErrors(async () => {
+      await updateTransactionById(id, {
+        ...data,
+        amount: data.amount ? String(data.amount) : undefined,
+      });
+    }, "Failed to update transaction");
   }
 
   static async handleErrors<T>(
