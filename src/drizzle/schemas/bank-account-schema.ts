@@ -9,7 +9,8 @@ import {
   unique,
 } from "drizzle-orm/pg-core";
 import { user } from "./auth-schema";
-import { InferSelectModel } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
+import { transaction } from "./transaction-schema";
 
 export const accountTypeEnum = pgEnum("account_type", [
   "checking",
@@ -44,6 +45,17 @@ export const bankAccount = pgTable(
     },
   ],
 );
+
+export const bankAccountRelations = relations(bankAccount, ({ one, many }) => ({
+  user: one(user, {
+    fields: [bankAccount.userId],
+    references: [user.id],
+    relationName: "user_bank_accounts",
+  }),
+  transactions: many(transaction, {
+    relationName: "bank_account_transactions",
+  }),
+}));
 
 export type BankAccount = InferSelectModel<typeof bankAccount>;
 export type ClientBankAccount = Omit<BankAccount, "balance"> & {

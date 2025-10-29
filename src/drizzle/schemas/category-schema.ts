@@ -8,6 +8,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { user } from "./auth-schema";
 import { InferSelectModel, relations } from "drizzle-orm";
+import { transaction } from "./transaction-schema";
 
 export const categoryTypeEnum = pgEnum("category_type", ["income", "expense"]);
 
@@ -39,6 +40,10 @@ export const categoryRelations = relations(category, ({ one, many }) => ({
   user: one(user, {
     fields: [category.userId],
     references: [user.id],
+    relationName: "user_categories",
+  }),
+  transactions: many(transaction, {
+    relationName: "category_transactions",
   }),
 }));
 

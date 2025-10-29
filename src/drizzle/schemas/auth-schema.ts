@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   pgTable,
   text,
@@ -5,6 +6,9 @@ import {
   boolean,
   integer,
 } from "drizzle-orm/pg-core";
+import { bankAccount } from "./bank-account-schema";
+import { category } from "./category-schema";
+import { transaction } from "./transaction-schema";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -23,6 +27,18 @@ export const user = pgTable("user", {
   banReason: text("ban_reason"),
   banExpires: timestamp("ban_expires"),
 });
+
+export const userRelations = relations(user, ({ many }) => ({
+  bankAccounts: many(bankAccount, {
+    relationName: "user_bank_accounts",
+  }),
+  categories: many(category, {
+    relationName: "user_categories",
+  }),
+  transactions: many(transaction, {
+    relationName: "user_transactions",
+  }),
+}));
 
 export const session = pgTable("session", {
   id: text("id").primaryKey(),
