@@ -7,8 +7,8 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 import { user } from "./auth-schema";
-import { bankAccount } from "./bank-account-schema";
-import { category } from "./category-schema";
+import { BankAccount, bankAccount } from "./bank-account-schema";
+import { Category, category } from "./category-schema";
 import { InferSelectModel, relations } from "drizzle-orm";
 
 export const transactionTypeEnum = pgEnum("transaction_type", [
@@ -59,4 +59,6 @@ export const transactionRelations = relations(transaction, ({ one }) => ({
 export type Transaction = InferSelectModel<typeof transaction>;
 export type ClientTransaction = Omit<Transaction, "amount"> & {
   amount: number;
+  bankAccount: BankAccount;
+  category: Category & { parent: Category | null };
 };
