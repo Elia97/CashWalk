@@ -61,7 +61,7 @@ export function HomepageTabs() {
               </div>
               <Progress
                 value={50}
-                className="h-4 bg-primary [&>div]:bg-accent"
+                className="h-4 bg-primary [&>div]:bg-secondary"
               />
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center text-sm">
@@ -139,7 +139,7 @@ export function HomepageTabs() {
               </div>
               <Progress
                 value={66.67}
-                className="h-4 bg-primary [&>div]:bg-accent"
+                className="h-4 bg-primary [&>div]:bg-secondary"
               />
             </div>
             <div className="grid grid-cols-2 gap-4 text-center text-sm">
@@ -209,7 +209,7 @@ export function HomepageTabs() {
               </div>
               <Progress
                 value={10}
-                className="h-4 bg-primary [&>div]:bg-accent"
+                className="h-4 bg-primary [&>div]:bg-secondary"
               />
             </div>
             <div className="grid grid-cols-3 gap-4 text-center text-sm">

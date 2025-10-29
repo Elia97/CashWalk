@@ -10,13 +10,13 @@ export default function Home() {
         {/* Left Column - Text */}
         <div className="space-y-8 text-center lg:text-left">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
-            <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
             Now in Early Access
           </div>
 
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-balance">
             Your year, <span className="text-primary">your story</span>,{" "}
-            <span className="text-accent">your numbers</span>
+            <span className="text-secondary">your numbers</span>
           </h1>
 
           <p className="text-lg md:text-xl text-muted-foreground leading-relaxed text-pretty max-w-2xl mx-auto lg:mx-0">
@@ -37,7 +37,7 @@ export default function Home() {
                 {[1, 2, 3, 4].map((i) => (
                   <div
                     key={i}
-                    className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-accent border-2 border-background"
+                    className="w-8 h-8 rounded-full bg-gradient-to-br from-secondary to-accent border-2 border-background"
                   />
                 ))}
               </div>
