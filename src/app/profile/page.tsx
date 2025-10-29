@@ -2,7 +2,6 @@ import Image from "next/image";
 import { auth } from "@/lib/auth/auth";
 import { Key, LinkIcon, Shield, Trash2, User } from "lucide-react";
 import { headers } from "next/headers";
-import { redirect } from "next/navigation";
 import { ProfileUpdateForm } from "./_components/profile-update-form";
 import { SecurityTab } from "./_components/security-tab";
 import { SessionsTab } from "./_components/sessions-tab";
@@ -12,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LoadingSuspense } from "@/components/ui/loading-suspence";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { UserNotAuthenticated } from "@/components/auth/user-not-authenticated";
 
 export type Passkey = Awaited<ReturnType<typeof auth.api.listPasskeys>>[number];
 
@@ -23,7 +23,7 @@ export type Session = Awaited<ReturnType<typeof auth.api.listSessions>>[number];
 
 export default async function ProfilePage() {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (!session) redirect("/auth/login");
+  if (session == null) return <UserNotAuthenticated />;
 
   const [passkeys, accounts, sessions] = await Promise.all([
     auth.api.listPasskeys({

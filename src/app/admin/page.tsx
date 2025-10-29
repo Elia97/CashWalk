@@ -16,17 +16,17 @@ import {
   TableHead,
   TableBody,
 } from "@/components/ui/table";
+import { UserNotAuthenticated } from "@/components/auth/user-not-authenticated";
 
 export default async function AdminPage() {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (session == null) return redirect("/auth/login");
+  if (session == null) return <UserNotAuthenticated />;
+
   const hasAccess = await auth.api.userHasPermission({
     headers: await headers(),
     body: { permission: { user: ["list"] } },
   });
-  if (!hasAccess.success) {
-    return redirect("/");
-  }
+  if (!hasAccess.success) return redirect("/profile");
 
   const users = await auth.api.listUsers({
     headers: await headers(),

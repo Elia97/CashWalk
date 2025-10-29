@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth/auth-client";
-import { Loader2 } from "lucide-react";
+import { Loader2, LogIn } from "lucide-react";
 import Link from "next/link";
 import { BetterAuthActionButton } from "./better-auth-action-button";
 import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
@@ -82,7 +82,9 @@ export function AuthButton() {
 
   return (
     <Button asChild>
-      <Link href={"/auth/login"}>Sign In / Sign Up</Link>
+      <Link href={"/auth/login"}>
+        <LogIn />
+      </Link>
     </Button>
   );
 }
