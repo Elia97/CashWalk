@@ -18,7 +18,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ClientTransaction } from "@/drizzle/schema";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { SquarePen, Trash2 } from "lucide-react";
+import { BrushCleaning, SquarePen, Trash2 } from "lucide-react";
 import { ButtonGroup } from "@/components/ui/button-group";
 
 import { RowData } from "@tanstack/react-table";
@@ -33,6 +33,12 @@ import {
 } from "@/components/ui/dialog";
 import { UpdateTransactionForm } from "./update-transaction-form";
 import { useState } from "react";
+import {
+  Empty,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
 
 declare module "@tanstack/react-table" {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -172,7 +178,14 @@ export function TransactionTable({ data }: { data: ClientTransaction[] }) {
                 colSpan={transactionColumns.length}
                 className="text-center"
               >
-                No results.
+                <Empty>
+                  <EmptyHeader>
+                    <EmptyMedia variant="icon">
+                      <BrushCleaning />
+                    </EmptyMedia>
+                    <EmptyTitle>No Transactions found</EmptyTitle>
+                  </EmptyHeader>
+                </Empty>
               </TableCell>
             </TableRow>
           )}

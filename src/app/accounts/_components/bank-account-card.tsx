@@ -9,10 +9,7 @@ import {
   formatDate,
 } from "@/lib/utils";
 import { SquarePen, Trash2 } from "lucide-react";
-import {
-  deleteUserBankAccount,
-  setUserPrimaryBankAccount,
-} from "../actions/bank-account-actions";
+import { deleteUserBankAccount } from "../actions/bank-account-actions";
 import { UpdateBankAccountForm } from "./update-bank-account-form";
 import { ActionButton } from "@/components/ui/action-button";
 import { Button } from "@/components/ui/button";
@@ -33,6 +30,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
+import { ButtonGroup } from "@/components/ui/button-group";
 
 export function BankAccountCard({ account }: { account: ClientBankAccount }) {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
@@ -44,42 +42,13 @@ export function BankAccountCard({ account }: { account: ClientBankAccount }) {
           Primary
         </Badge>
       )}
-      <CardHeader className="flex justify-between items-center">
+      <CardHeader>
         <div className="flex gap-3 items-center">
           {React.createElement(getAccountIcon(account.accountType))}
           <div>
             <CardTitle className="text-lg">{account.name}</CardTitle>
             <CardDescription>{account.currency}</CardDescription>
           </div>
-        </div>
-        <div className="space-x-2">
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button variant="outline" size="icon">
-                <SquarePen />
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Update {account.name}</DialogTitle>
-                <DialogDescription>
-                  Update the details for your bank account.
-                </DialogDescription>
-              </DialogHeader>
-              <UpdateBankAccountForm
-                account={account}
-                closeDialog={() => setIsDialogOpen(false)}
-              />
-            </DialogContent>
-          </Dialog>
-          <ActionButton
-            requireAreYouSure
-            variant="destructive"
-            size="icon"
-            action={() => deleteUserBankAccount(account.id)}
-          >
-            <Trash2 />
-          </ActionButton>
         </div>
       </CardHeader>
       <CardContent className="space-y-2">
@@ -101,14 +70,36 @@ export function BankAccountCard({ account }: { account: ClientBankAccount }) {
         </div>
       </CardContent>
       <CardFooter>
-        <ActionButton
-          variant="outline"
-          className="w-full"
-          disabled={account.isPrimary}
-          action={() => setUserPrimaryBankAccount(account.userId, account.id)}
-        >
-          Set as Primary
-        </ActionButton>
+        <ButtonGroup className="w-full">
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline" size="icon" className="w-1/2">
+                <SquarePen />
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Update {account.name}</DialogTitle>
+                <DialogDescription>
+                  Update the details for your bank account.
+                </DialogDescription>
+              </DialogHeader>
+              <UpdateBankAccountForm
+                account={account}
+                closeDialog={() => setIsDialogOpen(false)}
+              />
+            </DialogContent>
+          </Dialog>
+          <ActionButton
+            requireAreYouSure
+            variant="destructive"
+            size="icon"
+            className="w-1/2"
+            action={() => deleteUserBankAccount(account.id)}
+          >
+            <Trash2 />
+          </ActionButton>
+        </ButtonGroup>
       </CardFooter>
     </Card>
   );

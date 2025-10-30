@@ -20,8 +20,10 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogContent,
+  DialogHeader,
 } from "@/components/ui/dialog";
 import { CreateCategoryForm } from "./create-category-form";
+import { useIsMobile } from "@/lib/hooks/use-is-mobile";
 
 export function CategoryManagement({
   categories,
@@ -29,19 +31,39 @@ export function CategoryManagement({
   categories: CategoryWithChildren[];
 }) {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const [selectedType, setSelectedType] = useState<
+    "all" | "income" | "expense"
+  >("all");
   const [filter, setFilter] = useState("");
   const filterTerms = filter
     .toLowerCase()
-    .split(/[\s,]+/) // divide per spazio o virgola
+    .split(/[\s,]+/)
     .filter(Boolean);
 
   const filteredCategories = categories.filter((cat) => {
-    const name = cat.name.toLowerCase();
-    const description = (cat.description ?? "").toLowerCase();
-    return filterTerms.every(
-      (term) => name.includes(term) || description.includes(term),
-    );
+    if (selectedType !== "all" && cat.categoryType !== selectedType)
+      return false;
+
+    if (filterTerms.length > 0) {
+      const name = cat.name.toLowerCase();
+      const description = (cat.description ?? "").toLowerCase();
+      const childrenNames = (cat.children ?? [])
+        .map((child) => child.name.toLowerCase())
+        .join(" ");
+      const textMatch = filterTerms.every(
+        (term) =>
+          name.includes(term) ||
+          description.includes(term) ||
+          childrenNames.includes(term),
+      );
+      if (!textMatch) return false;
+    }
+    if (!cat.children || cat.children.length === 0) return false;
+
+    return true;
   });
+
+  const isMobile = useIsMobile(768);
 
   return (
     <Card>
@@ -50,8 +72,11 @@ export function CategoryManagement({
         <CardDescription>
           Manage your income and expense categories here.
         </CardDescription>
-        <ButtonGroup className="w-full">
-          <ButtonGroup className="flex-10">
+        <ButtonGroup
+          className="w-full"
+          orientation={isMobile ? "vertical" : "horizontal"}
+        >
+          <ButtonGroup className="w-full">
             <Input
               placeholder="Search..."
               value={filter}
@@ -61,35 +86,57 @@ export function CategoryManagement({
               <Search />
             </Button>
           </ButtonGroup>
-          <ButtonGroup>
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
-                <Button variant="outline" className="col-span-3 sm:col-span-1">
-                  <Plus />
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogTitle>Add New Category</DialogTitle>
-                <DialogDescription>
-                  Choose one system category and create your own subcategory.
-                </DialogDescription>
-                <CreateCategoryForm
-                  closeDialog={() => setIsDialogOpen(false)}
-                  categories={categories}
-                />
-              </DialogContent>
-            </Dialog>
+          <ButtonGroup className="w-full md:w-auto">
+            <Button
+              variant={selectedType === "all" ? "secondary" : "outline"}
+              onClick={() => setSelectedType("all")}
+              className="w-1/3 md:w-auto"
+            >
+              All
+            </Button>
+            <Button
+              variant={selectedType === "income" ? "secondary" : "outline"}
+              onClick={() => setSelectedType("income")}
+              className="w-1/3 md:w-auto"
+            >
+              Income
+            </Button>
+            <Button
+              variant={selectedType === "expense" ? "secondary" : "outline"}
+              onClick={() => setSelectedType("expense")}
+              className="w-1/3 md:w-auto"
+            >
+              Expenses
+            </Button>
           </ButtonGroup>
         </ButtonGroup>
       </CardHeader>
-      <CardContent className="space-y-4">
-        {filteredCategories.length > 0 ? (
+      <CardContent className="grid gap-4 lg:grid-cols-2">
+        {filteredCategories.length > 0 &&
           filteredCategories.map((category) => (
             <CategoryCard key={category.id} category={category} />
-          ))
-        ) : (
-          <p className="text-center">No Categories Found</p>
-        )}
+          ))}
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild>
+            <Card className="flex justify-center items-center h-28 border-2 border-dashed cursor-pointer bg-transparent hover:bg-card">
+              <Button variant="link" asChild>
+                <Plus className="w-full h-full text-white" />
+              </Button>
+            </Card>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add New Category</DialogTitle>
+              <DialogDescription>
+                Choose one system category and create your own subcategory.
+              </DialogDescription>
+            </DialogHeader>
+            <CreateCategoryForm
+              closeDialog={() => setIsDialogOpen(false)}
+              categories={categories}
+            />
+          </DialogContent>
+        </Dialog>
       </CardContent>
     </Card>
   );

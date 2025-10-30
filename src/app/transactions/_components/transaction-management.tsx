@@ -16,7 +16,7 @@ import { TransactionFilters } from "./transaction-filters";
 import { useIsMobile } from "@/lib/hooks/use-is-mobile";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { Button } from "@/components/ui/button";
-import { SquarePen, Trash2 } from "lucide-react";
+import { BrushCleaning, SquarePen, Trash2 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { ActionButton } from "@/components/ui/action-button";
 import {
@@ -28,6 +28,12 @@ import {
 } from "@/components/ui/dialog";
 import { deleteTransaction } from "../actions/transaction-actions";
 import { UpdateTransactionForm } from "./update-transaction-form";
+import {
+  Empty,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
 
 export function TransactionManagement({
   transactions,
@@ -111,82 +117,95 @@ export function TransactionManagement({
         <Separator className="lg:hidden" />
         {isMobile ? (
           <ul className="divide-y">
-            {filteredTransactions.map((transaction) => (
-              <li key={transaction.id} className="py-3 space-y-3">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <div className="font-semibold">
-                      {transaction.description}
+            {filteredTransactions.length > 0 ? (
+              filteredTransactions.map((transaction) => (
+                <li key={transaction.id} className="py-3 space-y-3">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <div className="font-semibold">
+                        {transaction.description}
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        {formatDate(transaction.date)} •{" "}
+                        {transaction.bankAccount.name}
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        {transaction.category.name}
+                        {transaction.category.parent?.name && (
+                          <> • {transaction.category.parent.name}</>
+                        )}
+                      </div>
                     </div>
-                    <div className="text-sm text-muted-foreground">
-                      {formatDate(transaction.date)} •{" "}
-                      {transaction.bankAccount.name}
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      {transaction.category.name}
-                      {transaction.category.parent?.name && (
-                        <> • {transaction.category.parent.name}</>
+                    <div
+                      className={`font-bold text-right whitespace-nowrap ${
+                        transaction.transactionType === "income"
+                          ? "text-green-300"
+                          : "text-red-300"
+                      }`}
+                    >
+                      {formatCurrency(
+                        transaction.amount,
+                        transaction.bankAccount.currency,
                       )}
                     </div>
                   </div>
-                  <div
-                    className={`font-bold text-right whitespace-nowrap ${
-                      transaction.transactionType === "income"
-                        ? "text-green-300"
-                        : "text-red-300"
-                    }`}
-                  >
-                    {formatCurrency(
-                      transaction.amount,
-                      transaction.bankAccount.currency,
-                    )}
+                  <div className="flex justify-between items-center">
+                    <span
+                      className={`text-xl ${
+                        transaction.transactionType === "income"
+                          ? "text-green-300"
+                          : "text-red-300"
+                      }`}
+                    >
+                      {transaction.transactionType.toLocaleUpperCase()}
+                    </span>
+                    <ButtonGroup>
+                      <Dialog
+                        open={editingId === transaction.id}
+                        onOpenChange={(open) =>
+                          setEditingId(open ? transaction.id : null)
+                        }
+                      >
+                        <DialogTrigger asChild>
+                          <Button variant="outline" size="icon-sm">
+                            <SquarePen />
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogTitle>Modifica transazione</DialogTitle>
+                          <DialogDescription>
+                            Modifica i dettagli della transazione.
+                          </DialogDescription>
+                          <UpdateTransactionForm
+                            transaction={transaction}
+                            closeDialog={() => setEditingId(null)}
+                          />
+                        </DialogContent>
+                      </Dialog>
+                      <ActionButton
+                        requireAreYouSure
+                        variant="destructive"
+                        size="icon-sm"
+                        action={() => deleteTransaction(transaction.id)}
+                      >
+                        <Trash2 />
+                      </ActionButton>
+                    </ButtonGroup>
                   </div>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span
-                    className={`text-xl ${
-                      transaction.transactionType === "income"
-                        ? "text-green-300"
-                        : "text-red-300"
-                    }`}
-                  >
-                    {transaction.transactionType.toLocaleUpperCase()}
-                  </span>
-                  <ButtonGroup>
-                    <Dialog
-                      open={editingId === transaction.id}
-                      onOpenChange={(open) =>
-                        setEditingId(open ? transaction.id : null)
-                      }
-                    >
-                      <DialogTrigger asChild>
-                        <Button variant="outline" size="icon-sm">
-                          <SquarePen />
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogTitle>Modifica transazione</DialogTitle>
-                        <DialogDescription>
-                          Modifica i dettagli della transazione.
-                        </DialogDescription>
-                        <UpdateTransactionForm
-                          transaction={transaction}
-                          closeDialog={() => setEditingId(null)}
-                        />
-                      </DialogContent>
-                    </Dialog>
-                    <ActionButton
-                      requireAreYouSure
-                      variant="destructive"
-                      size="icon-sm"
-                      action={() => deleteTransaction(transaction.id)}
-                    >
-                      <Trash2 />
-                    </ActionButton>
-                  </ButtonGroup>
-                </div>
+                </li>
+              ))
+            ) : (
+              <li>
+                <Empty>
+                  <EmptyHeader>
+                    <EmptyMedia variant="icon">
+                      <BrushCleaning />
+                    </EmptyMedia>
+                    <EmptyTitle>No Transactions found</EmptyTitle>
+                  </EmptyHeader>
+                </Empty>
               </li>
-            ))}
+            )}
           </ul>
         ) : (
           <TransactionTable data={filteredTransactions} />

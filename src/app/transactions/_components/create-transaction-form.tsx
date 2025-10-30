@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import {
   FieldGroup,
   Field,
@@ -11,7 +12,7 @@ import z from "zod";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CalendarIcon, Loader2 } from "lucide-react";
+import { CalendarIcon, Hand, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { DialogFooter } from "@/components/ui/dialog";
@@ -36,6 +37,15 @@ import {
   createTransaction,
   getTransactionFormData,
 } from "../actions/transaction-actions";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+import { ButtonGroup } from "@/components/ui/button-group";
 
 const transactionSchema = z.object({
   userId: z.string().min(1, "User ID is required"),
@@ -55,7 +65,8 @@ export function CreateTransactionForm({
 }: {
   closeDialog: () => void;
 }) {
-  const { data: session, isPending } = authClient.useSession();
+  const { data: session } = authClient.useSession();
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<TransactionFormData>({
     resolver: zodResolver(transactionSchema),
     defaultValues: {
@@ -78,12 +89,14 @@ export function CreateTransactionForm({
       userId: session?.user.id || "",
     });
     async function fetchData() {
+      setIsLoading(true);
       const { bankAccounts: accountsData, categories: categoriesData } =
         await getTransactionFormData(session?.user.id || "").then(
           (res) => res.data || { bankAccounts: [], categories: [] },
         );
       setAccounts(accountsData);
       setCategories(categoriesData);
+      setIsLoading(false);
     }
     fetchData();
   }, [form, session?.user.id]);
@@ -98,11 +111,45 @@ export function CreateTransactionForm({
     }
   };
 
-  if (isPending) {
+  if (isLoading)
     return (
-      <section className="flex justify-center h-screen">
+      <div className="flex justify-center items-center h-[300px]">
         <Loader2 className="animate-spin" />
-      </section>
+      </div>
+    );
+
+  if (accounts.length === 0 || categories.length === 0) {
+    return (
+      <Empty>
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <Hand />
+          </EmptyMedia>
+          <EmptyTitle>Add an account and a category to get started</EmptyTitle>
+          <EmptyDescription>
+            To create a transaction, you need at least one bank account and one
+            category. Please add them first.
+          </EmptyDescription>
+        </EmptyHeader>
+        <EmptyContent>
+          <ButtonGroup className="w-full">
+            {accounts.length === 0 && (
+              <ButtonGroup className="flex-1">
+                <Button asChild variant={"outline"} className="w-full">
+                  <Link href="/accounts">Create a Bank Account</Link>
+                </Button>
+              </ButtonGroup>
+            )}
+            {categories.length === 0 && (
+              <ButtonGroup className="flex-1">
+                <Button asChild variant={"outline"} className="w-full">
+                  <Link href="/settings">Create a Category</Link>
+                </Button>
+              </ButtonGroup>
+            )}
+          </ButtonGroup>
+        </EmptyContent>
+      </Empty>
     );
   }
 

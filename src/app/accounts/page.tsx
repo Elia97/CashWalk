@@ -9,7 +9,10 @@ export default async function AccountsPage() {
   if (session == null) return <UserNotAuthenticated />;
 
   const res = await getUserBankAccounts(session.user.id);
-  if (res.data) {
-    return <BankAccountManagement accounts={res.data} />;
-  }
+  return (
+    <section>
+      <h1 className="hidden">Accounts Page</h1>
+      {res.data && <BankAccountManagement accounts={res.data} />}
+    </section>
+  );
 }
