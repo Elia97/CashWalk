@@ -1,4 +1,3 @@
-import * as React from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -23,6 +22,17 @@ import { SquarePen, Trash2 } from "lucide-react";
 import { ButtonGroup } from "@/components/ui/button-group";
 
 import { RowData } from "@tanstack/react-table";
+import { ActionButton } from "@/components/ui/action-button";
+import { deleteTransaction } from "../actions/transaction-actions";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { UpdateTransactionForm } from "./update-transaction-form";
+import { useState } from "react";
 
 declare module "@tanstack/react-table" {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -30,65 +40,88 @@ declare module "@tanstack/react-table" {
     className?: string;
   }
 }
-export const transactionColumns: ColumnDef<ClientTransaction>[] = [
-  {
-    accessorKey: "date",
-    header: "Date",
-    cell: ({ row }) => formatDate(row.original.date),
-  },
-  {
-    accessorKey: "bankAccount",
-    header: "Account",
-    cell: ({ row }) => row.original.bankAccount.name,
-  },
-  {
-    accessorKey: "name",
-    header: "Name",
-    cell: ({ row }) => row.original.category.name,
-  },
-  {
-    accessorKey: "description",
-    header: "Description",
-    cell: ({ row }) => row.original.category.parent?.name ?? "-",
-  },
-  {
-    accessorKey: "amount",
-    header: "Amount",
-    cell: ({ row }) => (
-      <span
-        className={`${
-          row.original.transactionType === "income"
-            ? "text-green-300"
-            : "text-red-300"
-        }`}
-      >
-        {formatCurrency(row.original.amount, row.original.bankAccount.currency)}
-      </span>
-    ),
-  },
-  {
-    id: "actions",
-    header: "Actions",
-    meta: { className: "w-20 text-center" },
-    cell: () => (
-      <ButtonGroup>
-        <ButtonGroup>
-          <Button variant="outline" size="icon-sm">
-            <SquarePen />
-          </Button>
-        </ButtonGroup>
-        <ButtonGroup>
-          <Button variant="destructive" size="icon-sm">
-            <Trash2 />
-          </Button>
-        </ButtonGroup>
-      </ButtonGroup>
-    ),
-  },
-];
 
 export function TransactionTable({ data }: { data: ClientTransaction[] }) {
-  const [globalFilter, setGlobalFilter] = React.useState("");
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const transactionColumns: ColumnDef<ClientTransaction>[] = [
+    {
+      accessorKey: "date",
+      header: "Date",
+      cell: ({ row }) => formatDate(row.original.date),
+    },
+    {
+      accessorKey: "bankAccount",
+      header: "Account",
+      cell: ({ row }) => row.original.bankAccount.name,
+    },
+    {
+      accessorKey: "name",
+      header: "Name",
+      cell: ({ row }) => row.original.category.name,
+    },
+    {
+      accessorKey: "description",
+      header: "Description",
+      cell: ({ row }) => row.original.category.parent?.name ?? "-",
+    },
+    {
+      accessorKey: "amount",
+      header: "Amount",
+      cell: ({ row }) => (
+        <span
+          className={`${
+            row.original.transactionType === "income"
+              ? "text-green-300"
+              : "text-red-300"
+          }`}
+        >
+          {formatCurrency(
+            row.original.amount,
+            row.original.bankAccount.currency,
+          )}
+        </span>
+      ),
+    },
+    {
+      id: "actions",
+      header: "Actions",
+      meta: { className: "w-20 text-center" },
+      cell: ({ row }) => (
+        <ButtonGroup>
+          <Dialog
+            open={editingId === row.original.id}
+            onOpenChange={(open) => setEditingId(open ? row.original.id : null)}
+          >
+            <DialogTrigger asChild>
+              <Button variant="outline" size="icon-sm">
+                <SquarePen />
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogTitle>Modifica transazione</DialogTitle>
+              <DialogDescription>
+                Modifica i dettagli della transazione.
+              </DialogDescription>
+              <UpdateTransactionForm
+                transaction={row.original}
+                closeDialog={() => setEditingId(null)}
+              />
+            </DialogContent>
+          </Dialog>
+          <ActionButton
+            requireAreYouSure
+            variant="destructive"
+            size="icon-sm"
+            action={() => deleteTransaction(row.original.id)}
+          >
+            <Trash2 />
+          </ActionButton>
+        </ButtonGroup>
+      ),
+    },
+  ];
+
+  const [globalFilter, setGlobalFilter] = useState("");
   const table = useReactTable({
     data,
     columns: transactionColumns,

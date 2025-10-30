@@ -18,14 +18,29 @@ import { ButtonGroup } from "@/components/ui/button-group";
 import { Button } from "@/components/ui/button";
 import { SquarePen, Trash2 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { ActionButton } from "@/components/ui/action-button";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { deleteTransaction } from "../actions/transaction-actions";
+import { UpdateTransactionForm } from "./update-transaction-form";
 
 export function TransactionManagement({
   transactions,
 }: {
   transactions: ClientTransaction[];
 }) {
+  const [editingId, setEditingId] = useState<string | null>(null);
+
   const [filter, setFilter] = useState("");
-  const [date, setDate] = useState<DateRange>();
+  const [date, setDate] = useState<DateRange | undefined>({
+    from: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+    to: new Date(),
+  });
   const [selectedAccount, setSelectedAccount] = useState("all");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedType, setSelectedType] = useState<
@@ -138,12 +153,36 @@ export function TransactionManagement({
                     {transaction.transactionType.toLocaleUpperCase()}
                   </span>
                   <ButtonGroup>
-                    <Button variant="outline" size={"icon-sm"}>
-                      <SquarePen />
-                    </Button>
-                    <Button variant="destructive" size={"icon-sm"}>
+                    <Dialog
+                      open={editingId === transaction.id}
+                      onOpenChange={(open) =>
+                        setEditingId(open ? transaction.id : null)
+                      }
+                    >
+                      <DialogTrigger asChild>
+                        <Button variant="outline" size="icon-sm">
+                          <SquarePen />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogTitle>Modifica transazione</DialogTitle>
+                        <DialogDescription>
+                          Modifica i dettagli della transazione.
+                        </DialogDescription>
+                        <UpdateTransactionForm
+                          transaction={transaction}
+                          closeDialog={() => setEditingId(null)}
+                        />
+                      </DialogContent>
+                    </Dialog>
+                    <ActionButton
+                      requireAreYouSure
+                      variant="destructive"
+                      size="icon-sm"
+                      action={() => deleteTransaction(transaction.id)}
+                    >
                       <Trash2 />
-                    </Button>
+                    </ActionButton>
                   </ButtonGroup>
                 </div>
               </li>

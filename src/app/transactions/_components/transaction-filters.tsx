@@ -28,6 +28,7 @@ import { DateRange } from "react-day-picker";
 import { ClientTransaction } from "@/drizzle/schema";
 import { useState } from "react";
 import { formatDate } from "@/lib/utils";
+import { CreateTransactionForm } from "./create-transaction-form";
 
 export function TransactionFilters({
   transactions,
@@ -169,14 +170,13 @@ export function TransactionFilters({
               </Button>
             </DialogTrigger>
             <DialogContent>
-              <DialogTitle>Add New Category</DialogTitle>
+              <DialogTitle>Add New Transaction</DialogTitle>
               <DialogDescription>
-                Choose one system category and create your own subcategory.
+                Fill the form below to create a new transaction.
               </DialogDescription>
-              {/* <CreateCategoryForm
-                  closeDialog={() => setIsDialogOpen(false)}
-                  categories={categories}
-                /> */}
+              <CreateTransactionForm
+                closeDialog={() => setIsDialogOpen(false)}
+              />
             </DialogContent>
           </Dialog>
         </ButtonGroup>
