@@ -90,7 +90,7 @@ export function UpdateTransactionForm({
   const handleUpdateTransaction = async (data: TransactionFormData) => {
     const res = await updateTransaction(
       transaction.id,
-      data as unknown as Partial<ClientTransaction>,
+      data as unknown as ClientTransaction,
     );
     if (res.error) {
       toast.error(res.message || "Failed to update transaction");

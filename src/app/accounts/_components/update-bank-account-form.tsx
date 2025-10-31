@@ -63,7 +63,7 @@ export function UpdateBankAccountForm({
   const handleUpdateBankAccount = async (data: BankAccountFormData) => {
     const res = await updateUserBankAccount(
       account.id,
-      data as Partial<ClientBankAccount>,
+      data as unknown as ClientBankAccount,
     );
     if (res.error) {
       toast.error(res.message || "Failed to update bank account");
