@@ -1,34 +1,45 @@
-import { db } from "@/drizzle/db";
-import { bankAccount } from "@/drizzle/schema";
-import type { BankAccount } from "@/drizzle/schemas/bank-account-schema";
 import { eq } from "drizzle-orm";
+import { db } from "@/drizzle/db";
+import { type BankAccount, bankAccount } from "@/drizzle/schema";
 
-export async function getAllBankAccountsByUserId(
+export async function findManyBankAccountsByUserId(
   userId: string,
 ): Promise<BankAccount[]> {
-  return db.query.bankAccount.findMany({
+  return await db.query.bankAccount.findMany({
     where(fields, operators) {
       return operators.eq(fields.userId, userId);
     },
     orderBy(fields, operators) {
       return operators.asc(fields.createdAt);
     },
+  });
+}
+
+export async function findManyBankAccountIdAndNameByUserId(
+  userId: string,
+): Promise<{ id: string; name: string }[]> {
+  return await db.query.bankAccount.findMany({
+    where(fields, operators) {
+      return operators.eq(fields.userId, userId);
+    },
     columns: {
       id: true,
-      userId: true,
       name: true,
-      accountNumber: true,
-      accountType: true,
-      currency: true,
-      balance: true,
-      isPrimary: true,
-      createdAt: true,
-      updatedAt: true,
     },
   });
 }
 
-export async function createBankAccount(data: BankAccount): Promise<void> {
+export async function findFirstBankAccountById(
+  id: string,
+): Promise<BankAccount | undefined> {
+  return await db.query.bankAccount.findFirst({
+    where(fields, operators) {
+      return operators.eq(fields.id, id);
+    },
+  });
+}
+
+export async function insertBankAccount(data: BankAccount): Promise<void> {
   await db.insert(bankAccount).values(data);
 }
 

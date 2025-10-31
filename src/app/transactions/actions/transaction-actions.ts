@@ -9,7 +9,7 @@ export async function getUserTransactions(
   userId: string,
 ): Promise<TransactionActionResponse<ClientTransaction[]>> {
   if (!userId || typeof userId !== "string") throw new Error("Invalid user ID");
-  return TransactionService.findUserTransactions(userId);
+  return TransactionService.getAllTransactions(userId);
 }
 
 export async function getTransactionFormData(userId: string): Promise<
@@ -28,10 +28,7 @@ export async function createTransaction(
   if (!data.userId || typeof data.userId !== "string")
     throw new Error("Invalid user ID");
   revalidatePath("/transactions");
-  return await TransactionService.createTransaction({
-    ...data,
-    amount: String(data.amount),
-  });
+  return await TransactionService.createTransaction(data);
 }
 
 export async function deleteTransaction(
@@ -44,7 +41,7 @@ export async function deleteTransaction(
 
 export async function updateTransaction(
   transactionId: string,
-  data: Partial<ClientTransaction>,
+  data: ClientTransaction,
 ): Promise<TransactionActionResponse> {
   if (!transactionId || typeof transactionId !== "string")
     throw new Error("Invalid transaction ID");

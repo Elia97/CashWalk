@@ -11,7 +11,7 @@ export async function getUserBankAccounts(
   userId: string,
 ): Promise<BankAccountActionResponse<ClientBankAccount[]>> {
   if (!userId || typeof userId !== "string") throw new Error("Invalid user ID");
-  return await BankAccountService.findUserBankAccounts(userId);
+  return await BankAccountService.getAllBankAccounts(userId);
 }
 
 export async function createUserBankAccount(
@@ -33,7 +33,7 @@ export async function deleteUserBankAccount(
 
 export async function updateUserBankAccount(
   accountId: string,
-  data: Partial<ClientBankAccount>,
+  data: ClientBankAccount,
 ): Promise<BankAccountActionResponse> {
   if (!accountId) throw new Error("Invalid account ID");
   revalidatePath("/accounts");

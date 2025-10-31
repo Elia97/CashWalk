@@ -1,8 +1,8 @@
-import { db } from "@/drizzle/db";
-import { bankAccount, transaction, Transaction } from "@/drizzle/schema";
 import { eq } from "drizzle-orm";
+import { db } from "@/drizzle/db";
+import { type Transaction, bankAccount, transaction } from "@/drizzle/schema";
 
-export async function getAllUserTransactions(
+export async function findManyTransactionsByUserId(
   userId: string,
 ): Promise<Transaction[]> {
   return await db.query.transaction.findMany({
@@ -10,7 +10,7 @@ export async function getAllUserTransactions(
       return operators.eq(fields.userId, userId);
     },
     orderBy(fields, operators) {
-      return operators.desc(fields.createdAt);
+      return operators.desc(fields.date);
     },
     with: {
       bankAccount: true,
@@ -23,76 +23,65 @@ export async function getAllUserTransactions(
   });
 }
 
-export async function getTransactionFormData(userId: string): Promise<{
-  bankAccounts: { id: string; name: string }[];
-  categories: { id: string; name: string }[];
-}> {
-  const [bankAccounts, categories] = await Promise.all([
-    db.query.bankAccount.findMany({
-      where(fields, operators) {
-        return operators.eq(fields.userId, userId);
+export async function findFirstTransactionById(
+  id: string,
+): Promise<Transaction | undefined> {
+  return await db.query.transaction.findFirst({
+    where(fields, operators) {
+      return operators.eq(fields.id, id);
+    },
+    with: {
+      bankAccount: {
+        columns: {
+          id: true,
+          balance: true,
+        },
       },
-      columns: {
-        id: true,
-        name: true,
-      },
-    }),
-    db.query.category.findMany({
-      where(fields, operators) {
-        return operators.eq(fields.userId, userId);
-      },
-      columns: {
-        id: true,
-        name: true,
-      },
-    }),
-  ]);
-
-  return { bankAccounts, categories };
+    },
+  });
 }
 
-export async function createTransaction(data: Transaction): Promise<void> {
+export async function insertTransaction(
+  data: Transaction,
+  newBalance: string,
+): Promise<void> {
   await db.transaction(async (tx) => {
     await tx.insert(transaction).values(data);
-
-    const amountAdjustment =
-      data.transactionType === "income" ? data.amount : -data.amount;
-
-    const account = await tx.query.bankAccount.findFirst({
-      where(fields, operators) {
-        return operators.eq(fields.id, data.bankAccountId);
-      },
-      columns: {
-        balance: true,
-      },
-    });
-
-    if (!account) {
-      throw new Error("Bank account not found");
-    }
-
-    const currentBalance =
-      typeof account.balance === "string"
-        ? parseFloat(account.balance)
-        : account.balance;
-    const newBalance = Number(currentBalance) + Number(amountAdjustment);
-
     await tx
       .update(bankAccount)
       .set({
-        balance: String(newBalance),
+        balance: newBalance,
       })
       .where(eq(bankAccount.id, data.bankAccountId));
   });
 }
 
-export async function deleteTransactionById(id: string): Promise<void> {
-  await db.delete(transaction).where(eq(transaction.id, id));
+export async function deleteTransactionById(
+  id: string,
+  accountId: string,
+  newBalance: string,
+): Promise<void> {
+  await db.transaction(async (tx) => {
+    await tx
+      .update(bankAccount)
+      .set({
+        balance: newBalance.toString(),
+      })
+      .where(eq(bankAccount.id, accountId));
+    await tx.delete(transaction).where(eq(transaction.id, id));
+  });
 }
 
 export async function updateTransactionById(
   id: string,
-  data: Partial<Transaction>,
+  newBalance: string,
+  data: Transaction,
 ): Promise<void> {
-  await db.update(transaction).set(data).where(eq(transaction.id, id));
+  await db.transaction(async (tx) => {
+    await tx.update(transaction).set(data).where(eq(transaction.id, id));
+    await tx
+      .update(bankAccount)
+      .set({ balance: newBalance })
+      .where(eq(bankAccount.id, data.bankAccountId));
+  });
 }

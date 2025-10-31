@@ -1,12 +1,17 @@
-import { ClientTransaction, Transaction } from "@/drizzle/schema";
+import { ClientTransaction } from "@/drizzle/schema";
 import {
-  getAllUserTransactions,
-  createTransaction,
+  findFirstBankAccountById,
+  findManyBankAccountIdAndNameByUserId,
+} from "@/repo/bank-account-repository";
+import { findManyCategoryIdAndNameByUserId } from "@/repo/category-repository";
+import {
+  findManyTransactionsByUserId,
+  insertTransaction,
   deleteTransactionById,
   updateTransactionById,
-  getTransactionFormData,
+  findFirstTransactionById,
 } from "@/repo/transaction-repository";
-import { getUserById } from "@/repo/user-repository";
+import { findFirstUserById } from "@/repo/user-repository";
 
 export type TransactionActionResponse<T = void> = {
   error: boolean;
@@ -15,18 +20,87 @@ export type TransactionActionResponse<T = void> = {
 };
 
 export class TransactionService {
-  static async findUserTransactions(
+  static async getAllTransactions(
     userId: string,
   ): Promise<TransactionActionResponse<ClientTransaction[]>> {
     return this.handleErrors(async () => {
-      const user = await getUserById(userId);
+      const user = await findFirstUserById(userId);
       if (!user) throw new Error("User not found");
-      const transactions = await getAllUserTransactions(userId);
-      return transactions.map((transaction) => ({
-        ...transaction,
-        amount: Number(transaction.amount),
+      const transactions = await findManyTransactionsByUserId(userId);
+      return transactions.map((tx) => ({
+        ...tx,
+        amount: Number(tx.amount),
       })) as ClientTransaction[];
     }, "Failed to retrieve transactions");
+  }
+
+  static async createTransaction(
+    data: ClientTransaction,
+  ): Promise<TransactionActionResponse> {
+    return this.handleErrors(async () => {
+      const account = await findFirstBankAccountById(data.bankAccountId);
+      if (!account) throw new Error("Bank account not found");
+      const amountAdjustment =
+        data.transactionType === "income" ? data.amount : -data.amount;
+      const currentBalance =
+        typeof account.balance === "string"
+          ? parseFloat(account.balance)
+          : account.balance;
+      const newBalance = Number(currentBalance) + Number(amountAdjustment);
+      await insertTransaction(
+        { ...data, amount: String(data.amount) },
+        newBalance.toString(),
+      );
+    }, "Failed to create transaction");
+  }
+
+  static async deleteTransaction(
+    id: string,
+  ): Promise<TransactionActionResponse> {
+    return this.handleErrors(async () => {
+      const transaction = await findFirstTransactionById(id);
+      if (!transaction) throw new Error("Transaction not found");
+      const account = await findFirstBankAccountById(transaction.bankAccountId);
+      if (!account) throw new Error("Bank account not found");
+      const amountAdjustment =
+        transaction.transactionType === "income"
+          ? transaction.amount
+          : -transaction.amount;
+      const currentBalance =
+        typeof account.balance === "string"
+          ? parseFloat(account.balance)
+          : account.balance;
+      const newBalance = Number(currentBalance) + Number(amountAdjustment);
+      await deleteTransactionById(id, account.id, newBalance.toString());
+    }, "Failed to delete transaction");
+  }
+
+  static async updateTransaction(
+    id: string,
+    data: ClientTransaction,
+  ): Promise<TransactionActionResponse> {
+    return this.handleErrors(async () => {
+      const transaction = await findFirstTransactionById(id);
+      if (!transaction) throw new Error("Transaction not found");
+      const account = await findFirstBankAccountById(transaction.bankAccountId);
+      if (!account) throw new Error("Bank account not found");
+      const oldAdjustment =
+        transaction.transactionType === "income"
+          ? transaction.amount
+          : -transaction.amount;
+      const newAdjustment =
+        data.transactionType === "income" ? data.amount : -data.amount;
+      const currentBalance =
+        typeof account.balance === "string"
+          ? parseFloat(account.balance)
+          : account.balance;
+      const newBalance =
+        Number(currentBalance) - Number(oldAdjustment) + Number(newAdjustment);
+      await updateTransactionById(id, newBalance.toString(), {
+        ...data,
+        amount: String(data.amount),
+      });
+    }, "Failed to update transaction");
   }
 
   static async getTransactionFormData(userId: string): Promise<
@@ -36,37 +110,12 @@ export class TransactionService {
     }>
   > {
     return this.handleErrors(async () => {
-      const { bankAccounts, categories } = await getTransactionFormData(userId);
+      const [bankAccounts, categories] = await Promise.all([
+        findManyBankAccountIdAndNameByUserId(userId),
+        findManyCategoryIdAndNameByUserId(userId),
+      ]);
       return { bankAccounts, categories };
     }, "Failed to retrieve transaction form data");
-  }
-
-  static async createTransaction(
-    data: Transaction,
-  ): Promise<TransactionActionResponse> {
-    return this.handleErrors(async () => {
-      await createTransaction(data);
-    }, "Failed to create transaction");
-  }
-
-  static async deleteTransaction(
-    id: string,
-  ): Promise<TransactionActionResponse> {
-    return this.handleErrors(async () => {
-      await deleteTransactionById(id);
-    }, "Failed to delete transaction");
-  }
-
-  static async updateTransaction(
-    id: string,
-    data: Partial<ClientTransaction>,
-  ): Promise<TransactionActionResponse> {
-    return this.handleErrors(async () => {
-      await updateTransactionById(id, {
-        ...data,
-        amount: data.amount ? String(data.amount) : undefined,
-      });
-    }, "Failed to update transaction");
   }
 
   static async handleErrors<T>(

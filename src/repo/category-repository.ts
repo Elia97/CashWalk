@@ -2,7 +2,7 @@ import { db } from "@/drizzle/db";
 import { category, Category, CategoryWithChildren } from "@/drizzle/schema";
 import { eq } from "drizzle-orm";
 
-export async function getAllUserCategories(
+export async function findManyCategoriesByUserId(
   userId: string,
 ): Promise<CategoryWithChildren[]> {
   return db.query.category.findMany({
@@ -46,7 +46,29 @@ export async function getAllUserCategories(
   });
 }
 
-export async function createCategory(data: Category): Promise<void> {
+export async function findManyCategoryIdAndNameByUserId(
+  userId: string,
+): Promise<{ id: string; name: string }[]> {
+  return await db.query.category.findMany({
+    where(fields, operators) {
+      return operators.eq(fields.userId, userId);
+    },
+    columns: {
+      id: true,
+      name: true,
+    },
+  });
+}
+
+export async function findFirstCategoryById(
+  id: string,
+): Promise<Category | undefined> {
+  return await db.query.category.findFirst({
+    where: (fields, operators) => operators.eq(fields.id, id),
+  });
+}
+
+export async function insertCategory(data: Category): Promise<void> {
   await db.insert(category).values(data);
 }
 

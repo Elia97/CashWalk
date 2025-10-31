@@ -1,11 +1,12 @@
 import {
-  createBankAccount,
+  findManyBankAccountsByUserId,
+  insertBankAccount,
   deleteBankAccountById,
-  getAllBankAccountsByUserId,
   setPrimaryBankAccount,
   updateBankAccountById,
+  findFirstBankAccountById,
 } from "@/repo/bank-account-repository";
-import { getUserById } from "@/repo/user-repository";
+import { findFirstUserById } from "@/repo/user-repository";
 import type { ClientBankAccount } from "@/drizzle/schema";
 
 export type BankAccountActionResponse<T = void> = {
@@ -15,13 +16,13 @@ export type BankAccountActionResponse<T = void> = {
 };
 
 export class BankAccountService {
-  static async findUserBankAccounts(
+  static async getAllBankAccounts(
     userId: string,
   ): Promise<BankAccountActionResponse<ClientBankAccount[]>> {
     return this.handleErrors(async () => {
-      const user = await getUserById(userId);
+      const user = await findFirstUserById(userId);
       if (!user) throw new Error("User not found");
-      const accounts = await getAllBankAccountsByUserId(userId);
+      const accounts = await findManyBankAccountsByUserId(userId);
       return accounts.map((account) => ({
         ...account,
         balance: Number(account.balance),
@@ -32,47 +33,51 @@ export class BankAccountService {
   static async createBankAccount(
     data: ClientBankAccount,
   ): Promise<BankAccountActionResponse> {
-    return this.handleErrors(
-      async () =>
-        await createBankAccount({
-          ...data,
-          balance: String(data.balance),
-        }),
-      "Failed to create bank account",
-    );
+    return this.handleErrors(async () => {
+      const user = await findFirstUserById(data.userId);
+      if (!user) throw new Error("User not found");
+      return await insertBankAccount({
+        ...data,
+        balance: String(data.balance),
+      });
+    }, "Failed to create bank account");
   }
 
   static async deleteBankAccount(
     accountId: string,
   ): Promise<BankAccountActionResponse> {
-    return this.handleErrors(
-      async () => await deleteBankAccountById(accountId),
-      "Failed to delete bank account",
-    );
+    return this.handleErrors(async () => {
+      const account = await findFirstBankAccountById(accountId);
+      if (!account) throw new Error("Bank account not found");
+      return await deleteBankAccountById(accountId);
+    }, "Failed to delete bank account");
   }
 
   static async updateBankAccount(
     accountId: string,
-    data: Partial<ClientBankAccount>,
+    data: ClientBankAccount,
   ): Promise<BankAccountActionResponse> {
-    return this.handleErrors(
-      async () =>
-        await updateBankAccountById(accountId, {
-          ...data,
-          balance: String(data.balance),
-        }),
-      "Failed to update bank account",
-    );
+    return this.handleErrors(async () => {
+      const account = await findFirstBankAccountById(accountId);
+      if (!account) throw new Error("Bank account not found");
+      return await updateBankAccountById(accountId, {
+        ...data,
+        balance: String(data.balance),
+      });
+    }, "Failed to update bank account");
   }
 
   static async setPrimaryBankAccount(
     userId: string,
     accountId: string,
   ): Promise<BankAccountActionResponse> {
-    return this.handleErrors(
-      async () => await setPrimaryBankAccount(userId, accountId),
-      "Failed to set primary bank account",
-    );
+    return this.handleErrors(async () => {
+      const user = await findFirstUserById(userId);
+      if (!user) throw new Error("User not found");
+      const account = await findFirstBankAccountById(accountId);
+      if (!account) throw new Error("Bank account not found");
+      return await setPrimaryBankAccount(userId, accountId);
+    }, "Failed to set primary bank account");
   }
 
   static async handleErrors<T>(

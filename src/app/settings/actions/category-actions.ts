@@ -33,7 +33,7 @@ export async function deleteUserCategory(
 
 export async function updateUserCategory(
   categoryId: string,
-  data: Partial<Category>,
+  data: Category,
 ): Promise<CategoryActionResponse> {
   if (!categoryId || typeof categoryId !== "string")
     throw new Error("Invalid category ID");
