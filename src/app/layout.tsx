@@ -27,7 +27,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Personal Finance",
+  title: "Cash Walk",
   description: "Manage your finances effectively",
 };
 
@@ -38,7 +38,7 @@ export type NavbarItem = {
 };
 
 const NAVBAR_ITEMS: NavbarItem[] = [
-  { href: "/dashboard", label: "Dashboard", Icon: LayoutDashboard },
+  { href: "/overview", label: "Overview", Icon: LayoutDashboard },
   { href: "/accounts", label: "Accounts", Icon: Wallet },
   { href: "/transactions", label: "Transactions", Icon: ArrowRightLeft },
   { href: "/analytics", label: "Analytics", Icon: ChartColumn },
@@ -59,20 +59,15 @@ export default function RootLayout({
             href="/"
             className="absolute top-6 left-4 inline-flex gap-2 items-center"
           >
-            <Image
-              src="/logo.svg"
-              alt="Personal Finance"
-              width={36}
-              height={36}
-            />
-            <span className="font-bold text-lg">Personal Finance</span>
+            <Image src="/logo.svg" alt="Cash Walk" width={36} height={36} />
+            <span className="font-bold text-lg">Cash Walk</span>
           </Link>
           <DesktopNavigation navbarItems={NAVBAR_ITEMS} />
           <div className="absolute top-6 right-4">
             <AuthButton />
           </div>
         </header>
-        <main className="my-6 px-4 container mx-auto pb-16 lg:pb-0">
+        <main className="px-4 container mx-auto pb-16 lg:pb-0">
           {children}
           <Toaster position="top-center" />
           <ImpersonationIndicator />
