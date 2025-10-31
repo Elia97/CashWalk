@@ -88,21 +88,21 @@ export function CategoryManagement({
           </ButtonGroup>
           <ButtonGroup className="w-full md:w-auto">
             <Button
-              variant={selectedType === "all" ? "secondary" : "outline"}
+              variant={selectedType === "all" ? "default" : "outline"}
               onClick={() => setSelectedType("all")}
               className="w-1/3 md:w-auto"
             >
               All
             </Button>
             <Button
-              variant={selectedType === "income" ? "secondary" : "outline"}
+              variant={selectedType === "income" ? "default" : "outline"}
               onClick={() => setSelectedType("income")}
               className="w-1/3 md:w-auto"
             >
               Income
             </Button>
             <Button
-              variant={selectedType === "expense" ? "secondary" : "outline"}
+              variant={selectedType === "expense" ? "default" : "outline"}
               onClick={() => setSelectedType("expense")}
               className="w-1/3 md:w-auto"
             >

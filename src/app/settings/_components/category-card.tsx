@@ -77,7 +77,7 @@ export function CategoryCard({ category }: { category: CategoryWithChildren }) {
             <div key={subcat.id}>
               <Separator className="my-6" />
               <div className="grid sm:grid-cols-2 gap-3">
-                <Badge variant={"secondary"} className="text-base px-4 py-1">
+                <Badge className="text-base px-4 py-1">
                   {subcat.icon} {subcat.name}
                 </Badge>
                 <ButtonGroup className="w-full sm:justify-self-end sm:w-auto">

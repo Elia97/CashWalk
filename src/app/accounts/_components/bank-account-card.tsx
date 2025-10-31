@@ -38,9 +38,7 @@ export function BankAccountCard({ account }: { account: ClientBankAccount }) {
   return (
     <Card key={account.id} className="justify-between relative">
       {account.isPrimary && (
-        <Badge variant="outline" className="absolute -top-2 -right-2">
-          Primary
-        </Badge>
+        <Badge className="absolute -top-2 -right-2">Primary</Badge>
       )}
       <CardHeader>
         <div className="flex gap-3 items-center">
