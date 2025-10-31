@@ -13,7 +13,6 @@ import { ClientBankAccount } from "@/drizzle/schema";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { DialogFooter } from "@/components/ui/dialog";
@@ -51,7 +50,7 @@ export function CreateBankAccountForm({
 }: {
   closeDialog: () => void;
 }) {
-  const { data: session, isPending } = authClient.useSession();
+  const { data: session } = authClient.useSession();
   const form = useForm<BankAccountFormData>({
     resolver: zodResolver(bankAccountSchema),
     defaultValues: {
@@ -82,14 +81,6 @@ export function CreateBankAccountForm({
       closeDialog();
     }
   };
-
-  if (isPending) {
-    return (
-      <section className="flex justify-center h-screen">
-        <Loader2 className="animate-spin" />
-      </section>
-    );
-  }
 
   return (
     <form onSubmit={form.handleSubmit(handleAddBankAccount)}>

@@ -39,14 +39,3 @@ export async function updateUserBankAccount(
   revalidatePath("/accounts");
   return await BankAccountService.updateBankAccount(accountId, data);
 }
-
-export async function setUserPrimaryBankAccount(
-  userId: string,
-  accountId: string,
-): Promise<BankAccountActionResponse> {
-  if (!userId || typeof userId !== "string") throw new Error("Invalid user ID");
-  if (!accountId || typeof accountId !== "string")
-    throw new Error("Invalid account ID");
-  revalidatePath("/accounts");
-  return await BankAccountService.setPrimaryBankAccount(userId, accountId);
-}

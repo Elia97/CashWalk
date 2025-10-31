@@ -14,7 +14,7 @@ export async function getUserTransactions(
 
 export async function getTransactionFormData(userId: string): Promise<
   TransactionActionResponse<{
-    bankAccounts: { id: string; name: string }[];
+    bankAccounts: { id: string; name: string; isPrimary: boolean }[];
     categories: { id: string; name: string }[];
   }>
 > {

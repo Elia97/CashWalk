@@ -78,16 +78,16 @@ export function CreateTransactionForm({
       date: new Date(),
     },
   });
-  const [accounts, setAccounts] = useState<{ id: string; name: string }[]>([]);
+  const [accounts, setAccounts] = useState<
+    { id: string; name: string; isPrimary: boolean }[]
+  >([]);
   const [categories, setCategories] = useState<{ id: string; name: string }[]>(
     [],
   );
 
+  const [showCalendar, setShowCalendar] = useState<boolean>(false);
+
   useEffect(() => {
-    form.reset({
-      ...form.getValues(),
-      userId: session?.user.id || "",
-    });
     async function fetchData() {
       setIsLoading(true);
       const { bankAccounts: accountsData, categories: categoriesData } =
@@ -96,6 +96,16 @@ export function CreateTransactionForm({
         );
       setAccounts(accountsData);
       setCategories(categoriesData);
+
+      form.reset({
+        ...form.getValues(),
+        userId: session?.user.id || "",
+        bankAccountId:
+          accountsData.find((a) => a.isPrimary)?.id ||
+          accountsData[0]?.id ||
+          "",
+      });
+
       setIsLoading(false);
     }
     fetchData();
@@ -162,7 +172,7 @@ export function CreateTransactionForm({
           render={({ field }) => (
             <Field>
               <FieldLabel htmlFor="date">Date</FieldLabel>
-              <Popover>
+              <Popover open={showCalendar} onOpenChange={setShowCalendar}>
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
@@ -179,6 +189,7 @@ export function CreateTransactionForm({
                     mode="single"
                     selected={field.value}
                     onSelect={field.onChange}
+                    onDayClick={() => setShowCalendar(false)}
                   />
                 </PopoverContent>
               </Popover>
@@ -268,6 +279,7 @@ export function CreateTransactionForm({
                   placeholder="Balance"
                   value={field.value}
                   onChange={field.onChange}
+                  step={0.01}
                 />
               </Field>
             )}

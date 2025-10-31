@@ -5,9 +5,13 @@ import {
   setPrimaryBankAccount,
   updateBankAccountById,
   findFirstBankAccountById,
+  findFirstPrimaryBankAccountByUserId,
 } from "@/repo/bank-account-repository";
 import { findFirstUserById } from "@/repo/user-repository";
-import type { ClientBankAccount } from "@/drizzle/schema";
+import type {
+  ClientBankAccount,
+  ClientBankAccountWithTransactions,
+} from "@/drizzle/schema";
 
 export type BankAccountActionResponse<T = void> = {
   error: boolean;
@@ -36,10 +40,14 @@ export class BankAccountService {
     return this.handleErrors(async () => {
       const user = await findFirstUserById(data.userId);
       if (!user) throw new Error("User not found");
-      return await insertBankAccount({
+      const existingAccounts = await findManyBankAccountsByUserId(data.userId);
+      const account = await insertBankAccount({
         ...data,
         balance: String(data.balance),
       });
+      if (account && existingAccounts.length === 0) {
+        await setPrimaryBankAccount(account.userId, account.id);
+      }
     }, "Failed to create bank account");
   }
 
@@ -78,6 +86,21 @@ export class BankAccountService {
       if (!account) throw new Error("Bank account not found");
       return await setPrimaryBankAccount(userId, accountId);
     }, "Failed to set primary bank account");
+  }
+
+  static async getPrimaryBankAccount(
+    userId: string,
+  ): Promise<BankAccountActionResponse<ClientBankAccountWithTransactions>> {
+    return this.handleErrors(async () => {
+      const user = await findFirstUserById(userId);
+      if (!user) throw new Error("User not found");
+      const account = await findFirstPrimaryBankAccountByUserId(userId);
+      if (!account) throw new Error("Primary bank account not found");
+      return {
+        ...account,
+        balance: Number(account.balance),
+      } as ClientBankAccountWithTransactions;
+    }, "Failed to retrieve primary bank account");
   }
 
   static async handleErrors<T>(

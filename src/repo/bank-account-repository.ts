@@ -1,6 +1,10 @@
 import { eq } from "drizzle-orm";
 import { db } from "@/drizzle/db";
-import { type BankAccount, bankAccount } from "@/drizzle/schema";
+import {
+  type BankAccount,
+  bankAccount,
+  BankAccountWithTransactions,
+} from "@/drizzle/schema";
 
 export async function findManyBankAccountsByUserId(
   userId: string,
@@ -17,7 +21,7 @@ export async function findManyBankAccountsByUserId(
 
 export async function findManyBankAccountIdAndNameByUserId(
   userId: string,
-): Promise<{ id: string; name: string }[]> {
+): Promise<{ id: string; name: string; isPrimary: boolean }[]> {
   return await db.query.bankAccount.findMany({
     where(fields, operators) {
       return operators.eq(fields.userId, userId);
@@ -25,6 +29,7 @@ export async function findManyBankAccountIdAndNameByUserId(
     columns: {
       id: true,
       name: true,
+      isPrimary: true,
     },
   });
 }
@@ -39,8 +44,38 @@ export async function findFirstBankAccountById(
   });
 }
 
-export async function insertBankAccount(data: BankAccount): Promise<void> {
-  await db.insert(bankAccount).values(data);
+export async function findFirstPrimaryBankAccountByUserId(
+  userId: string,
+): Promise<BankAccountWithTransactions | undefined> {
+  return await db.query.bankAccount.findFirst({
+    where(fields, operators) {
+      return (
+        operators.eq(fields.userId, userId) &&
+        operators.eq(fields.isPrimary, true)
+      );
+    },
+    with: {
+      transactions: {
+        where(fields, operators) {
+          return operators.gte(
+            fields.date,
+            new Date(new Date().getFullYear(), 0, 1),
+          );
+        },
+        orderBy(fields, operators) {
+          return operators.desc(fields.date);
+        },
+      },
+    },
+  });
+}
+
+export async function insertBankAccount(
+  data: BankAccount,
+): Promise<BankAccount> {
+  const [result] = await db.insert(bankAccount).values(data).returning();
+  if (!result) throw new Error("Failed to insert bank account");
+  return result as BankAccount;
 }
 
 export async function deleteBankAccountById(id: string): Promise<void> {
