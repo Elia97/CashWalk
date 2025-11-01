@@ -14,10 +14,12 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 export function AuthButton() {
   const { data: session, isPending } = authClient.useSession();
   const [hasAdminPermission, setHasAdminPermission] = useState<boolean>(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (!session) return;
@@ -32,9 +34,9 @@ export function AuthButton() {
 
   if (session) {
     return (
-      <DropdownMenu>
+      <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
-          <Avatar className="size-9">
+          <Avatar className="size-9" role="button" tabIndex={0}>
             <AvatarImage src={session.user.image!} alt={session.user.name} />
             <AvatarFallback>
               {session.user.name
@@ -46,7 +48,7 @@ export function AuthButton() {
             </AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
+        <DropdownMenuContent align="end" aria-modal={false}>
           <div className="flex flex-col gap-2 py-3 px-2">
             <span className="text-sm">{session.user.name}</span>
             <span className="text-sm text-muted-foreground">
@@ -70,6 +72,7 @@ export function AuthButton() {
             <BetterAuthActionButton
               variant={"destructive"}
               action={() => authClient.signOut()}
+              onClick={() => router.push("/")}
               className="w-full"
             >
               Logout

@@ -60,7 +60,7 @@ export function SignInForm({
 
   const handleSignIn = async (data: SignInFormData) => {
     await authClient.signIn.email(
-      { ...data, callbackURL: "/" },
+      { ...data, callbackURL: "/overview" },
       {
         onError: (error) => {
           if (error.error.code === "EMAIL_NOT_VERIFIED") {
@@ -69,7 +69,7 @@ export function SignInForm({
           toast.error(error.error.message || "Failed to sign in");
         },
         onSuccess: () => {
-          router.push("/");
+          toast.success("Successfully signed in");
         },
       },
     );
