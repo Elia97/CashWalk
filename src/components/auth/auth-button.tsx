@@ -66,7 +66,7 @@ export function AuthButton() {
             </DropdownMenuItem>
           )}
           <DropdownMenuSeparator />
-          <DropdownMenuItem asChild>
+          <DropdownMenuItem>
             <BetterAuthActionButton
               variant={"destructive"}
               action={() => authClient.signOut()}

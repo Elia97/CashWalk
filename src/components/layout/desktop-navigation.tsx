@@ -17,7 +17,7 @@ export function DesktopNavigation({
   const getLabelWithIcon = (label: string, Icon: LucideIcon) => {
     return (
       <span className="inline-flex items-center gap-2">
-        <Icon className="w-4 h-4 text-white" />
+        <Icon className="w-4 h-4" />
         {label}
       </span>
     );
