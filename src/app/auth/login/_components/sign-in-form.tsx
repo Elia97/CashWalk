@@ -121,7 +121,7 @@ export function SignInForm({
                     type="button"
                     variant="link"
                     size="sm"
-                    className="text-sm font-normal underline"
+                    className="text-sm font-normal hover:underline"
                     onClick={openForgotPasswordTab}
                   >
                     Forgot Password?
@@ -134,30 +134,30 @@ export function SignInForm({
           <Field orientation="horizontal">
             <Button
               type="submit"
-              className="w-full"
+              className="flex-1"
               disabled={form.formState.isSubmitting}
             >
               <LoadingSwap isLoading={form.formState.isSubmitting}>
                 Sign In
               </LoadingSwap>
             </Button>
+            <BetterAuthActionButton
+              variant={"outline"}
+              className="flex-1"
+              action={() =>
+                authClient.signIn.passkey(undefined, {
+                  onSuccess: () => {
+                    refetch();
+                    router.push("/");
+                  },
+                })
+              }
+            >
+              Use Passkey
+            </BetterAuthActionButton>
           </Field>
         </FieldGroup>
       </form>
-      <BetterAuthActionButton
-        variant={"outline"}
-        className="w-full"
-        action={() =>
-          authClient.signIn.passkey(undefined, {
-            onSuccess: () => {
-              refetch();
-              router.push("/");
-            },
-          })
-        }
-      >
-        Use Passkey
-      </BetterAuthActionButton>
     </div>
   );
 }

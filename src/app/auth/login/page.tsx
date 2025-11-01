@@ -16,7 +16,8 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 
 type Tab = "signin" | "signup" | "email-verification" | "forgot-password";
 
@@ -36,70 +37,91 @@ export default function LoginPage() {
   };
 
   return (
-    <Tabs
-      value={selectedTab}
-      onValueChange={(t) => setSelectedTab(t as Tab)}
-      className="mx-auto w-full max-w-md my-6 px-4"
-    >
-      {(selectedTab === "signin" || selectedTab === "signup") && (
-        <TabsList className="mx-auto w-full">
-          <TabsTrigger value="signin">Sign In</TabsTrigger>
-          <TabsTrigger value="signup">Sign Up</TabsTrigger>
-        </TabsList>
-      )}
-      <TabsContent value="signin">
-        <Card>
-          <CardHeader className="text-2xl font-bold">
-            <CardTitle>Sign In</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <SignInForm
-              openEmailVerificationTab={openEmailVerificationTab}
-              openForgotPasswordTab={() => setSelectedTab("forgot-password")}
-            />
-          </CardContent>
-          <Separator />
-          <CardFooter className="grid grid-cols-2 gap-3">
-            <SocialAuthButtons />
-          </CardFooter>
-        </Card>
-      </TabsContent>
-      <TabsContent value="signup">
-        <Card>
-          <CardHeader className="text-2xl font-bold">
-            <CardTitle>Sign Up</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <SignUpForm openEmailVerificationTab={openEmailVerificationTab} />
-          </CardContent>
-          <Separator />
-          <CardFooter className="grid grid-cols-2 gap-3">
-            <SocialAuthButtons />
-          </CardFooter>
-        </Card>
-      </TabsContent>
-      <TabsContent value="email-verification">
-        <Card>
-          <CardHeader className="text-2xl font-bold">
-            <CardTitle>Verify your email</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <EmailVerification email={email} />
-          </CardContent>
-        </Card>
-      </TabsContent>
-      <TabsContent value="forgot-password">
-        <Card>
-          <CardHeader className="text-2xl font-bold">
-            <CardTitle>Forgot password</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ForgotPasswordForm
-              openSignInTab={() => setSelectedTab("signin")}
-            />
-          </CardContent>
-        </Card>
-      </TabsContent>
-    </Tabs>
+    <section className="animate-fade-up">
+      <Tabs
+        value={selectedTab}
+        onValueChange={(t) => setSelectedTab(t as Tab)}
+        className="mx-auto w-full max-w-xl px-4 animate-fade-up"
+      >
+        <TabsContent value="signin">
+          <Card>
+            <CardHeader className="text-2xl font-bold">
+              <CardTitle className="mb-4">Sign In</CardTitle>
+              <SocialAuthButtons />
+            </CardHeader>
+            <Separator className="relative my-2">
+              <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-muted-foreground bg-card px-4">
+                or
+              </span>
+            </Separator>
+            <CardContent>
+              <SignInForm
+                openEmailVerificationTab={openEmailVerificationTab}
+                openForgotPasswordTab={() => setSelectedTab("forgot-password")}
+              />
+            </CardContent>
+            <CardFooter className="justify-center">
+              <Button
+                type="button"
+                variant="link"
+                size="sm"
+                className="text-sm font-normal hover:underline"
+                onClick={() => setSelectedTab("signup")}
+              >
+                Don&apos;t have an account?
+              </Button>
+            </CardFooter>
+          </Card>
+        </TabsContent>
+        <TabsContent value="signup">
+          <Card>
+            <CardHeader className="text-2xl font-bold">
+              <CardTitle className="mb-4">Sign Up</CardTitle>
+              <SocialAuthButtons />
+            </CardHeader>
+            <Separator className="relative my-2">
+              <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-muted-foreground bg-card px-4">
+                or
+              </span>
+            </Separator>
+            <CardContent>
+              <SignUpForm openEmailVerificationTab={openEmailVerificationTab} />
+            </CardContent>
+            <CardFooter className="justify-center">
+              <Button
+                variant="link"
+                size="sm"
+                className="text-sm font-normal hover:underline"
+                onClick={() => setSelectedTab("signin")}
+              >
+                Already have an account?
+              </Button>
+            </CardFooter>
+          </Card>
+        </TabsContent>
+        <TabsContent value="email-verification">
+          <Card>
+            <CardHeader className="text-2xl font-bold">
+              <CardTitle>Verify your email</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <EmailVerification email={email} />
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="forgot-password">
+          <Card>
+            <CardHeader className="text-2xl font-bold">
+              <CardTitle>Forgot password</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ForgotPasswordForm
+                openSignInTab={() => setSelectedTab("signin")}
+              />
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </section>
   );
 }

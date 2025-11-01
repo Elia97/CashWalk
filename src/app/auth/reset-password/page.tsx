@@ -3,8 +3,10 @@ import { LoadingSuspense } from "@/components/ui/loading-suspence";
 
 export default function ResetPasswordPage() {
   return (
-    <LoadingSuspense>
-      <ResetPasswordForm />
-    </LoadingSuspense>
+    <section className="animate-fade-up">
+      <LoadingSuspense>
+        <ResetPasswordForm />
+      </LoadingSuspense>
+    </section>
   );
 }

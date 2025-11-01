@@ -81,7 +81,7 @@ export function AuthButton() {
   }
 
   return (
-    <Button asChild>
+    <Button asChild size={"icon-lg"}>
       <Link href={"/auth/login"}>
         <LogIn />
       </Link>

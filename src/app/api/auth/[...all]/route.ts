@@ -19,16 +19,18 @@ const aj = arcjet({
 
 const botSettings = { mode: "LIVE", allow: [] } satisfies BotOptions;
 
+const isDev = process.env.NODE_ENV === "development";
+
 const restrictiveRateLimitSettings = {
   mode: "LIVE",
-  max: 60,
-  interval: "1m",
+  max: isDev ? 1000 : 60,
+  interval: isDev ? "1m" : "1m",
 } satisfies SlidingWindowRateLimitOptions<[]>;
 
 const laxRateLimitSettings = {
   mode: "LIVE",
-  max: 10,
-  interval: "10m",
+  max: isDev ? 1000 : 10,
+  interval: isDev ? "1m" : "10m",
 } satisfies SlidingWindowRateLimitOptions<[]>;
 
 const emailSettings = {

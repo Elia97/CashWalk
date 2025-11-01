@@ -36,7 +36,7 @@ export default async function ProfilePage() {
   ]);
 
   return (
-    <section>
+    <section className="animate-fade-up">
       <div className="mb-8">
         <div className="flex items-center space-x-4">
           <div className="size-16 bg-muted rounded-full flex items-center justify-center overflow-hidden">

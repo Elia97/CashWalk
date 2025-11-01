@@ -22,7 +22,7 @@ export default async function OverviewPage() {
   const res = await getUserPrimaryBankAccount(session.user.id);
 
   return (
-    <section>
+    <section className="animate-fade-up">
       <h1 className="hidden">Overview Page</h1>
       {res.data && res.data?.transactions.length > 0 ? (
         <OverviewManagement account={res.data} />

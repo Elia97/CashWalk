@@ -10,7 +10,7 @@ export default async function AccountsPage() {
 
   const res = await getUserBankAccounts(session.user.id);
   return (
-    <section>
+    <section className="animate-fade-up">
       <h1 className="hidden">Accounts Page</h1>
       {res.data && <BankAccountManagement accounts={res.data} />}
     </section>

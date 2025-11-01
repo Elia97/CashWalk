@@ -10,7 +10,7 @@ export default async function TransactionsPage() {
 
   const res = await getUserTransactions(session.user.id);
   return (
-    <section>
+    <section className="animate-fade-up">
       <h1 className="hidden">Transactions Page</h1>
       {res.data && <TransactionManagement transactions={res.data} />}
     </section>

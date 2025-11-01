@@ -11,7 +11,7 @@ export default async function TwoFactorPage() {
   if (session != null) return redirect("/");
 
   return (
-    <div className="my-6 px-4">
+    <section className="animate-fade-up">
       <Card className="mx-auto max-w-md">
         <CardHeader>
           <CardTitle>Two-Factor Authentication</CardTitle>
@@ -33,6 +33,6 @@ export default async function TwoFactorPage() {
           </Tabs>
         </CardContent>
       </Card>
-    </div>
+    </section>
   );
 }

@@ -10,7 +10,7 @@ export default async function SettingsPage() {
   const categories = await getUserCategories(session.user.id);
 
   return (
-    <section>
+    <section className="animate-fade-up">
       <h1 className="hidden">Settings</h1>
       {categories.data && <CategoryManagement categories={categories.data} />}
     </section>

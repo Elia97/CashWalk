@@ -27,7 +27,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Cash Walk",
+  title: "CashWalk",
   description: "Manage your finances effectively",
 };
 
@@ -57,10 +57,10 @@ export default function RootLayout({
         <header className="py-6 flex justify-center relative h-[84px]">
           <Link
             href="/"
-            className="absolute top-6 left-4 inline-flex gap-2 items-center"
+            className="absolute top-6 left-4 inline-flex items-center"
           >
-            <Image src="/logo.svg" alt="Cash Walk" width={36} height={36} />
-            <span className="font-bold text-lg">Cash Walk</span>
+            <Image src="/CashWalk.svg" alt="CashWalk" width={40} height={40} />
+            <span className="font-bold text-lg">CashWalk</span>
           </Link>
           <DesktopNavigation navbarItems={NAVBAR_ITEMS} />
           <div className="absolute top-6 right-4">
