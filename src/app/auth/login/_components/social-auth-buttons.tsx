@@ -26,7 +26,9 @@ export function SocialAuthButtons() {
             }
           >
             <Icon />
-            {SUPPORTED_O_AUTH_PROVIDER_DETAILS[provider].name}
+            <span className="max-sm:hidden">
+              {SUPPORTED_O_AUTH_PROVIDER_DETAILS[provider].name}
+            </span>
           </BetterAuthActionButton>
         );
       })}

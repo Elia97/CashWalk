@@ -169,7 +169,7 @@ export function TransactionFilters({
                 <span>Add New Transaction</span>
               </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-h-[90vh] overflow-y-auto scrollbar">
               <DialogTitle>Add New Transaction</DialogTitle>
               <DialogDescription>
                 Fill the form below to create a new transaction.

@@ -75,7 +75,7 @@ export function BankAccountCard({ account }: { account: ClientBankAccount }) {
                 <SquarePen />
               </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-h-[90vh] overflow-y-auto scrollbar">
               <DialogHeader>
                 <DialogTitle>Update {account.name}</DialogTitle>
                 <DialogDescription>

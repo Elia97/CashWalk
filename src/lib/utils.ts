@@ -6,6 +6,18 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export const capitalize = (s: string) => {
+  if (!s) return s;
+  const spaced = s
+    .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+    .replace(/[_-]+/g, " ")
+    .trim();
+  const lower = spaced.toLowerCase();
+  const withoutTrailingId = lower.replace(/\s*\bid$/, "").trim();
+  const base = withoutTrailingId || lower;
+  return base.charAt(0).toUpperCase() + base.slice(1);
+};
+
 export function formatCurrency(amount: number, currency: string) {
   return new Intl.NumberFormat("it-IT", {
     style: "currency",

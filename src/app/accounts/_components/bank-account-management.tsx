@@ -45,13 +45,13 @@ export function BankAccountManagement({
           ))}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Card className="flex justify-center items-center h-80 border-2 border-dashed cursor-pointer bg-transparent hover:bg-card">
+            <Card className="flex justify-center items-center h-[336px] border-2 border-dashed cursor-pointer bg-transparent hover:bg-card">
               <Button variant="link" asChild>
                 <Plus className="w-full h-full" />
               </Button>
             </Card>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="max-h-[90vh] overflow-y-auto scrollbar">
             <DialogHeader>
               <DialogTitle>Add New Bank Account</DialogTitle>
               <DialogDescription>

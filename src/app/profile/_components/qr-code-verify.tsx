@@ -17,7 +17,9 @@ import {
   Field,
   FieldLabel,
   FieldError,
+  FieldContent,
 } from "@/components/ui/field";
+import { capitalize } from "@/lib/utils";
 
 const qrCodeVerifySchema = z.object({
   token: z.string().length(6, "Code must be 6 digits"),
@@ -82,27 +84,29 @@ export function QrCodeVerify({
       <p className="text-muted-foreground">
         Scan the QR code with your authenticator app and enter the 6-digit
       </p>
-      <form
-        className="space-y-4"
-        onSubmit={form.handleSubmit(handleQrCodeVerify)}
-      >
-        <FieldGroup className="gap-4">
+      <form onSubmit={form.handleSubmit(handleQrCodeVerify)}>
+        <FieldGroup>
           {/* Token Field */}
           <Controller
             name="token"
             control={form.control}
-            render={({ field }) => (
-              <Field>
-                <div className="flex items-center gap-2">
-                  <FieldLabel htmlFor="token">Backup Code</FieldLabel>
-                  <FieldError errors={[form.formState.errors.token]} />
-                </div>
-                <Input
-                  id="token"
-                  placeholder="Your Code"
-                  autoComplete="off"
-                  {...field}
-                />
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid} className="flex-1">
+                <FieldContent>
+                  <FieldLabel htmlFor={field.name}>
+                    {capitalize(field.name)}
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id={field.name}
+                    aria-invalid={fieldState.invalid}
+                    placeholder="Your Code"
+                    autoComplete="off"
+                  />
+                  {fieldState.error && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </FieldContent>
               </Field>
             )}
           />

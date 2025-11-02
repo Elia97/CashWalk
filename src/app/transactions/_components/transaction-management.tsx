@@ -171,7 +171,7 @@ export function TransactionManagement({
                             <SquarePen />
                           </Button>
                         </DialogTrigger>
-                        <DialogContent>
+                        <DialogContent className="max-h-[90vh] overflow-y-auto scrollbar">
                           <DialogTitle>Modifica transazione</DialogTitle>
                           <DialogDescription>
                             Modifica i dettagli della transazione.

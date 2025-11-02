@@ -5,6 +5,11 @@ import {
   Field,
   FieldLabel,
   FieldError,
+  FieldContent,
+  FieldDescription,
+  FieldLegend,
+  FieldSeparator,
+  FieldSet,
 } from "@/components/ui/field";
 import { Controller, useForm } from "react-hook-form";
 import { updateUserBankAccount } from "../actions/bank-account-actions";
@@ -24,6 +29,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import { capitalize } from "@/lib/utils";
 
 const bankAccountSchema = z.object({
   name: z.string().min(1, "Name is required").max(50, "Name is too long"),
@@ -31,7 +37,7 @@ const bankAccountSchema = z.object({
     .number()
     .min(0, "Balance must be at least 0")
     .max(10_000_000, "Balance is too high"),
-  type: z.enum(["checking", "savings", "cash"], {
+  accountType: z.enum(["checking", "savings", "cash"], {
     message: "Type is required",
   }),
   currency: z.enum(["USD", "EUR", "GBP"], {
@@ -54,7 +60,7 @@ export function UpdateBankAccountForm({
     defaultValues: {
       name: account.name,
       balance: account.balance,
-      type: account.accountType as BankAccountFormData["type"],
+      accountType: account.accountType as BankAccountFormData["accountType"],
       currency: account.currency as BankAccountFormData["currency"],
       accountNumber: account.accountNumber ?? "",
     },
@@ -75,105 +81,200 @@ export function UpdateBankAccountForm({
 
   return (
     <form onSubmit={form.handleSubmit(handleUpdateBankAccount)}>
-      <FieldGroup className="gap-4">
-        <Controller
-          name="name"
-          control={form.control}
-          render={({ field }) => (
-            <Field>
-              <div className="flex items-center gap-2">
-                <FieldLabel htmlFor="name">Name</FieldLabel>
-                <FieldError errors={[form.formState.errors.name]} />
-              </div>
-              <Input
-                id="name"
-                placeholder="Your Account Name"
-                autoComplete="additional-name"
-                {...field}
-              />
-            </Field>
-          )}
-        />
+      <FieldGroup>
+        <FieldSeparator />
+        <FieldSet>
+          <FieldLegend>Account details</FieldLegend>
+          <FieldDescription>
+            Provide the details of the bank account.
+          </FieldDescription>
+          <Field orientation={"responsive"}>
+            <Controller
+              name="name"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field
+                  data-invalid={fieldState.invalid}
+                  className="relative flex-1"
+                >
+                  <FieldContent>
+                    <FieldLabel htmlFor={field.name}>
+                      {capitalize(field.name)}
+                    </FieldLabel>
+                    <FieldDescription>
+                      Your bank account display name.
+                    </FieldDescription>
+                  </FieldContent>
+                  <Input
+                    {...field}
+                    id={field.name}
+                    aria-invalid={fieldState.invalid}
+                    placeholder="Your Bank Account Name"
+                    autoComplete="off"
+                  />
+                  {fieldState.error && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="absolute top-full text-xs"
+                    />
+                  )}
+                </Field>
+              )}
+            />
 
-        <Controller
-          name="balance"
-          control={form.control}
-          render={({ field }) => (
-            <Field>
-              <div className="flex items-center gap-2">
-                <FieldLabel htmlFor="balance">Balance</FieldLabel>
-                <FieldError errors={[form.formState.errors.balance]} />
-              </div>
-              <NumberInput
-                id="balance"
-                placeholder="Balance"
-                value={field.value}
-                onChange={field.onChange}
-              />
-            </Field>
-          )}
-        />
+            <Controller
+              name="accountType"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field
+                  data-invalid={fieldState.invalid}
+                  className="relative flex-1"
+                >
+                  <FieldContent>
+                    <FieldLabel htmlFor={field.name}>
+                      {capitalize(field.name)}
+                    </FieldLabel>
+                    <FieldDescription>
+                      Select the type of bank account.
+                    </FieldDescription>
+                  </FieldContent>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger
+                      id={field.name}
+                      aria-invalid={fieldState.invalid}
+                    >
+                      <SelectValue placeholder="Select type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="checking">Checking</SelectItem>
+                      <SelectItem value="cash">Cash</SelectItem>
+                      <SelectItem value="savings">Savings</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {fieldState.error && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="absolute top-full text-xs"
+                    />
+                  )}
+                </Field>
+              )}
+            />
+          </Field>
+        </FieldSet>
+        <FieldSeparator />
+        <FieldSet>
+          <FieldLegend>Additional info</FieldLegend>
+          <FieldDescription>
+            Provide any additional information about the bank account.
+          </FieldDescription>
+          <Field orientation="responsive">
+            <Controller
+              name="currency"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field
+                  data-invalid={fieldState.invalid}
+                  className="relative flex-1"
+                >
+                  <FieldContent>
+                    <FieldLabel htmlFor={field.name}>
+                      {capitalize(field.name)}
+                    </FieldLabel>
+                    <FieldDescription>
+                      Select the currency for the account.
+                    </FieldDescription>
+                  </FieldContent>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger
+                      id={field.name}
+                      aria-invalid={fieldState.invalid}
+                    >
+                      <SelectValue placeholder="Select currency" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="EUR">EUR</SelectItem>
+                      <SelectItem value="USD">USD</SelectItem>
+                      <SelectItem value="GBP">GBP</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {fieldState.error && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="absolute top-full text-xs"
+                    />
+                  )}
+                </Field>
+              )}
+            />
+            <Controller
+              name="balance"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field
+                  data-invalid={fieldState.invalid}
+                  className="relative flex-1"
+                >
+                  <FieldContent>
+                    <FieldLabel htmlFor={field.name}>
+                      {capitalize(field.name)}
+                    </FieldLabel>
+                    <FieldDescription>
+                      Initial balance ({form.watch("currency")}).
+                    </FieldDescription>
+                  </FieldContent>
+                  <NumberInput
+                    id="balance"
+                    placeholder="0"
+                    value={field.value}
+                    onChange={field.onChange}
+                    min={0}
+                    step={0.01}
+                    aria-invalid={fieldState.invalid}
+                  />
+                  {fieldState.error && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="absolute top-full text-xs"
+                    />
+                  )}
+                </Field>
+              )}
+            />
+          </Field>
 
-        <Controller
-          name="type"
-          control={form.control}
-          render={({ field }) => (
-            <Field>
-              <FieldLabel htmlFor="type">Type</FieldLabel>
-              <Select value={field.value} onValueChange={field.onChange}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="checking">Checking</SelectItem>
-                  <SelectItem value="cash">Cash</SelectItem>
-                  <SelectItem value="savings">Savings</SelectItem>
-                </SelectContent>
-              </Select>
-            </Field>
-          )}
-        />
-
-        <Controller
-          name="currency"
-          control={form.control}
-          render={({ field }) => (
-            <Field>
-              <FieldLabel htmlFor="currency">Currency</FieldLabel>
-              <Select value={field.value} onValueChange={field.onChange}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select currency" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="EUR">EUR</SelectItem>
-                  <SelectItem value="USD">USD</SelectItem>
-                  <SelectItem value="GBP">GBP</SelectItem>
-                </SelectContent>
-              </Select>
-            </Field>
-          )}
-        />
-
-        <Controller
-          name="accountNumber"
-          control={form.control}
-          render={({ field }) => (
-            <Field>
-              <div className="flex items-center gap-2">
-                <FieldLabel htmlFor="accountNumber">Account Number</FieldLabel>
-                <FieldError errors={[form.formState.errors.accountNumber]} />
-              </div>
-
-              <Input
-                id="accountNumber"
-                placeholder="Your Account Number"
-                autoComplete="off"
-                {...field}
-              />
-            </Field>
-          )}
-        />
-
+          <Controller
+            name="accountNumber"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field
+                data-invalid={fieldState.invalid}
+                className="relative flex-1"
+              >
+                <FieldContent>
+                  <FieldLabel htmlFor={field.name}>
+                    {capitalize(field.name)}
+                  </FieldLabel>
+                  <FieldDescription>
+                    Your bank account number (optional).
+                  </FieldDescription>
+                </FieldContent>
+                <Input
+                  {...field}
+                  id={field.name}
+                  aria-invalid={fieldState.invalid}
+                  autoComplete="off"
+                />
+                {fieldState.error && (
+                  <FieldError
+                    errors={[fieldState.error]}
+                    className="absolute top-full text-xs"
+                  />
+                )}
+              </Field>
+            )}
+          />
+        </FieldSet>
         <DialogFooter>
           <Field orientation="horizontal" className="mt-4">
             <Button
@@ -190,7 +291,7 @@ export function UpdateBankAccountForm({
               disabled={form.formState.isSubmitting}
             >
               <LoadingSwap isLoading={form.formState.isSubmitting}>
-                Update
+                Add
               </LoadingSwap>
             </Button>
           </Field>

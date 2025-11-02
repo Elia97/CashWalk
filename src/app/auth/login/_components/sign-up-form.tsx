@@ -11,10 +11,12 @@ import { LoadingSwap } from "@/components/ui/loading-swap";
 import { PasswordInput } from "@/components/ui/password-input";
 import {
   Field,
+  FieldContent,
   FieldError,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
+import { capitalize } from "@/lib/utils";
 
 const signUpSchema = z
   .object({
@@ -22,7 +24,7 @@ const signUpSchema = z
     email: z.email().min(1, "Email is required").max(100, "Email is too long"),
     password: z
       .string()
-      .min(6, "Password must be at least 6 characters long")
+      .min(6, "Password is too short")
       .max(100, "Password is too long"),
     confirmPassword: z
       .string()
@@ -68,94 +70,115 @@ export function SignUpForm({
 
   return (
     <form className="space-y-4" onSubmit={form.handleSubmit(handleSignUp)}>
-      <FieldGroup className="gap-4">
-        <Field orientation={"responsive"}>
-          {/* Name Field */}
-          <Controller
-            name="name"
-            control={form.control}
-            render={({ field }) => (
-              <Field className="flex-1">
-                <div className="flex items-center gap-2">
-                  <FieldLabel htmlFor="name">Name</FieldLabel>
-                  <FieldError errors={[form.formState.errors.name]} />
-                </div>
-                <Input
-                  id="name"
-                  placeholder="Your Name"
-                  autoComplete="name webauthn"
-                  {...field}
-                />
-              </Field>
-            )}
-          />
+      <FieldGroup>
+        <FieldGroup>
+          <Field orientation={"responsive"}>
+            {/* Name Field */}
+            <Controller
+              name="name"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid} className="flex-1">
+                  <FieldContent>
+                    <FieldLabel htmlFor={field.name}>
+                      {capitalize(field.name)}
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      id={field.name}
+                      aria-invalid={fieldState.invalid}
+                      placeholder="Your Name"
+                      autoComplete="name webauthn"
+                    />
+                    {fieldState.error && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </FieldContent>
+                </Field>
+              )}
+            />
 
-          {/* Email Field */}
-          <Controller
-            name="email"
-            control={form.control}
-            render={({ field }) => (
-              <Field className="flex-1">
-                <div className="flex items-center gap-2">
-                  <FieldLabel htmlFor="email">Email</FieldLabel>
-                  <FieldError errors={[form.formState.errors.email]} />
-                </div>
-                <Input
-                  id="email"
-                  placeholder="Your Email"
-                  autoComplete="email webauthn"
-                  {...field}
-                />
-              </Field>
-            )}
-          />
-        </Field>
+            {/* Email Field */}
+            <Controller
+              name="email"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid} className="flex-1">
+                  <FieldContent>
+                    <FieldLabel htmlFor={field.name}>
+                      {capitalize(field.name)}
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      id={field.name}
+                      aria-invalid={fieldState.invalid}
+                      placeholder="Your Email"
+                      autoComplete="email webauthn"
+                    />
+                    {fieldState.error && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </FieldContent>
+                </Field>
+              )}
+            />
+          </Field>
 
-        <Field orientation={"responsive"}>
-          {/* Password Field */}
-          <Controller
-            name="password"
-            control={form.control}
-            render={({ field }) => (
-              <Field className="flex-1">
-                <div className="flex items-center gap-2">
-                  <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <FieldError errors={[form.formState.errors.password]} />
-                </div>
-                <PasswordInput
-                  id="password"
-                  placeholder="Your Password"
-                  autoComplete="new-password webauthn"
-                  {...field}
-                />
-              </Field>
-            )}
-          />
+          <Field orientation={"responsive"}>
+            {/* Password Field */}
+            <Controller
+              name="password"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid} className="flex-1">
+                  <FieldContent>
+                    <FieldLabel htmlFor={field.name}>
+                      {capitalize(field.name)}
+                    </FieldLabel>
+                    <PasswordInput
+                      {...field}
+                      id={field.name}
+                      aria-invalid={fieldState.invalid}
+                      placeholder="Your Password"
+                      autoComplete="new-password webauthn"
+                    />
+                    {fieldState.error && (
+                      <FieldError
+                        errors={[fieldState.error]}
+                        className="text-nowrap"
+                      />
+                    )}
+                  </FieldContent>
+                </Field>
+              )}
+            />
 
-          {/* Confirm Password Field */}
-          <Controller
-            name="confirmPassword"
-            control={form.control}
-            render={({ field }) => (
-              <Field className="flex-1">
-                <div className="flex items-center gap-2">
-                  <FieldLabel htmlFor="confirmPassword">
-                    Confirm Password
-                  </FieldLabel>
-                  <FieldError
-                    errors={[form.formState.errors.confirmPassword]}
-                  />
-                </div>
-                <PasswordInput
-                  id="confirmPassword"
-                  placeholder="Confirm Your Password"
-                  autoComplete="new-password webauthn"
-                  {...field}
-                />
-              </Field>
-            )}
-          />
-        </Field>
+            {/* Confirm Password Field */}
+            <Controller
+              name="confirmPassword"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid} className="flex-1">
+                  <FieldContent>
+                    <FieldLabel htmlFor={field.name}>
+                      {capitalize(field.name)}
+                    </FieldLabel>
+                    <PasswordInput
+                      {...field}
+                      id={field.name}
+                      aria-invalid={fieldState.invalid}
+                      placeholder="Confirm Your Password"
+                      autoComplete="new-password webauthn"
+                    />
+                    {fieldState.error && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </FieldContent>
+                </Field>
+              )}
+            />
+          </Field>
+        </FieldGroup>
 
         <Field orientation="horizontal">
           <Button

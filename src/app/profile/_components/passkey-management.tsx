@@ -29,10 +29,12 @@ import {
 } from "@/components/ui/dialog";
 import {
   Field,
+  FieldContent,
   FieldError,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
+import { capitalize } from "@/lib/utils";
 
 const passkeySchema = z.object({
   name: z.string().min(1, "Name is required").max(100, "Name is too long"),
@@ -122,27 +124,29 @@ export function PasskeyManagement({ passkeys }: { passkeys: Passkey[] }) {
               Create a new passkey for secure, passwordless authentication
             </DialogDescription>
           </DialogHeader>
-          <form
-            className="space-y-4"
-            onSubmit={form.handleSubmit(handleAddPasskey)}
-          >
-            <FieldGroup className="gap-4">
+          <form onSubmit={form.handleSubmit(handleAddPasskey)}>
+            <FieldGroup>
               {/* Name Field */}
               <Controller
                 name="name"
                 control={form.control}
-                render={({ field }) => (
-                  <Field>
-                    <div className="flex items-center gap-2">
-                      <FieldLabel htmlFor="name">Name</FieldLabel>
-                      <FieldError errors={[form.formState.errors.name]} />
-                    </div>
-                    <Input
-                      id="name"
-                      placeholder="Your Name"
-                      autoComplete="name"
-                      {...field}
-                    />
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid} className="flex-1">
+                    <FieldContent>
+                      <FieldLabel htmlFor={field.name}>
+                        {capitalize(field.name)}
+                      </FieldLabel>
+                      <Input
+                        {...field}
+                        id={field.name}
+                        aria-invalid={fieldState.invalid}
+                        placeholder="Passkey Name"
+                        autoComplete="off"
+                      />
+                      {fieldState.error && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </FieldContent>
                   </Field>
                 )}
               />

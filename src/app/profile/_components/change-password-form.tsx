@@ -14,7 +14,9 @@ import {
   Field,
   FieldLabel,
   FieldError,
+  FieldContent,
 } from "@/components/ui/field";
+import { capitalize } from "@/lib/utils";
 
 const changePasswordSchema = z
   .object({
@@ -56,94 +58,111 @@ export function ChangePasswordForm() {
   };
 
   return (
-    <form
-      className="space-y-4"
-      onSubmit={form.handleSubmit(handleProfileUpdate)}
-    >
-      <FieldGroup className="gap-4">
-        {/* Current Password Field */}
-        <Controller
-          name="currentPassword"
-          control={form.control}
-          render={({ field }) => (
-            <Field>
-              <div className="flex items-center gap-2">
-                <FieldLabel htmlFor="currentPassword">
-                  Current Password
-                </FieldLabel>
-                <FieldError errors={[form.formState.errors.currentPassword]} />
-              </div>
-              <PasswordInput
-                id="currentPassword"
-                placeholder="Your Current Password"
-                autoComplete="current-password webauthn"
-                {...field}
-              />
-            </Field>
-          )}
-        />
+    <form onSubmit={form.handleSubmit(handleProfileUpdate)}>
+      <FieldGroup>
+        <FieldGroup>
+          {/* Current Password Field */}
+          <Controller
+            name="currentPassword"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid} className="flex-1">
+                <FieldContent>
+                  <FieldLabel htmlFor={field.name}>
+                    {capitalize(field.name)}
+                  </FieldLabel>
+                  <PasswordInput
+                    {...field}
+                    id={field.name}
+                    aria-invalid={fieldState.invalid}
+                    placeholder="Your Current Password"
+                    autoComplete="current-password webauthn"
+                  />
+                  {fieldState.error && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="text-nowrap"
+                    />
+                  )}
+                </FieldContent>
+              </Field>
+            )}
+          />
 
-        {/* New Password Field */}
-        <Controller
-          name="newPassword"
-          control={form.control}
-          render={({ field }) => (
-            <Field>
-              <div className="flex items-center gap-2">
-                <FieldLabel htmlFor="newPassword">New Password</FieldLabel>
-                <FieldError errors={[form.formState.errors.newPassword]} />
-              </div>
-              <PasswordInput
-                id="newPassword"
-                placeholder="Your New Password"
-                autoComplete="new-password webauthn"
-                {...field}
-              />
-            </Field>
-          )}
-        />
+          {/* New Password Field */}
+          <Controller
+            name="newPassword"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid} className="flex-1">
+                <FieldContent>
+                  <FieldLabel htmlFor={field.name}>
+                    {capitalize(field.name)}
+                  </FieldLabel>
+                  <PasswordInput
+                    {...field}
+                    id={field.name}
+                    aria-invalid={fieldState.invalid}
+                    placeholder="Your New Password"
+                    autoComplete="new-password webauthn"
+                  />
+                  {fieldState.error && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="text-nowrap"
+                    />
+                  )}
+                </FieldContent>
+              </Field>
+            )}
+          />
 
-        {/* Confirm New Password Field */}
-        <Controller
-          name="confirmNewPassword"
-          control={form.control}
-          render={({ field }) => (
-            <Field>
-              <div className="flex items-center gap-2">
-                <FieldLabel htmlFor="confirmNewPassword">
-                  Confirm New Password
-                </FieldLabel>
-                <FieldError
-                  errors={[form.formState.errors.confirmNewPassword]}
+          {/* Confirm New Password Field */}
+          <Controller
+            name="confirmNewPassword"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid} className="flex-1">
+                <FieldContent>
+                  <FieldLabel htmlFor={field.name}>
+                    {capitalize(field.name)}
+                  </FieldLabel>
+                  <PasswordInput
+                    {...field}
+                    id={field.name}
+                    aria-invalid={fieldState.invalid}
+                    placeholder="Confirm Your New Password"
+                    autoComplete="new-password webauthn"
+                  />
+                  {fieldState.error && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="text-nowrap"
+                    />
+                  )}
+                </FieldContent>
+              </Field>
+            )}
+          />
+
+          {/* Revoke Other Sessions Field */}
+          <Controller
+            name="revokeOtherSessions"
+            control={form.control}
+            render={({ field }) => (
+              <Field orientation={"horizontal"}>
+                <Checkbox
+                  id="revokeOtherSessions"
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
                 />
-              </div>
-              <PasswordInput
-                id="confirmNewPassword"
-                placeholder="Confirm Your New Password"
-                autoComplete="new-password webauthn"
-                {...field}
-              />
-            </Field>
-          )}
-        />
-
-        {/* Revoke Other Sessions Field */}
-        <Controller
-          name="revokeOtherSessions"
-          control={form.control}
-          render={({ field }) => (
-            <Field orientation={"horizontal"}>
-              <Checkbox
-                id="revokeOtherSessions"
-                checked={field.value}
-                onCheckedChange={field.onChange}
-              />
-              <FieldLabel htmlFor="revokeOtherSessions">
-                Revoke other sessions
-              </FieldLabel>
-            </Field>
-          )}
-        />
+                <FieldLabel htmlFor="revokeOtherSessions">
+                  Revoke other sessions
+                </FieldLabel>
+              </Field>
+            )}
+          />
+        </FieldGroup>
 
         <Button
           type="submit"

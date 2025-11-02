@@ -5,6 +5,11 @@ import {
   Field,
   FieldLabel,
   FieldError,
+  FieldSet,
+  FieldLegend,
+  FieldDescription,
+  FieldSeparator,
+  FieldContent,
 } from "@/components/ui/field";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
@@ -31,6 +36,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { capitalize } from "@/lib/utils";
 
 const categorySchema = z.object({
   name: z.string().min(1, "Name is required").max(50, "Name is too long"),
@@ -83,120 +89,201 @@ export function CreateCategoryForm({
 
   return (
     <form onSubmit={form.handleSubmit(handleAddCategory)}>
-      <FieldGroup className="gap-4">
-        <Field orientation={"responsive"}>
-          <Controller
-            name="categoryType"
-            control={form.control}
-            render={({ field }) => (
-              <Field className="flex-1">
-                <FieldLabel htmlFor="categoryType">Category Type</FieldLabel>
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select category type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="income">Income</SelectItem>
-                    <SelectItem value="expense">Expense</SelectItem>
-                  </SelectContent>
-                </Select>
-              </Field>
-            )}
-          />
-
-          <Controller
-            name="parentId"
-            control={form.control}
-            render={({ field }) => {
-              const selectedType = form.watch("categoryType");
-              const filteredCategories = categories.filter(
-                (cat) => cat.categoryType === selectedType,
-              );
-
-              return (
-                <Field className="flex-1">
-                  <FieldLabel htmlFor="parentId">Parent Category</FieldLabel>
+      <FieldGroup>
+        <FieldSeparator />
+        <FieldSet>
+          <FieldLegend>Category Details</FieldLegend>
+          <FieldDescription>
+            Choose first the category type and then select a parent category.
+          </FieldDescription>
+          <Field orientation={"responsive"}>
+            <Controller
+              name="categoryType"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field
+                  data-invalid={fieldState.invalid}
+                  className="relative flex-1"
+                >
+                  <FieldContent>
+                    <FieldLabel htmlFor={field.name}>
+                      {capitalize(field.name)}
+                    </FieldLabel>
+                    <FieldDescription>
+                      Select from income or expense
+                    </FieldDescription>
+                  </FieldContent>
                   <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select parent category" />
+                    <SelectTrigger
+                      id={field.name}
+                      aria-invalid={fieldState.invalid}
+                    >
+                      <SelectValue placeholder="Select category type" />
                     </SelectTrigger>
                     <SelectContent>
-                      {filteredCategories.map((category) => (
-                        <SelectItem key={category.id} value={category.id}>
-                          {category.icon && category.icon} {category.name}
-                        </SelectItem>
-                      ))}
+                      <SelectItem value="income">Income</SelectItem>
+                      <SelectItem value="expense">Expense</SelectItem>
                     </SelectContent>
                   </Select>
-                </Field>
-              );
-            }}
-          />
-        </Field>
-
-        <Field orientation={"responsive"}>
-          <Controller
-            name="icon"
-            control={form.control}
-            render={({ field }) => (
-              <Field className="flex-1">
-                <FieldLabel htmlFor="icon">Icon</FieldLabel>
-                <Popover
-                  open={showEmojiPicker}
-                  onOpenChange={setShowEmojiPicker}
-                >
-                  <PopoverTrigger asChild>
-                    <Input
-                      id="icon"
-                      placeholder="Choose an icon"
-                      value={field.value}
-                      readOnly
+                  {fieldState.error && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="absolute top-full text-xs"
                     />
-                  </PopoverTrigger>
-                  <PopoverContent className="text-center">
-                    {emojiList.map((emoji) => (
-                      <Button
-                        variant={"ghost"}
-                        key={emoji}
-                        className={`text-xl ${
-                          field.value === emoji
-                            ? "border-primary"
-                            : "border-transparent"
-                        }`}
-                        onClick={() => {
-                          field.onChange(emoji);
-                          setShowEmojiPicker(false);
-                        }}
+                  )}
+                </Field>
+              )}
+            />
+
+            <Controller
+              name="parentId"
+              control={form.control}
+              render={({ field, fieldState }) => {
+                const selectedType = form.watch("categoryType");
+                const filteredCategories = categories.filter(
+                  (cat) => cat.categoryType === selectedType,
+                );
+
+                return (
+                  <Field
+                    data-invalid={fieldState.invalid}
+                    className="relative flex-1"
+                  >
+                    <FieldContent>
+                      <FieldLabel htmlFor={field.name}>
+                        {capitalize(field.name)}
+                      </FieldLabel>
+                      <FieldDescription>
+                        Select a parent category.
+                      </FieldDescription>
+                    </FieldContent>
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger
+                        id={field.name}
+                        aria-invalid={fieldState.invalid}
                       >
-                        {emoji}
-                      </Button>
-                    ))}
-                  </PopoverContent>
-                </Popover>
-              </Field>
-            )}
-          />
+                        <SelectValue placeholder="Select parent category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {filteredCategories.map((category) => (
+                          <SelectItem key={category.id} value={category.id}>
+                            {category.icon && category.icon} {category.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {fieldState.error && (
+                      <FieldError
+                        errors={[fieldState.error]}
+                        className="absolute top-full text-xs"
+                      />
+                    )}
+                  </Field>
+                );
+              }}
+            />
+          </Field>
+        </FieldSet>
+        <FieldSeparator />
+        <FieldSet>
+          <FieldLegend>Category Info</FieldLegend>
+          <FieldDescription>
+            Choose an icon and a name for your new category.
+          </FieldDescription>
+          <Field orientation={"responsive"}>
+            <Controller
+              name="icon"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field
+                  data-invalid={fieldState.invalid}
+                  className="relative flex-1"
+                >
+                  <FieldContent>
+                    <FieldLabel htmlFor={field.name}>
+                      {capitalize(field.name)}
+                    </FieldLabel>
+                    <FieldDescription>
+                      Select an icon for your category.
+                    </FieldDescription>
+                  </FieldContent>
+                  <Popover
+                    open={showEmojiPicker}
+                    onOpenChange={setShowEmojiPicker}
+                  >
+                    <PopoverTrigger asChild>
+                      <Input
+                        id={field.name}
+                        placeholder="Choose an icon"
+                        value={field.value}
+                        readOnly
+                      />
+                    </PopoverTrigger>
+                    <PopoverContent className="text-center">
+                      {emojiList.map((emoji) => (
+                        <Button
+                          variant={"ghost"}
+                          key={emoji}
+                          className={`text-xl ${
+                            field.value === emoji
+                              ? "border-primary"
+                              : "border-transparent"
+                          }`}
+                          onClick={() => {
+                            field.onChange(emoji);
+                            setShowEmojiPicker(false);
+                          }}
+                        >
+                          {emoji}
+                        </Button>
+                      ))}
+                    </PopoverContent>
+                  </Popover>
+                  {fieldState.error && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="absolute top-full text-xs"
+                    />
+                  )}
+                </Field>
+              )}
+            />
 
-          <Controller
-            name="name"
-            control={form.control}
-            render={({ field }) => (
-              <Field className="flex-1">
-                <div className="flex items-center gap-2">
-                  <FieldLabel htmlFor="name">Name</FieldLabel>
-                  <FieldError errors={[form.formState.errors.name]} />
-                </div>
-                <Input
-                  id="name"
-                  placeholder="Category Name"
-                  autoComplete="off"
-                  {...field}
-                />
-              </Field>
-            )}
-          />
-        </Field>
-
+            <Controller
+              name="name"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field
+                  data-invalid={fieldState.invalid}
+                  className="relative flex-1"
+                >
+                  <FieldContent>
+                    <FieldLabel htmlFor={field.name}>
+                      {capitalize(field.name)}
+                    </FieldLabel>
+                    <FieldDescription>
+                      Enter the category name.
+                    </FieldDescription>
+                  </FieldContent>
+                  <Input
+                    {...field}
+                    id={field.name}
+                    aria-invalid={fieldState.invalid}
+                    placeholder="Your Bank Account Name"
+                    autoComplete="off"
+                  />
+                  {fieldState.error && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="absolute top-full text-xs"
+                    />
+                  )}
+                </Field>
+              )}
+            />
+          </Field>
+        </FieldSet>
+        <FieldSeparator />
         <DialogFooter>
           <Field orientation="horizontal" className="mt-4">
             <Button

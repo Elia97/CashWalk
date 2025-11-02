@@ -48,7 +48,7 @@ export async function findManyCategoriesByUserId(
 
 export async function findManyCategoryIdAndNameByUserId(
   userId: string,
-): Promise<{ id: string; name: string }[]> {
+): Promise<{ id: string; name: string; categoryType: string }[]> {
   return await db.query.category.findMany({
     where(fields, operators) {
       return operators.eq(fields.userId, userId);
@@ -56,6 +56,7 @@ export async function findManyCategoryIdAndNameByUserId(
     columns: {
       id: true,
       name: true,
+      categoryType: true,
     },
   });
 }

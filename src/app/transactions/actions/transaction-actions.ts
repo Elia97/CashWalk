@@ -15,7 +15,7 @@ export async function getUserTransactions(
 export async function getTransactionFormData(userId: string): Promise<
   TransactionActionResponse<{
     bankAccounts: { id: string; name: string; isPrimary: boolean }[];
-    categories: { id: string; name: string }[];
+    categories: { id: string; name: string; categoryType: string }[];
   }>
 > {
   if (!userId || typeof userId !== "string") throw new Error("Invalid user ID");

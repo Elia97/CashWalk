@@ -5,6 +5,11 @@ import {
   Field,
   FieldLabel,
   FieldError,
+  FieldSeparator,
+  FieldContent,
+  FieldDescription,
+  FieldLegend,
+  FieldSet,
 } from "@/components/ui/field";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
@@ -18,6 +23,12 @@ import { useState } from "react";
 import { emojiList } from "@/lib/emoji-list";
 import { updateUserCategory } from "../actions/category-actions";
 import { toast } from "sonner";
+import { capitalize } from "@/lib/utils";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
 
 const categorySchema = z.object({
   name: z.string().min(1, "Name is required").max(50, "Name is too long"),
@@ -57,66 +68,107 @@ export function UpdateCategoryForm({
 
   return (
     <form onSubmit={form.handleSubmit(handleUpdateCategory)}>
-      <FieldGroup className="gap-4">
-        <Controller
-          name="icon"
-          control={form.control}
-          render={({ field }) => (
-            <Field>
-              <FieldLabel htmlFor="icon">Icon</FieldLabel>
-              <div className="relative">
-                <Input
-                  id="icon"
-                  placeholder="Choose an icon"
-                  value={field.value}
-                  readOnly
-                  onClick={() => setShowEmojiPicker((v) => !v)}
-                />
-                {showEmojiPicker && (
-                  <div className="absolute left-0 top-full mt-2 z-50 w-full grid grid-cols-4 sm:grid-cols-6 bg-muted p-4 rounded-lg">
-                    {emojiList.map((emoji) => (
-                      <button
-                        type="button"
-                        key={emoji}
-                        className={`text-2xl p-1 border rounded hover:bg-accent transition ${
-                          field.value === emoji
-                            ? "border-primary"
-                            : "border-transparent"
-                        }`}
-                        onClick={() => {
-                          field.onChange(emoji);
-                          setShowEmojiPicker(false);
-                        }}
-                      >
-                        {emoji}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </Field>
-          )}
-        />
+      <FieldGroup>
+        <FieldSeparator />
+        <FieldSet>
+          <FieldLegend>Category Info</FieldLegend>
+          <FieldDescription>
+            You can update only the name and icon of the category.
+          </FieldDescription>
+          <Field orientation={"responsive"}>
+            <Controller
+              name="icon"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field
+                  data-invalid={fieldState.invalid}
+                  className="relative flex-1"
+                >
+                  <FieldContent>
+                    <FieldLabel htmlFor={field.name}>
+                      {capitalize(field.name)}
+                    </FieldLabel>
+                    <FieldDescription>
+                      Select an icon for your category.
+                    </FieldDescription>
+                  </FieldContent>
+                  <Popover
+                    open={showEmojiPicker}
+                    onOpenChange={setShowEmojiPicker}
+                  >
+                    <PopoverTrigger asChild>
+                      <Input
+                        id={field.name}
+                        placeholder="Choose an icon"
+                        value={field.value}
+                        readOnly
+                      />
+                    </PopoverTrigger>
+                    <PopoverContent className="text-center">
+                      {emojiList.map((emoji) => (
+                        <Button
+                          variant={"ghost"}
+                          key={emoji}
+                          className={`text-xl ${
+                            field.value === emoji
+                              ? "border-primary"
+                              : "border-transparent"
+                          }`}
+                          onClick={() => {
+                            field.onChange(emoji);
+                            setShowEmojiPicker(false);
+                          }}
+                        >
+                          {emoji}
+                        </Button>
+                      ))}
+                    </PopoverContent>
+                  </Popover>
+                  {fieldState.error && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="absolute top-full text-xs"
+                    />
+                  )}
+                </Field>
+              )}
+            />
 
-        <Controller
-          name="name"
-          control={form.control}
-          render={({ field }) => (
-            <Field>
-              <div className="flex items-center gap-2">
-                <FieldLabel htmlFor="name">Name</FieldLabel>
-                <FieldError errors={[form.formState.errors.name]} />
-              </div>
-              <Input
-                id="name"
-                placeholder="Category Name"
-                autoComplete="off"
-                {...field}
-              />
-            </Field>
-          )}
-        />
-
+            <Controller
+              name="name"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field
+                  data-invalid={fieldState.invalid}
+                  className="relative flex-1"
+                >
+                  <FieldContent>
+                    <FieldLabel htmlFor={field.name}>
+                      {capitalize(field.name)}
+                    </FieldLabel>
+                    <FieldDescription>
+                      Enter the category name.
+                    </FieldDescription>
+                  </FieldContent>
+                  <Input
+                    {...field}
+                    id={field.name}
+                    aria-invalid={fieldState.invalid}
+                    placeholder="Your Bank Account Name"
+                    autoComplete="off"
+                  />
+                  {fieldState.error && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="absolute top-full text-xs"
+                    />
+                  )}
+                </Field>
+              )}
+            />
+          </Field>
+        </FieldSet>
+        <FieldSeparator />
         <DialogFooter>
           <Field orientation="horizontal" className="mt-4">
             <Button
@@ -133,7 +185,7 @@ export function UpdateCategoryForm({
               disabled={form.formState.isSubmitting}
             >
               <LoadingSwap isLoading={form.formState.isSubmitting}>
-                Add
+                Update
               </LoadingSwap>
             </Button>
           </Field>

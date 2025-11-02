@@ -13,10 +13,12 @@ import { LoadingSwap } from "@/components/ui/loading-swap";
 import { PasswordInput } from "@/components/ui/password-input";
 import {
   Field,
+  FieldContent,
   FieldError,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
+import { capitalize } from "@/lib/utils";
 
 const twoFactorAuthSchema = z.object({
   password: z.string().min(1, "Password is required"),
@@ -80,28 +82,35 @@ export function TwoFactorAuthForm({ isEnabled }: { isEnabled: boolean }) {
 
   return (
     <form
-      className="space-y-4"
       onSubmit={form.handleSubmit(
         isEnabled ? handleDisableTwoFactorAuth : handleEnableTwoFactorAuth,
       )}
     >
-      <FieldGroup className="gap-4">
+      <FieldGroup>
         {/* Password Field */}
         <Controller
           name="password"
           control={form.control}
-          render={({ field }) => (
-            <Field>
-              <div className="flex items-center gap-2">
-                <FieldLabel htmlFor="password">Password</FieldLabel>
-                <FieldError errors={[form.formState.errors.password]} />
-              </div>
-              <PasswordInput
-                id="password"
-                placeholder="Your Password"
-                autoComplete="current-password webauthn"
-                {...field}
-              />
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid} className="flex-1">
+              <FieldContent>
+                <FieldLabel htmlFor={field.name}>
+                  {capitalize(field.name)}
+                </FieldLabel>
+                <PasswordInput
+                  {...field}
+                  id={field.name}
+                  aria-invalid={fieldState.invalid}
+                  placeholder="Your Password"
+                  autoComplete="current-password webauthn"
+                />
+                {fieldState.error && (
+                  <FieldError
+                    errors={[fieldState.error]}
+                    className="text-nowrap"
+                  />
+                )}
+              </FieldContent>
             </Field>
           )}
         />

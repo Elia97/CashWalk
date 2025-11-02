@@ -6,6 +6,7 @@ import {
   Field,
   FieldLabel,
   FieldError,
+  FieldSeparator,
 } from "@/components/ui/field";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
@@ -31,7 +32,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { formatDate } from "@/lib/utils";
+import { capitalize, formatDate } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import {
   createTransaction,
@@ -81,9 +82,9 @@ export function CreateTransactionForm({
   const [accounts, setAccounts] = useState<
     { id: string; name: string; isPrimary: boolean }[]
   >([]);
-  const [categories, setCategories] = useState<{ id: string; name: string }[]>(
-    [],
-  );
+  const [categories, setCategories] = useState<
+    { id: string; name: string; categoryType: string }[]
+  >([]);
 
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
 
@@ -165,20 +166,28 @@ export function CreateTransactionForm({
 
   return (
     <form onSubmit={form.handleSubmit(handleAddTransaction)}>
-      <FieldGroup className="gap-4">
+      <FieldGroup>
+        <FieldSeparator />
         <Controller
           name="date"
           control={form.control}
-          render={({ field }) => (
-            <Field>
-              <FieldLabel htmlFor="date">Date</FieldLabel>
+          render={({ field, fieldState }) => (
+            <Field
+              data-invalid={fieldState.invalid}
+              className="relative flex-1"
+            >
+              <FieldLabel htmlFor={field.name}>
+                {capitalize(field.name)}
+              </FieldLabel>
               <Popover open={showCalendar} onOpenChange={setShowCalendar}>
                 <PopoverTrigger asChild>
                   <Button
+                    id={field.name}
                     variant="outline"
                     data-empty={!field.value}
                     className="data-[empty=true]:text-muted-foreground"
                     aria-label="Date filter"
+                    aria-invalid={fieldState.invalid}
                   >
                     <CalendarIcon />
                     {formatDate(field.value)}
@@ -193,6 +202,12 @@ export function CreateTransactionForm({
                   />
                 </PopoverContent>
               </Popover>
+              {fieldState.error && (
+                <FieldError
+                  errors={[fieldState.error]}
+                  className="absolute top-full text-xs"
+                />
+              )}
             </Field>
           )}
         />
@@ -201,11 +216,20 @@ export function CreateTransactionForm({
           <Controller
             name="bankAccountId"
             control={form.control}
-            render={({ field }) => (
-              <Field className="flex-1">
-                <FieldLabel htmlFor="bankAccountId">Bank Account</FieldLabel>
+            render={({ field, fieldState }) => (
+              <Field
+                data-invalid={fieldState.invalid}
+                className="relative flex-1"
+              >
+                <FieldLabel htmlFor={field.name}>
+                  {capitalize(field.name)}
+                </FieldLabel>
                 <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger>
+                  <SelectTrigger
+                    {...field}
+                    id={field.name}
+                    aria-invalid={fieldState.invalid}
+                  >
                     <SelectValue placeholder="Select Bank Account" />
                   </SelectTrigger>
                   <SelectContent>
@@ -216,28 +240,43 @@ export function CreateTransactionForm({
                     ))}
                   </SelectContent>
                 </Select>
+                {fieldState.error && (
+                  <FieldError
+                    errors={[fieldState.error]}
+                    className="absolute top-full text-xs"
+                  />
+                )}
               </Field>
             )}
           />
 
           <Controller
-            name="categoryId"
+            name="amount"
             control={form.control}
-            render={({ field }) => (
-              <Field className="flex-1">
-                <FieldLabel htmlFor="categoryId">Category</FieldLabel>
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select Category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((category) => (
-                      <SelectItem key={category.id} value={category.id}>
-                        {category.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+            render={({ field, fieldState }) => (
+              <Field
+                data-invalid={fieldState.invalid}
+                className="relative flex-1"
+              >
+                <FieldLabel htmlFor={field.name}>
+                  {capitalize(field.name)}
+                </FieldLabel>
+                <NumberInput
+                  {...field}
+                  id={field.name}
+                  placeholder="0"
+                  value={field.value}
+                  onChange={field.onChange}
+                  min={0}
+                  step={0.01}
+                  aria-invalid={fieldState.invalid}
+                />
+                {fieldState.error && (
+                  <FieldError
+                    errors={[fieldState.error]}
+                    className="absolute top-full text-xs"
+                  />
+                )}
               </Field>
             )}
           />
@@ -247,13 +286,20 @@ export function CreateTransactionForm({
           <Controller
             name="transactionType"
             control={form.control}
-            render={({ field }) => (
-              <Field className="flex-1">
-                <FieldLabel htmlFor="transactionType">
-                  Transaction Type
+            render={({ field, fieldState }) => (
+              <Field
+                data-invalid={fieldState.invalid}
+                className="relative flex-1"
+              >
+                <FieldLabel htmlFor={field.name}>
+                  {capitalize(field.name)}
                 </FieldLabel>
                 <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger>
+                  <SelectTrigger
+                    {...field}
+                    id={field.name}
+                    aria-invalid={fieldState.invalid}
+                  >
                     <SelectValue placeholder="Select Transaction Type" />
                   </SelectTrigger>
                   <SelectContent>
@@ -261,30 +307,60 @@ export function CreateTransactionForm({
                     <SelectItem value="expense">Expense</SelectItem>
                   </SelectContent>
                 </Select>
+                {fieldState.error && (
+                  <FieldError
+                    errors={[fieldState.error]}
+                    className="absolute top-full text-xs"
+                  />
+                )}
               </Field>
             )}
           />
 
           <Controller
-            name="amount"
+            name="categoryId"
             control={form.control}
-            render={({ field }) => (
-              <Field className="flex-1">
-                <div className="flex items-center gap-2">
-                  <FieldLabel htmlFor="amount">Amount</FieldLabel>
-                  <FieldError errors={[form.formState.errors.amount]} />
-                </div>
-                <NumberInput
-                  id="balance"
-                  placeholder="Balance"
-                  value={field.value}
-                  onChange={field.onChange}
-                  step={0.01}
-                />
-              </Field>
-            )}
+            render={({ field, fieldState }) => {
+              const selectedType = form.watch("transactionType");
+              const filteredCategories = categories.filter(
+                (cat) => cat.categoryType === selectedType,
+              );
+              return (
+                <Field
+                  data-invalid={fieldState.invalid}
+                  className="relative flex-1"
+                >
+                  <FieldLabel htmlFor={field.name}>
+                    {capitalize(field.name)}
+                  </FieldLabel>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger
+                      {...field}
+                      id={field.name}
+                      aria-invalid={fieldState.invalid}
+                    >
+                      <SelectValue placeholder="Select Category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {filteredCategories.map((category) => (
+                        <SelectItem key={category.id} value={category.id}>
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {fieldState.error && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="absolute top-full text-xs"
+                    />
+                  )}
+                </Field>
+              );
+            }}
           />
         </Field>
+        <FieldSeparator />
         <DialogFooter>
           <Field orientation="horizontal" className="mt-4">
             <Button

@@ -44,7 +44,7 @@ export async function SecurityTab({
         <Card>
           <CardHeader className="flex justify-between items-center gap-2">
             <CardTitle>Two Factor Authentication</CardTitle>
-            <Badge variant={isTwoFactorEnabled ? "default" : "secondary"}>
+            <Badge variant={isTwoFactorEnabled ? "default" : "destructive"}>
               {isTwoFactorEnabled ? "Enabled" : "Disabled"}
             </Badge>
           </CardHeader>

@@ -127,6 +127,27 @@
   }
 }
 
+@layer utilities {
+  .scrollbar::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  .scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 5px;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    background: var(--muted);
+    border-radius: 5px;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+  }
+}
+
 @keyframes fade-out-left {
   from {
     opacity: 1;
@@ -140,29 +161,4 @@
 
 .animate-fade-out-left {
   animation: fade-out-left 0.5s ease-in-out forwards;
-}
-
-/* Scrollbar base */
-::-webkit-scrollbar {
-  width: 10px;
-  background: transparent;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  background: var(--background);
-  border-radius: 8px;
-}
-
-/* Thumb */
-::-webkit-scrollbar-thumb {
-  background-color: var(--foreground);
-  border-radius: 8px;
-}
-
-/* Firefox */
-@supports (scrollbar-width: thin) {
-  * {
-    scrollbar-width: thin;
-  }
 }

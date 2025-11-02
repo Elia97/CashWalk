@@ -106,7 +106,7 @@ export class TransactionService {
   static async getTransactionFormData(userId: string): Promise<
     TransactionActionResponse<{
       bankAccounts: { id: string; name: string; isPrimary: boolean }[];
-      categories: { id: string; name: string }[];
+      categories: { id: string; name: string; categoryType: string }[];
     }>
   > {
     return this.handleErrors(async () => {

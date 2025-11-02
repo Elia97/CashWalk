@@ -77,7 +77,7 @@ export function CategoryCard({ category }: { category: CategoryWithChildren }) {
             <div key={subcat.id}>
               <Separator className="my-6" />
               <div className="grid sm:grid-cols-2 gap-3">
-                <Badge className="text-base px-4 py-1">
+                <Badge variant={"outline"} className="text-base px-4 py-1">
                   {subcat.icon} {subcat.name}
                 </Badge>
                 <ButtonGroup className="w-full sm:justify-self-end sm:w-auto">
@@ -92,7 +92,7 @@ export function CategoryCard({ category }: { category: CategoryWithChildren }) {
                         <SquarePen />
                       </Button>
                     </DialogTrigger>
-                    <DialogContent>
+                    <DialogContent className="max-h-[90vh] overflow-y-auto scrollbar">
                       <DialogHeader>
                         <DialogTitle>Update {subcat.name}</DialogTitle>
                         <DialogDescription>

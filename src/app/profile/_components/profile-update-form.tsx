@@ -11,10 +11,12 @@ import { Input } from "@/components/ui/input";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import {
   Field,
+  FieldContent,
   FieldError,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
+import { capitalize } from "@/lib/utils";
 
 const profileUpdateSchema = z.object({
   name: z.string().min(1, "Name is required").max(100, "Name is too long"),
@@ -94,51 +96,59 @@ export function ProfileUpdateForm({
   };
 
   return (
-    <form
-      className="space-y-4"
-      onSubmit={form.handleSubmit(handleProfileUpdate)}
-    >
-      <FieldGroup className="gap-4">
-        {/* Name Field */}
-        <Controller
-          name="name"
-          control={form.control}
-          render={({ field }) => (
-            <Field>
-              <div className="flex items-center gap-2">
-                <FieldLabel htmlFor="name">Name</FieldLabel>
-                <FieldError errors={[form.formState.errors.name]} />
-              </div>
-              <Input
-                id="name"
-                placeholder="Your Name"
-                autoComplete="off"
-                {...field}
-              />
-            </Field>
-          )}
-        />
+    <form onSubmit={form.handleSubmit(handleProfileUpdate)}>
+      <FieldGroup>
+        <FieldGroup>
+          {/* Name Field */}
+          <Controller
+            name="name"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid} className="flex-1">
+                <FieldContent>
+                  <FieldLabel htmlFor={field.name}>
+                    {capitalize(field.name)}
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id={field.name}
+                    aria-invalid={fieldState.invalid}
+                    placeholder="Your Name"
+                    autoComplete="name"
+                  />
+                  {fieldState.error && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </FieldContent>
+              </Field>
+            )}
+          />
 
-        {/* Email Field */}
-        <Controller
-          name="email"
-          control={form.control}
-          render={({ field }) => (
-            <Field>
-              <div className="flex items-center gap-2">
-                <FieldLabel htmlFor="email">Email</FieldLabel>
-                <FieldError errors={[form.formState.errors.email]} />
-              </div>
-              <Input
-                id="email"
-                type="email"
-                placeholder="Your Email"
-                autoComplete="off"
-                {...field}
-              />
-            </Field>
-          )}
-        />
+          {/* Email Field */}
+          <Controller
+            name="email"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid} className="flex-1">
+                <FieldContent>
+                  <FieldLabel htmlFor={field.name}>
+                    {capitalize(field.name)}
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id={field.name}
+                    aria-invalid={fieldState.invalid}
+                    placeholder="Your Email"
+                    autoComplete="email"
+                  />
+                  {fieldState.error && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </FieldContent>
+              </Field>
+            )}
+          />
+        </FieldGroup>
 
         <Field orientation="horizontal">
           <Button

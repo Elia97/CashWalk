@@ -124,7 +124,7 @@ export function CategoryManagement({
               </Button>
             </Card>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="max-h-[90vh] overflow-y-auto scrollbar">
             <DialogHeader>
               <DialogTitle>Add New Category</DialogTitle>
               <DialogDescription>
