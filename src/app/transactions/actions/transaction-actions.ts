@@ -7,9 +7,35 @@ import { revalidatePath } from "next/cache";
 
 export async function getUserTransactions(
   userId: string,
-): Promise<TransactionActionResponse<ClientTransaction[]>> {
+  {
+    page = 1,
+    pageSize,
+    from,
+    to,
+    transactionType,
+  }: {
+    page?: number;
+    pageSize?: number;
+    from?: Date;
+    to?: Date;
+    transactionType?: "income" | "expense";
+  } = {},
+): Promise<
+  TransactionActionResponse<{
+    transactions: ClientTransaction[];
+    totalCount: number;
+    page: number;
+    pageSize: number;
+  }>
+> {
   if (!userId || typeof userId !== "string") throw new Error("Invalid user ID");
-  return TransactionService.getAllTransactions(userId);
+  return TransactionService.getAllTransactions(userId, {
+    page,
+    pageSize,
+    from,
+    to,
+    transactionType,
+  });
 }
 
 export async function getTransactionFormData(userId: string): Promise<

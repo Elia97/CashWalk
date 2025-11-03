@@ -10,6 +10,7 @@ import {
   deleteTransactionById,
   updateTransactionById,
   findFirstTransactionById,
+  DEFAULT_PAGE_SIZE,
 } from "@/repo/transaction-repository";
 import { findFirstUserById } from "@/repo/user-repository";
 
@@ -22,15 +23,52 @@ export type TransactionActionResponse<T = void> = {
 export class TransactionService {
   static async getAllTransactions(
     userId: string,
-  ): Promise<TransactionActionResponse<ClientTransaction[]>> {
+    {
+      page = 1,
+      pageSize,
+      from,
+      to,
+      transactionType,
+    }: {
+      page?: number;
+      pageSize?: number;
+      from?: Date;
+      to?: Date;
+      transactionType?: "income" | "expense";
+    } = {},
+  ): Promise<
+    TransactionActionResponse<{
+      transactions: ClientTransaction[];
+      totalCount: number;
+      page: number;
+      pageSize: number;
+    }>
+  > {
     return this.handleErrors(async () => {
       const user = await findFirstUserById(userId);
       if (!user) throw new Error("User not found");
-      const transactions = await findManyTransactionsByUserId(userId);
-      return transactions.map((tx) => ({
+      const { transactions, totalCount } = await findManyTransactionsByUserId(
+        userId,
+        {
+          page,
+          pageSize: pageSize ?? DEFAULT_PAGE_SIZE,
+          from,
+          to,
+          transactionType,
+        },
+      );
+      const clientTransactions = transactions.map((tx) => ({
         ...tx,
         amount: Number(tx.amount),
       })) as ClientTransaction[];
+      const resolvedPageSize = pageSize ?? DEFAULT_PAGE_SIZE;
+
+      return {
+        transactions: clientTransactions,
+        totalCount,
+        page,
+        pageSize: resolvedPageSize,
+      };
     }, "Failed to retrieve transactions");
   }
 

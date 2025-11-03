@@ -1,26 +1,56 @@
-import { eq } from "drizzle-orm";
+import { eq, sql, and, lte, gte } from "drizzle-orm";
 import { db } from "@/drizzle/db";
 import { type Transaction, bankAccount, transaction } from "@/drizzle/schema";
 
+export const DEFAULT_PAGE_SIZE = 25;
+const MAX_PAGE_SIZE = 100;
+
 export async function findManyTransactionsByUserId(
   userId: string,
-): Promise<Transaction[]> {
-  return await db.query.transaction.findMany({
-    where(fields, operators) {
-      return operators.eq(fields.userId, userId);
-    },
-    orderBy(fields, operators) {
-      return operators.desc(fields.date);
-    },
-    with: {
-      bankAccount: true,
-      category: {
-        with: {
-          parent: true,
-        },
-      },
-    },
-  });
+  {
+    page = 1,
+    pageSize = DEFAULT_PAGE_SIZE,
+    from,
+    to,
+    transactionType,
+  }: {
+    page?: number;
+    pageSize?: number;
+    from?: Date;
+    to?: Date;
+    transactionType?: "income" | "expense";
+  } = {},
+): Promise<{ transactions: Transaction[]; totalCount: number }> {
+  const size = Math.min(Math.max(pageSize, 1), MAX_PAGE_SIZE);
+  const offset = Math.max(page - 1, 0) * size;
+
+  const whereClause = and(
+    eq(transaction.userId, userId),
+    from ? gte(transaction.date, from) : undefined,
+    to ? lte(transaction.date, to) : undefined,
+    transactionType
+      ? eq(transaction.transactionType, transactionType)
+      : undefined,
+  );
+
+  const [countResult, transactions] = await Promise.all([
+    db
+      .select({ count: sql<number>`count(*)` })
+      .from(transaction)
+      .where(whereClause),
+    db.query.transaction.findMany({
+      where: () => whereClause,
+      orderBy: (fields, operators) => operators.desc(fields.date),
+      with: { bankAccount: true, category: { with: { parent: true } } },
+      limit: size,
+      offset,
+    }),
+  ]);
+
+  return {
+    transactions,
+    totalCount: countResult[0]?.count ?? 0,
+  };
 }
 
 export async function findFirstTransactionById(

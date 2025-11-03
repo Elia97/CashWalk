@@ -3,16 +3,57 @@ import { TransactionManagement } from "./_components/transaction-management";
 import { getUserTransactions } from "./actions/transaction-actions";
 import { headers } from "next/headers";
 import { UserNotAuthenticated } from "@/components/auth/user-not-authenticated";
+import { DEFAULT_PAGE_SIZE } from "@/repo/transaction-repository";
 
-export default async function TransactionsPage() {
+export default async function TransactionsPage({
+  searchParams,
+}: {
+  searchParams: {
+    page?: string;
+    pageSize?: string;
+    from?: string;
+    to?: string;
+    type?: "income" | "expense";
+  };
+}) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (session == null) return <UserNotAuthenticated />;
 
-  const res = await getUserTransactions(session.user.id);
+  const params = await Promise.resolve(searchParams);
+
+  const page = Number(params?.page ?? 1);
+  const pageSize = Number(params?.pageSize ?? DEFAULT_PAGE_SIZE);
+  const defaultFrom = new Date(
+    new Date().getFullYear(),
+    new Date().getMonth(),
+    1,
+  );
+  const defaultTo = new Date();
+
+  const from = params?.from ? new Date(params.from) : defaultFrom;
+  const to = params?.to ? new Date(params.to) : defaultTo;
+  const transactionType =
+    params?.type === "income" || params?.type === "expense"
+      ? params.type
+      : undefined;
+  const res = await getUserTransactions(session.user.id, {
+    page,
+    pageSize,
+    from,
+    to,
+    transactionType,
+  });
   return (
-    <section className="animate-fade-up">
+    <section className="animate-fade-up mb-6">
       <h1 className="hidden">Transactions Page</h1>
-      {res.data && <TransactionManagement transactions={res.data} />}
+      {res.data && (
+        <TransactionManagement
+          initialData={res.data.transactions}
+          totalCount={res.data.totalCount}
+          page={page}
+          pageSize={pageSize}
+        />
+      )}
     </section>
   );
 }

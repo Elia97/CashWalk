@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -34,48 +35,83 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
+import { TransactionsPagination } from "./transactions-pagination";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export function TransactionManagement({
-  transactions,
+  initialData,
+  totalCount,
+  page,
+  pageSize,
 }: {
-  transactions: ClientTransaction[];
+  initialData: ClientTransaction[];
+  totalCount: number;
+  page: number;
+  pageSize: number;
 }) {
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
+  const paramsString = searchParams.toString();
+  const initialRange = useMemo<DateRange | undefined>(() => {
+    const params = new URLSearchParams(paramsString);
+    const fromParam = params.get("from");
+    const toParam = params.get("to");
+
+    if (!fromParam && !toParam) {
+      const now = new Date();
+      return {
+        from: new Date(now.getFullYear(), now.getMonth(), 1),
+        to: now,
+      };
+    }
+
+    return {
+      from: fromParam ? new Date(fromParam) : undefined,
+      to: toParam ? new Date(toParam) : undefined,
+    };
+  }, [paramsString]);
+
+  const initialType = useMemo<"all" | "income" | "expense">(() => {
+    const params = new URLSearchParams(paramsString);
+    const typeParam = params.get("type");
+    return typeParam === "income" || typeParam === "expense"
+      ? typeParam
+      : "all";
+  }, [paramsString]);
+
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [filter, setFilter] = useState("");
-  const [date, setDate] = useState<DateRange | undefined>({
-    from: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
-    to: new Date(),
-  });
+  const [date, setDate] = useState<DateRange | undefined>(initialRange);
   const [selectedAccount, setSelectedAccount] = useState("all");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedType, setSelectedType] = useState<
     "all" | "income" | "expense"
-  >("all");
+  >(initialType);
   const isMobile = useIsMobile(1024);
+
+  useEffect(() => {
+    setDate(initialRange);
+  }, [initialRange]);
+
+  useEffect(() => {
+    setSelectedType(initialType);
+  }, [initialType]);
 
   const filterTerms = filter
     .toLowerCase()
     .split(/[\s,]+/)
     .filter(Boolean);
 
-  const filteredTransactions = transactions.filter((tx) => {
+  const filteredTransactions = initialData.filter((tx) => {
     if (selectedAccount !== "all" && tx.bankAccount.id !== selectedAccount) {
       return false;
     }
-    if (selectedType !== "all" && tx.category.categoryType !== selectedType) {
+    if (selectedType !== "all" && tx.transactionType !== selectedType) {
       return false;
     }
     if (selectedCategory !== "all" && tx.category.id !== selectedCategory) {
       return false;
-    }
-    if (date && date.from && date.to) {
-      const txDate = new Date(tx.date).setHours(0, 0, 0, 0);
-      const from = new Date(date.from).setHours(0, 0, 0, 0);
-      const to = new Date(date.to).setHours(0, 0, 0, 0);
-      if (txDate < from || txDate > to) {
-        return false;
-      }
     }
     if (filterTerms.length > 0) {
       const categoryName = tx.category.name.toLowerCase();
@@ -92,6 +128,34 @@ export function TransactionManagement({
     return true;
   });
 
+  function applyFilters(
+    nextPage: number,
+    nextRange: DateRange | undefined,
+    nextType: "all" | "income" | "expense" = selectedType,
+  ) {
+    const params = new URLSearchParams(searchParams.toString());
+    if (nextPage > 1) params.set("page", String(nextPage));
+    else params.delete("page");
+    params.set("pageSize", String(pageSize));
+    if (nextRange?.from) params.set("from", nextRange.from.toISOString());
+    else params.delete("from");
+    if (nextRange?.to) params.set("to", nextRange.to.toISOString());
+    else params.delete("to");
+    if (nextType !== "all") params.set("type", nextType);
+    else params.delete("type");
+    router.push(`?${params.toString()}`);
+  }
+
+  function handleDateChange(value: DateRange | undefined) {
+    setDate(value);
+    applyFilters(1, value);
+  }
+
+  function handleTypeChange(value: "all" | "income" | "expense") {
+    setSelectedType(value);
+    applyFilters(1, date, value);
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -100,13 +164,13 @@ export function TransactionManagement({
           Manage your transactions efficiently with our intuitive interface.
         </CardDescription>
         <TransactionFilters
-          transactions={transactions}
+          transactions={initialData}
           filter={filter}
           setFilter={setFilter}
           date={date}
-          setDate={setDate}
+          setDate={handleDateChange}
           selectedType={selectedType}
-          setSelectedType={setSelectedType}
+          setSelectedType={handleTypeChange}
           selectedAccount={selectedAccount}
           setSelectedAccount={setSelectedAccount}
           selectedCategory={selectedCategory}
@@ -211,6 +275,16 @@ export function TransactionManagement({
           <TransactionTable data={filteredTransactions} />
         )}
       </CardContent>
+      <CardFooter>
+        <TransactionsPagination
+          totalCount={totalCount}
+          page={page}
+          pageSize={pageSize}
+          from={date?.from}
+          to={date?.to}
+          type={selectedType !== "all" ? selectedType : undefined}
+        />
+      </CardFooter>
     </Card>
   );
 }
