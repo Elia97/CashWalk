@@ -99,6 +99,10 @@ export class BankAccountService {
       return {
         ...account,
         balance: Number(account.balance),
+        transactions: account.transactions.map((tx) => ({
+          ...tx,
+          amount: Number(tx.amount),
+        })),
       } as ClientBankAccountWithTransactions;
     }, "Failed to retrieve primary bank account");
   }

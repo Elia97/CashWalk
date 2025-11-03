@@ -65,6 +65,13 @@ export async function findFirstPrimaryBankAccountByUserId(
         orderBy(fields, operators) {
           return operators.desc(fields.date);
         },
+        with: {
+          category: {
+            with: {
+              parent: true,
+            },
+          },
+        },
       },
     },
   });

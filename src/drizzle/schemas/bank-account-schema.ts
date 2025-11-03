@@ -10,7 +10,11 @@ import {
 } from "drizzle-orm/pg-core";
 import { user } from "./auth-schema";
 import { InferSelectModel, relations } from "drizzle-orm";
-import { Transaction, transaction } from "./transaction-schema";
+import {
+  ClientTransaction,
+  Transaction,
+  transaction,
+} from "./transaction-schema";
 
 export const accountTypeEnum = pgEnum("account_type", [
   "checking",
@@ -65,5 +69,5 @@ export type ClientBankAccount = Omit<BankAccount, "balance"> & {
   balance: number;
 };
 export type ClientBankAccountWithTransactions = ClientBankAccount & {
-  transactions: Transaction[];
+  transactions: ClientTransaction[];
 };
