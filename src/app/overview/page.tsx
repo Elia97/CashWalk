@@ -20,6 +20,28 @@ export default async function OverviewPage() {
   if (session == null) return <UserNotAuthenticated />;
 
   const res = await getUserPrimaryBankAccount(session.user.id);
+  if (!res.data)
+    return (
+      <Empty>
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <Lock />
+          </EmptyMedia>
+          <EmptyTitle>
+            You need to create at least one bank account to see your overview
+          </EmptyTitle>
+          <EmptyDescription>
+            Please create a bank account and some transactions to see your
+            financial overview.
+          </EmptyDescription>
+        </EmptyHeader>
+        <EmptyContent>
+          <Button asChild variant={"link"}>
+            <Link href="/accounts">Create a Bank Account</Link>
+          </Button>
+        </EmptyContent>
+      </Empty>
+    );
 
   return (
     <section className="animate-fade-up">
@@ -52,12 +74,9 @@ export default async function OverviewPage() {
             <EmptyMedia variant="icon">
               <Lock />
             </EmptyMedia>
-            <EmptyTitle>
-              You need to create at least one bank account to see your overview
-            </EmptyTitle>
+            <EmptyTitle>Something went wrong loading your overview</EmptyTitle>
             <EmptyDescription>
-              Please create a bank account and some transactions to see your
-              financial overview.
+              Please try again or create a bank account.
             </EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
