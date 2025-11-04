@@ -1,14 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  type TooltipProps,
-} from "recharts";
+import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from "recharts";
 import { formatCurrency } from "@/lib/utils";
 
 type CategoryDatum = { name: string; value: number; color: string };

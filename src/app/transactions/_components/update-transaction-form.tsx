@@ -72,9 +72,6 @@ export function UpdateTransactionForm({
   const [categories, setCategories] = useState<
     { id: string; name: string; categoryType: string }[]
   >([]);
-  const filteredCategories = categories.filter(
-    (category) => form.watch("transactionType") === category.categoryType,
-  );
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(true);
 

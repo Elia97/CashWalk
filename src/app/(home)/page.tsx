@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
@@ -10,8 +9,6 @@ import { cn } from "@/lib/utils";
 
 export default function Home() {
   const [animateOut, setAnimateOut] = useState(false);
-  const router = useRouter();
-
   return (
     <section>
       <div className="grid lg:grid-cols-2 gap-8">

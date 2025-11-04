@@ -1,6 +1,6 @@
 "use server";
 
-import { Category, ClientBankAccount } from "@/drizzle/schema";
+import { ClientBankAccount } from "@/drizzle/schema";
 import {
   WelcomeActionResponse,
   WelcomeService,
