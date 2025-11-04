@@ -1,5 +1,5 @@
 import { auth } from "@/lib/auth/auth";
-import { Table, Users } from "lucide-react";
+import { Users } from "lucide-react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { UserRow } from "./_components/user-row";
@@ -11,6 +11,7 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import {
+  Table,
   TableHeader,
   TableRow,
   TableHead,

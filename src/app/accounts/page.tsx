@@ -8,6 +8,8 @@ export default async function AccountsPage() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (session == null) return <UserNotAuthenticated />;
 
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
   const res = await getUserBankAccounts(session.user.id);
   return (
     <section className="animate-fade-up">

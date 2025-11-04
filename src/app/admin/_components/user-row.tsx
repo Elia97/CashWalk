@@ -28,6 +28,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { formatDate } from "@/lib/utils";
 
 export function UserRow({
   user,
@@ -134,7 +135,7 @@ export function UserRow({
           {user.role || "No role"}
         </Badge>
       </TableCell>
-      <TableCell>{new Date(user.createdAt).toLocaleDateString()}</TableCell>
+      <TableCell>{formatDate(user.createdAt)}</TableCell>
       <TableCell>
         {!isSelf && (
           <AlertDialog>

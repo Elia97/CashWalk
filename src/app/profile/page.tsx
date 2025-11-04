@@ -64,7 +64,7 @@ export default async function ProfilePage() {
         </div>
       </div>
 
-      <Tabs className="space-y-2" defaultValue="profile">
+      <Tabs defaultValue="profile">
         <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="profile">
             <User />

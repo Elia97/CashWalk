@@ -54,12 +54,18 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased dark min-h-screen`}
       >
-        <header className="py-6 flex justify-center relative h-[84px]">
+        <header className="py-6 px-4 flex justify-center relative h-[84px]">
           <Link
             href="/"
             className="absolute top-6 left-4 inline-flex items-center"
           >
-            <Image src="/CashWalk.svg" alt="CashWalk" width={40} height={40} />
+            <Image
+              priority={true}
+              src="/CashWalk.svg"
+              alt="CashWalk"
+              width={40}
+              height={40}
+            />
             <span className="font-bold text-lg">CashWalk</span>
           </Link>
           <DesktopNavigation navbarItems={NAVBAR_ITEMS} />
@@ -67,7 +73,7 @@ export default function RootLayout({
             <AuthButton />
           </div>
         </header>
-        <main className="px-4 container mx-auto pb-16 lg:pb-0">
+        <main className="px-4 mb-6 container mx-auto pb-16 lg:pb-0">
           {children}
           <Toaster position="top-center" />
           <ImpersonationIndicator />

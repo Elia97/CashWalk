@@ -44,7 +44,7 @@ export default async function TransactionsPage({
     transactionType,
   });
   return (
-    <section className="animate-fade-up mb-6">
+    <section className="animate-fade-up">
       <h1 className="hidden">Transactions Page</h1>
       {res.data && (
         <TransactionManagement

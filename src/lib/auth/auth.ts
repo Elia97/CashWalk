@@ -88,4 +88,5 @@ export const auth = betterAuth({
       }
     }),
   },
+  trustedOrigins: ["http://192.168.1.55:3000"],
 });

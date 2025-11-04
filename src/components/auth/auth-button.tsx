@@ -71,8 +71,15 @@ export function AuthButton() {
           <DropdownMenuItem>
             <BetterAuthActionButton
               variant={"destructive"}
-              action={() => authClient.signOut()}
-              onClick={() => router.push("/")}
+              action={() =>
+                authClient.signOut({
+                  fetchOptions: {
+                    onSuccess: () => {
+                      router.push("/login");
+                    },
+                  },
+                })
+              }
               className="w-full"
             >
               Logout

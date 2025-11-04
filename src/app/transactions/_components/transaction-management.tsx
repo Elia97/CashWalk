@@ -236,9 +236,9 @@ export function TransactionManagement({
                           </Button>
                         </DialogTrigger>
                         <DialogContent className="max-h-[90vh] overflow-y-auto scrollbar">
-                          <DialogTitle>Modifica transazione</DialogTitle>
+                          <DialogTitle>Update Transaction</DialogTitle>
                           <DialogDescription>
-                            Modifica i dettagli della transazione.
+                            Update the details of the transaction.
                           </DialogDescription>
                           <UpdateTransactionForm
                             transaction={transaction}

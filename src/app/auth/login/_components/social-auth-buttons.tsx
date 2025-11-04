@@ -21,7 +21,9 @@ export function SocialAuthButtons() {
             action={() =>
               authClient.signIn.social({
                 provider,
-                callbackURL: "/",
+                callbackURL: "/overview",
+                errorCallbackURL: "/auth/login",
+                newUserCallbackURL: "/auth/welcome",
               })
             }
           >
