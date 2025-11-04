@@ -1,4 +1,3 @@
-import { UserNotAuthenticated } from "@/components/auth/user-not-authenticated";
 import { auth } from "@/lib/auth/auth";
 import { headers } from "next/headers";
 import { getUserPrimaryBankAccount } from "../overview/actions/overview-actions";
@@ -17,7 +16,7 @@ import { AnalyticsManagement } from "./_components/analytics-management";
 
 export default async function AnalyticsPage() {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (session == null) return <UserNotAuthenticated />;
+  if (!session) throw new Error("User session is required");
   const res = await getUserPrimaryBankAccount(session.user.id);
 
   return (

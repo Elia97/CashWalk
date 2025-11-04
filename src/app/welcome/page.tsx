@@ -1,4 +1,3 @@
-import { UserNotAuthenticated } from "@/components/auth/user-not-authenticated";
 import {
   Card,
   CardContent,
@@ -14,7 +13,7 @@ import { redirect } from "next/navigation";
 
 export default async function WelcomePage() {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (session == null) return <UserNotAuthenticated />;
+  if (!session) throw new Error("User session is required");
   const res = await getUserPrimaryBankAccount(session.user.id);
   if (res.data) redirect("/overview");
 

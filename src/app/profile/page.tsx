@@ -11,7 +11,6 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LoadingSuspense } from "@/components/ui/loading-suspence";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { UserNotAuthenticated } from "@/components/auth/user-not-authenticated";
 
 export type Passkey = Awaited<ReturnType<typeof auth.api.listPasskeys>>[number];
 
@@ -23,7 +22,7 @@ export type Session = Awaited<ReturnType<typeof auth.api.listSessions>>[number];
 
 export default async function ProfilePage() {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (session == null) return <UserNotAuthenticated />;
+  if (!session) throw new Error("User session is required");
 
   const [passkeys, accounts, sessions] = await Promise.all([
     auth.api.listPasskeys({

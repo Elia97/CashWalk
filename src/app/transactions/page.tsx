@@ -2,7 +2,6 @@ import { auth } from "@/lib/auth/auth";
 import { TransactionManagement } from "./_components/transaction-management";
 import { getUserTransactions } from "./actions/transaction-actions";
 import { headers } from "next/headers";
-import { UserNotAuthenticated } from "@/components/auth/user-not-authenticated";
 import { DEFAULT_PAGE_SIZE } from "@/repo/transaction-repository";
 
 export default async function TransactionsPage({
@@ -17,7 +16,7 @@ export default async function TransactionsPage({
   };
 }) {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (session == null) return <UserNotAuthenticated />;
+  if (!session) throw new Error("User session is required");
   const params = await Promise.resolve(searchParams);
   const page = Number(params?.page ?? 1);
   const pageSize = Number(params?.pageSize ?? DEFAULT_PAGE_SIZE);

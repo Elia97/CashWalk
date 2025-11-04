@@ -17,11 +17,10 @@ import {
   TableHead,
   TableBody,
 } from "@/components/ui/table";
-import { UserNotAuthenticated } from "@/components/auth/user-not-authenticated";
 
 export default async function AdminPage() {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (session == null) return <UserNotAuthenticated />;
+  if (!session) throw new Error("User session is required");
 
   const hasAccess = await auth.api.userHasPermission({
     headers: await headers(),

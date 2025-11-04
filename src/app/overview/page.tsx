@@ -1,7 +1,6 @@
 import { getUserPrimaryBankAccount } from "./actions/overview-actions";
 import { auth } from "@/lib/auth/auth";
 import { headers } from "next/headers";
-import { UserNotAuthenticated } from "@/components/auth/user-not-authenticated";
 import { OverviewManagement } from "./_components/overview-management";
 import {
   Empty,
@@ -18,7 +17,7 @@ import { redirect } from "next/navigation";
 
 export default async function OverviewPage() {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (session == null) return <UserNotAuthenticated />;
+  if (!session) throw new Error("User session is required");
 
   const res = await getUserPrimaryBankAccount(session.user.id);
   if (!res.data) redirect("/welcome");
