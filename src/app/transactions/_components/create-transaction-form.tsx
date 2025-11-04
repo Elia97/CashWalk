@@ -129,35 +129,25 @@ export function CreateTransactionForm({
       </div>
     );
 
-  if (accounts.length === 0 || categories.length === 0) {
+  if (categories.length === 0) {
     return (
       <Empty>
         <EmptyHeader>
           <EmptyMedia variant="icon">
             <Hand />
           </EmptyMedia>
-          <EmptyTitle>Add an account and a category to get started</EmptyTitle>
+          <EmptyTitle>No categories found</EmptyTitle>
           <EmptyDescription>
-            To create a transaction, you need at least one bank account and one
-            category. Please add them first.
+            You need to create at least one category to add a transaction.
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
           <ButtonGroup className="w-full">
-            {accounts.length === 0 && (
-              <ButtonGroup className="flex-1">
-                <Button asChild variant={"outline"} className="w-full">
-                  <Link href="/accounts">Create a Bank Account</Link>
-                </Button>
-              </ButtonGroup>
-            )}
-            {categories.length === 0 && (
-              <ButtonGroup className="flex-1">
-                <Button asChild variant={"outline"} className="w-full">
-                  <Link href="/settings">Create a Category</Link>
-                </Button>
-              </ButtonGroup>
-            )}
+            <ButtonGroup className="flex-1">
+              <Button asChild variant={"outline"} className="w-full">
+                <Link href="/settings">Create a Category</Link>
+              </Button>
+            </ButtonGroup>
           </ButtonGroup>
         </EmptyContent>
       </Empty>

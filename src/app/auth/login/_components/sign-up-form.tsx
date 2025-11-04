@@ -55,7 +55,7 @@ export function SignUpForm({
 
   const handleSignUp = async (data: SignUpFormData) => {
     const res = await authClient.signUp.email(
-      { ...data, callbackURL: "/" },
+      { ...data, callbackURL: "/welcome" },
       {
         onError: (error) => {
           toast.error(error.error.message || "Failed to sign up");

@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import type { ClientBankAccount } from "@/drizzle/schema";
 import { Plus } from "lucide-react";
 import { BankAccountCard } from "./bank-account-card";
@@ -25,10 +24,20 @@ import {
 
 export function BankAccountManagement({
   accounts,
+  isAdmin,
 }: {
   accounts: ClientBankAccount[];
+  isAdmin: boolean;
 }) {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+
+  const handleOpenChange = useCallback(
+    (open: boolean) => {
+      if (!isAdmin) return;
+      setIsDialogOpen(open);
+    },
+    [isAdmin],
+  );
 
   return (
     <Card>
@@ -43,12 +52,18 @@ export function BankAccountManagement({
           accounts.map((account) => (
             <BankAccountCard key={account.id} account={account} />
           ))}
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>
           <DialogTrigger asChild>
             <Card className="flex justify-center items-center h-[336px] border-2 border-dashed cursor-pointer bg-transparent hover:bg-card">
-              <Button variant="link" asChild>
-                <Plus className="w-full h-full" />
-              </Button>
+              {isAdmin ? (
+                <Button variant="link" asChild>
+                  <Plus className="w-full h-full" />
+                </Button>
+              ) : (
+                <span className="text-muted-foreground">
+                  More bank accounts are coming soon
+                </span>
+              )}
             </Card>
           </DialogTrigger>
           <DialogContent className="max-h-[90vh] overflow-y-auto scrollbar">

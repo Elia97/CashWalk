@@ -40,14 +40,10 @@ export class BankAccountService {
     return this.handleErrors(async () => {
       const user = await findFirstUserById(data.userId);
       if (!user) throw new Error("User not found");
-      const existingAccounts = await findManyBankAccountsByUserId(data.userId);
-      const account = await insertBankAccount({
+      return await insertBankAccount({
         ...data,
         balance: String(data.balance),
       });
-      if (account && existingAccounts.length === 0) {
-        await setPrimaryBankAccount(account.userId, account.id);
-      }
     }, "Failed to create bank account");
   }
 

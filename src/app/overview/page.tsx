@@ -14,34 +14,14 @@ import {
 import { Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export default async function OverviewPage() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (session == null) return <UserNotAuthenticated />;
 
   const res = await getUserPrimaryBankAccount(session.user.id);
-  if (!res.data)
-    return (
-      <Empty>
-        <EmptyHeader>
-          <EmptyMedia variant="icon">
-            <Lock />
-          </EmptyMedia>
-          <EmptyTitle>
-            You need to create at least one bank account to see your overview
-          </EmptyTitle>
-          <EmptyDescription>
-            Please create a bank account and some transactions to see your
-            financial overview.
-          </EmptyDescription>
-        </EmptyHeader>
-        <EmptyContent>
-          <Button asChild variant={"link"}>
-            <Link href="/accounts">Create a Bank Account</Link>
-          </Button>
-        </EmptyContent>
-      </Empty>
-    );
+  if (!res.data) redirect("/welcome");
 
   return (
     <section className="animate-fade-up">

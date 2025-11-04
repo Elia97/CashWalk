@@ -161,7 +161,7 @@ export function SignInForm({
                 authClient.signIn.passkey(undefined, {
                   onSuccess: () => {
                     refetch();
-                    router.push("/");
+                    router.push("/overview");
                   },
                 })
               }

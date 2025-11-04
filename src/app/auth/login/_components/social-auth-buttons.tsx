@@ -23,7 +23,7 @@ export function SocialAuthButtons() {
                 provider,
                 callbackURL: "/overview",
                 errorCallbackURL: "/auth/login",
-                newUserCallbackURL: "/auth/welcome",
+                newUserCallbackURL: "/welcome",
               })
             }
           >

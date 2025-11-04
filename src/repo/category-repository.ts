@@ -69,6 +69,18 @@ export async function findFirstCategoryById(
   });
 }
 
+export async function findFirstSystemCategoryByName(
+  name: string,
+): Promise<Category | undefined> {
+  return await db.query.category.findFirst({
+    where: (fields, operators) =>
+      operators.and(
+        operators.eq(fields.name, name),
+        operators.isNull(fields.userId),
+      ),
+  });
+}
+
 export async function insertCategory(data: Category): Promise<void> {
   await db.insert(category).values(data);
 }

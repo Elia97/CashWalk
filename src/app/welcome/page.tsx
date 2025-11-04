@@ -1,0 +1,37 @@
+import { UserNotAuthenticated } from "@/components/auth/user-not-authenticated";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { auth } from "@/lib/auth/auth";
+import { headers } from "next/headers";
+import { WelcomeForm } from "./_components/welcome-form";
+import { getUserPrimaryBankAccount } from "../overview/actions/overview-actions";
+import { redirect } from "next/navigation";
+
+export default async function WelcomePage() {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (session == null) return <UserNotAuthenticated />;
+  const res = await getUserPrimaryBankAccount(session.user.id);
+  if (res.data) redirect("/overview");
+
+  return (
+    <section>
+      <Card>
+        <CardHeader>
+          <CardTitle>Welcome {session.user.name}</CardTitle>
+          <CardDescription>
+            Your first step is adding your main bank account to start tracking
+            your finances.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <WelcomeForm />
+        </CardContent>
+      </Card>
+    </section>
+  );
+}

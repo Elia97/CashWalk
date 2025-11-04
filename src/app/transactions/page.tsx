@@ -18,20 +18,13 @@ export default async function TransactionsPage({
 }) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (session == null) return <UserNotAuthenticated />;
-
   const params = await Promise.resolve(searchParams);
-
   const page = Number(params?.page ?? 1);
   const pageSize = Number(params?.pageSize ?? DEFAULT_PAGE_SIZE);
-  const defaultFrom = new Date(
-    new Date().getFullYear(),
-    new Date().getMonth(),
-    1,
-  );
-  const defaultTo = new Date();
-
-  const from = params?.from ? new Date(params.from) : defaultFrom;
-  const to = params?.to ? new Date(params.to) : defaultTo;
+  const from = params?.from
+    ? new Date(params.from)
+    : new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  const to = params?.to ? new Date(params.to) : new Date();
   const transactionType =
     params?.type === "income" || params?.type === "expense"
       ? params.type
@@ -43,6 +36,7 @@ export default async function TransactionsPage({
     to,
     transactionType,
   });
+
   return (
     <section className="animate-fade-up">
       <h1 className="hidden">Transactions Page</h1>

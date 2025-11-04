@@ -18,7 +18,6 @@ import { AnalyticsManagement } from "./_components/analytics-management";
 export default async function AnalyticsPage() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (session == null) return <UserNotAuthenticated />;
-
   const res = await getUserPrimaryBankAccount(session.user.id);
 
   return (

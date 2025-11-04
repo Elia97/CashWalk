@@ -77,12 +77,8 @@ export async function findFirstPrimaryBankAccountByUserId(
   });
 }
 
-export async function insertBankAccount(
-  data: BankAccount,
-): Promise<BankAccount> {
-  const [result] = await db.insert(bankAccount).values(data).returning();
-  if (!result) throw new Error("Failed to insert bank account");
-  return result as BankAccount;
+export async function insertBankAccount(data: BankAccount): Promise<void> {
+  await db.insert(bankAccount).values(data).returning();
 }
 
 export async function deleteBankAccountById(id: string): Promise<void> {

@@ -75,7 +75,7 @@ export function AuthButton() {
                 authClient.signOut({
                   fetchOptions: {
                     onSuccess: () => {
-                      router.push("/login");
+                      router.push("/auth/login");
                     },
                   },
                 })
