@@ -94,7 +94,8 @@ export function CreateCategoryForm({
         <FieldSet>
           <FieldLegend>Category Details</FieldLegend>
           <FieldDescription>
-            Choose first the category type and then select a parent category.
+            First, choose if this is income or expense, then pick a parent
+            category.
           </FieldDescription>
           <Field orientation={"responsive"}>
             <Controller
@@ -110,7 +111,7 @@ export function CreateCategoryForm({
                       {capitalize(field.name)}
                     </FieldLabel>
                     <FieldDescription>
-                      Select from income or expense
+                      Is this money coming in or going out?
                     </FieldDescription>
                   </FieldContent>
                   <Select value={field.value} onValueChange={field.onChange}>
@@ -118,7 +119,7 @@ export function CreateCategoryForm({
                       id={field.name}
                       aria-invalid={fieldState.invalid}
                     >
-                      <SelectValue placeholder="Select category type" />
+                      <SelectValue placeholder="Choose type" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="income">Income</SelectItem>
@@ -154,7 +155,7 @@ export function CreateCategoryForm({
                         {capitalize(field.name)}
                       </FieldLabel>
                       <FieldDescription>
-                        Select a parent category.
+                        Which main category does this belong to?
                       </FieldDescription>
                     </FieldContent>
                     <Select value={field.value} onValueChange={field.onChange}>
@@ -162,7 +163,7 @@ export function CreateCategoryForm({
                         id={field.name}
                         aria-invalid={fieldState.invalid}
                       >
-                        <SelectValue placeholder="Select parent category" />
+                        <SelectValue placeholder="Choose parent" />
                       </SelectTrigger>
                       <SelectContent>
                         {filteredCategories.map((category) => (
@@ -186,9 +187,9 @@ export function CreateCategoryForm({
         </FieldSet>
         <FieldSeparator />
         <FieldSet>
-          <FieldLegend>Category Info</FieldLegend>
+          <FieldLegend>Make It Yours</FieldLegend>
           <FieldDescription>
-            Choose an icon and a name for your new category.
+            Pick an icon and give your category a name.
           </FieldDescription>
           <Field orientation={"responsive"}>
             <Controller
@@ -204,7 +205,7 @@ export function CreateCategoryForm({
                       {capitalize(field.name)}
                     </FieldLabel>
                     <FieldDescription>
-                      Select an icon for your category.
+                      Choose a fun icon to represent this category.
                     </FieldDescription>
                   </FieldContent>
                   <Popover
@@ -214,7 +215,7 @@ export function CreateCategoryForm({
                     <PopoverTrigger asChild>
                       <Input
                         id={field.name}
-                        placeholder="Choose an icon"
+                        placeholder="Pick an icon"
                         value={field.value || ""}
                         readOnly
                         className="text-2xl text-center cursor-pointer"
@@ -284,15 +285,13 @@ export function CreateCategoryForm({
                     <FieldLabel htmlFor={field.name}>
                       {capitalize(field.name)}
                     </FieldLabel>
-                    <FieldDescription>
-                      Enter the category name.
-                    </FieldDescription>
+                    <FieldDescription>What should we call it?</FieldDescription>
                   </FieldContent>
                   <Input
                     {...field}
                     id={field.name}
                     aria-invalid={fieldState.invalid}
-                    placeholder="Your Category Name"
+                    placeholder="Netflix"
                     autoComplete="off"
                   />
                   {fieldState.error && (
@@ -323,7 +322,7 @@ export function CreateCategoryForm({
               disabled={form.formState.isSubmitting}
             >
               <LoadingSwap isLoading={form.formState.isSubmitting}>
-                Add
+                Add Category
               </LoadingSwap>
             </Button>
           </Field>

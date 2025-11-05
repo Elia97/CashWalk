@@ -71,9 +71,9 @@ export function UpdateCategoryForm({
       <FieldGroup>
         <FieldSeparator />
         <FieldSet>
-          <FieldLegend>Category Info</FieldLegend>
+          <FieldLegend>Update Category</FieldLegend>
           <FieldDescription>
-            You can update only the name and icon of the category.
+            Change the name or icon to better suit your needs.
           </FieldDescription>
           <Field orientation={"responsive"}>
             <Controller
@@ -89,7 +89,7 @@ export function UpdateCategoryForm({
                       {capitalize(field.name)}
                     </FieldLabel>
                     <FieldDescription>
-                      Select an icon for your category.
+                      Pick a different icon if you'd like.
                     </FieldDescription>
                   </FieldContent>
                   <Popover
@@ -99,7 +99,7 @@ export function UpdateCategoryForm({
                     <PopoverTrigger asChild>
                       <Input
                         id={field.name}
-                        placeholder="Choose an icon"
+                        placeholder="Pick an icon"
                         value={field.value || ""}
                         readOnly
                         className="text-2xl text-center cursor-pointer"
@@ -170,14 +170,14 @@ export function UpdateCategoryForm({
                       {capitalize(field.name)}
                     </FieldLabel>
                     <FieldDescription>
-                      Enter the category name.
+                      Give it a new name if needed.
                     </FieldDescription>
                   </FieldContent>
                   <Input
                     {...field}
                     id={field.name}
                     aria-invalid={fieldState.invalid}
-                    placeholder="Your Bank Account Name"
+                    placeholder="Category Name"
                     autoComplete="off"
                   />
                   {fieldState.error && (
@@ -208,7 +208,7 @@ export function UpdateCategoryForm({
               disabled={form.formState.isSubmitting}
             >
               <LoadingSwap isLoading={form.formState.isSubmitting}>
-                Update
+                Save Changes
               </LoadingSwap>
             </Button>
           </Field>

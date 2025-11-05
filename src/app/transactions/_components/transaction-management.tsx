@@ -156,9 +156,9 @@ export function TransactionManagement({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Transactions Management</CardTitle>
+        <CardTitle>Your Transactions</CardTitle>
         <CardDescription>
-          Manage your transactions efficiently with our intuitive interface.
+          Track your income and expenses all in one place.
         </CardDescription>
         <TransactionFilters
           transactions={initialData}
@@ -259,7 +259,7 @@ export function TransactionManagement({
                     <EmptyMedia variant="icon">
                       <BrushCleaning />
                     </EmptyMedia>
-                    <EmptyTitle>No Transactions found</EmptyTitle>
+                    <EmptyTitle>No transactions here</EmptyTitle>
                   </EmptyHeader>
                 </Empty>
               </li>

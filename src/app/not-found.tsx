@@ -18,10 +18,9 @@ export default function NotFoundPage() {
           <EmptyMedia variant="icon">
             <Compass />
           </EmptyMedia>
-          <EmptyTitle>Page not found</EmptyTitle>
+          <EmptyTitle>Oops! Page not found</EmptyTitle>
           <EmptyDescription>
-            Looks like this trail doesn&apos;t exist yet. Let&apos;s guide you
-            back to CashWalk.
+            This page doesn't exist. Let's get you back on track!
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent className="flex gap-2">

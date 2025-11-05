@@ -68,9 +68,9 @@ export function CategoryManagement({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Category Management</CardTitle>
+        <CardTitle>Your Categories</CardTitle>
         <CardDescription>
-          Manage your income and expense categories here.
+          Organize your spending and income with custom categories.
         </CardDescription>
         <ButtonGroup
           className="w-full"

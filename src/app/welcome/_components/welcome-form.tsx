@@ -110,9 +110,9 @@ export function WelcomeForm() {
       <FieldGroup>
         <FieldSeparator />
         <FieldSet>
-          <FieldLegend>Account details</FieldLegend>
+          <FieldLegend>Your First Account</FieldLegend>
           <FieldDescription>
-            Provide the details of the bank account.
+            Let's start by adding your primary bank account.
           </FieldDescription>
           <Field orientation={"responsive"}>
             <Controller
@@ -128,14 +128,14 @@ export function WelcomeForm() {
                       {capitalize(field.name)}
                     </FieldLabel>
                     <FieldDescription>
-                      Your bank account display name.
+                      Give your account a friendly name.
                     </FieldDescription>
                   </FieldContent>
                   <Input
                     {...field}
                     id={field.name}
                     aria-invalid={fieldState.invalid}
-                    placeholder="Your Bank Account Name"
+                    placeholder="Main Account"
                     autoComplete="off"
                   />
                   {fieldState.error && (
@@ -161,13 +161,14 @@ export function WelcomeForm() {
                       {capitalize(field.name)}
                     </FieldLabel>
                     <FieldDescription>
-                      Your bank account number (optional).
+                      Optional - add it for easy reference.
                     </FieldDescription>
                   </FieldContent>
                   <Input
                     {...field}
                     id={field.name}
                     aria-invalid={fieldState.invalid}
+                    placeholder="1234567890"
                     autoComplete="off"
                   />
                   {fieldState.error && (
@@ -183,9 +184,9 @@ export function WelcomeForm() {
         </FieldSet>
         <FieldSeparator />
         <FieldSet>
-          <FieldLegend>Additional info</FieldLegend>
+          <FieldLegend>Account Settings</FieldLegend>
           <FieldDescription>
-            Provide any additional information about the bank account.
+            Choose your currency and set your starting balance.
           </FieldDescription>
           <Field orientation="responsive">
             <Controller
@@ -201,7 +202,7 @@ export function WelcomeForm() {
                       {capitalize(field.name)}
                     </FieldLabel>
                     <FieldDescription>
-                      Select the currency for the account.
+                      Choose your preferred currency.
                     </FieldDescription>
                   </FieldContent>
                   <Select value={field.value} onValueChange={field.onChange}>
@@ -210,7 +211,7 @@ export function WelcomeForm() {
                       id={field.name}
                       aria-invalid={fieldState.invalid}
                     >
-                      <SelectValue placeholder="Select currency" />
+                      <SelectValue placeholder="Choose currency" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="EUR">EUR</SelectItem>
@@ -240,7 +241,7 @@ export function WelcomeForm() {
                       {capitalize(field.name)}
                     </FieldLabel>
                     <FieldDescription>
-                      Initial balance ({form.watch("currency")}).
+                      How much do you have right now?
                     </FieldDescription>
                   </FieldContent>
                   <NumberInput
@@ -268,7 +269,8 @@ export function WelcomeForm() {
         <FieldSet>
           <FieldLegend>Quick Start</FieldLegend>
           <FieldDescription>
-            You can select some common categories to get started quickly.
+            Pick some common categories to get started faster (you can add more
+            later).
           </FieldDescription>
           <Controller
             name="categories"
@@ -283,8 +285,8 @@ export function WelcomeForm() {
                     {capitalize(field.name)}
                   </FieldLabel>
                   <FieldDescription>
-                    Choose from the list of common categories. You can always
-                    add or modify categories later.
+                    Select a few to begin with - don't worry, you can customize
+                    everything later!
                   </FieldDescription>
                 </FieldContent>
                 <MultiSelect
@@ -296,7 +298,7 @@ export function WelcomeForm() {
                     id={field.name}
                     aria-invalid={fieldState.invalid}
                   >
-                    <MultiSelectValue placeholder="Select categories..." />
+                    <MultiSelectValue placeholder="Choose categories..." />
                   </MultiSelectTrigger>
                   <MultiSelectContent>
                     <MultiSelectGroup>
@@ -327,7 +329,7 @@ export function WelcomeForm() {
               disabled={form.formState.isSubmitting}
             >
               <LoadingSwap isLoading={form.formState.isSubmitting}>
-                Continue
+                Get Started
               </LoadingSwap>
             </Button>
           </Field>

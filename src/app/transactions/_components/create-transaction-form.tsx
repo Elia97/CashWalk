@@ -136,9 +136,9 @@ export function CreateTransactionForm({
           <EmptyMedia variant="icon">
             <Hand />
           </EmptyMedia>
-          <EmptyTitle>No categories found</EmptyTitle>
+          <EmptyTitle>No categories yet</EmptyTitle>
           <EmptyDescription>
-            You need to create at least one category to add a transaction.
+            Let's create your first category before adding transactions.
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
@@ -220,7 +220,7 @@ export function CreateTransactionForm({
                     id={field.name}
                     aria-invalid={fieldState.invalid}
                   >
-                    <SelectValue placeholder="Select Bank Account" />
+                    <SelectValue placeholder="Choose account" />
                   </SelectTrigger>
                   <SelectContent>
                     {accounts.map((account) => (
@@ -290,7 +290,7 @@ export function CreateTransactionForm({
                     id={field.name}
                     aria-invalid={fieldState.invalid}
                   >
-                    <SelectValue placeholder="Select Transaction Type" />
+                    <SelectValue placeholder="Income or Expense?" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="income">Income</SelectItem>
@@ -329,7 +329,7 @@ export function CreateTransactionForm({
                       id={field.name}
                       aria-invalid={fieldState.invalid}
                     >
-                      <SelectValue placeholder="Select Category" />
+                      <SelectValue placeholder="Choose category" />
                     </SelectTrigger>
                     <SelectContent>
                       {filteredCategories.map((category) => (
@@ -367,7 +367,7 @@ export function CreateTransactionForm({
               disabled={form.formState.isSubmitting}
             >
               <LoadingSwap isLoading={form.formState.isSubmitting}>
-                Add
+                Add Transaction
               </LoadingSwap>
             </Button>
           </Field>

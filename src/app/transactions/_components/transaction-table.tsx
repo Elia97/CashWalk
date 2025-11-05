@@ -183,7 +183,7 @@ export function TransactionTable({ data }: { data: ClientTransaction[] }) {
                     <EmptyMedia variant="icon">
                       <BrushCleaning />
                     </EmptyMedia>
-                    <EmptyTitle>No Transactions found</EmptyTitle>
+                    <EmptyTitle>No transactions here</EmptyTitle>
                   </EmptyHeader>
                 </Empty>
               </TableCell>

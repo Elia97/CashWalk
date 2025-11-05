@@ -35,25 +35,19 @@ export default function Home() {
 
           <Button size="lg" className="text-lg px-8 py-6 group" asChild>
             <Link href="/overview" onClick={() => setAnimateOut(true)}>
-              Start Your Story
+              Get Started for Free
               <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Link>
           </Button>
 
           <div className="flex items-center gap-8 justify-center lg:justify-end text-sm text-muted-foreground mt-4">
-            <div className="flex items-center gap-2">
-              <div className="flex -space-x-2">
-                {Array.from({ length: 4 }, (_, i) => i + 1).map((i) => (
-                  <div
-                    key={i}
-                    className="w-8 h-8 rounded-full bg-gradient-to-br odd:from-secondary even:from-primary to-accent border-2 border-background"
-                  />
-                ))}
-              </div>
-              <span>2,400+ creators</span>
+            <div className="flex flex-col sm:flex-row sm:gap-3">
+              🎯<span>No ads, no tracking</span>
             </div>
             <div className="h-4 w-px bg-border" />
-            <span>Free for 30 days</span>
+            <div className="flex flex-col sm:flex-row sm:gap-3">
+              💯<span>Free to use</span>
+            </div>
           </div>
         </div>
         <Image

@@ -93,10 +93,8 @@ export function CreateBankAccountForm({
       <FieldGroup>
         <FieldSeparator />
         <FieldSet>
-          <FieldLegend>Account details</FieldLegend>
-          <FieldDescription>
-            Provide the details of the bank account.
-          </FieldDescription>
+          <FieldLegend>Account Details</FieldLegend>
+          <FieldDescription>Tell us about your new account.</FieldDescription>
           <Field orientation={"responsive"}>
             <Controller
               name="name"
@@ -111,14 +109,14 @@ export function CreateBankAccountForm({
                       {capitalize(field.name)}
                     </FieldLabel>
                     <FieldDescription>
-                      Your bank account display name.
+                      Give it a name you'll recognize.
                     </FieldDescription>
                   </FieldContent>
                   <Input
                     {...field}
                     id={field.name}
                     aria-invalid={fieldState.invalid}
-                    placeholder="Your Bank Account Name"
+                    placeholder="Savings Account"
                     autoComplete="off"
                   />
                   {fieldState.error && (
@@ -144,7 +142,7 @@ export function CreateBankAccountForm({
                       {capitalize(field.name)}
                     </FieldLabel>
                     <FieldDescription>
-                      Select the type of bank account.
+                      What kind of account is this?
                     </FieldDescription>
                   </FieldContent>
                   <Select value={field.value} onValueChange={field.onChange}>
@@ -153,7 +151,7 @@ export function CreateBankAccountForm({
                       id={field.name}
                       aria-invalid={fieldState.invalid}
                     >
-                      <SelectValue placeholder="Select type" />
+                      <SelectValue placeholder="Choose type" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="checking">Checking</SelectItem>
@@ -174,9 +172,9 @@ export function CreateBankAccountForm({
         </FieldSet>
         <FieldSeparator />
         <FieldSet>
-          <FieldLegend>Additional info</FieldLegend>
+          <FieldLegend>Financial Details</FieldLegend>
           <FieldDescription>
-            Provide any additional information about the bank account.
+            Set your currency and starting balance.
           </FieldDescription>
           <Field orientation="responsive">
             <Controller
@@ -192,7 +190,7 @@ export function CreateBankAccountForm({
                       {capitalize(field.name)}
                     </FieldLabel>
                     <FieldDescription>
-                      Select the currency for the account.
+                      Which currency do you use?
                     </FieldDescription>
                   </FieldContent>
                   <Select value={field.value} onValueChange={field.onChange}>
@@ -201,7 +199,7 @@ export function CreateBankAccountForm({
                       id={field.name}
                       aria-invalid={fieldState.invalid}
                     >
-                      <SelectValue placeholder="Select currency" />
+                      <SelectValue placeholder="Choose currency" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="EUR">EUR</SelectItem>
@@ -231,7 +229,7 @@ export function CreateBankAccountForm({
                       {capitalize(field.name)}
                     </FieldLabel>
                     <FieldDescription>
-                      Initial balance ({form.watch("currency")}).
+                      Current balance in this account.
                     </FieldDescription>
                   </FieldContent>
                   <NumberInput
@@ -268,13 +266,14 @@ export function CreateBankAccountForm({
                     {capitalize(field.name)}
                   </FieldLabel>
                   <FieldDescription>
-                    Your bank account number (optional).
+                    Optional - for your reference only.
                   </FieldDescription>
                 </FieldContent>
                 <Input
                   {...field}
                   id={field.name}
                   aria-invalid={fieldState.invalid}
+                  placeholder="1234567890"
                   autoComplete="off"
                 />
                 {fieldState.error && (
@@ -304,7 +303,7 @@ export function CreateBankAccountForm({
               disabled={form.formState.isSubmitting}
             >
               <LoadingSwap isLoading={form.formState.isSubmitting}>
-                Add
+                Add Account
               </LoadingSwap>
             </Button>
           </Field>

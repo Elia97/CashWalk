@@ -33,16 +33,15 @@ export default async function AnalyticsPage() {
             <EmptyMedia variant="icon">
               <Lock />
             </EmptyMedia>
-            <EmptyTitle>
-              You need to create transactions to see your analytics
-            </EmptyTitle>
+            <EmptyTitle>Ready to see your insights?</EmptyTitle>
             <EmptyDescription>
-              Please create some transactions to see your financial analytics.
+              Start tracking transactions to unlock detailed analytics and
+              trends.
             </EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
             <Button asChild variant={"link"}>
-              <Link href="/transactions">Create some transactions</Link>
+              <Link href="/transactions">Get Started</Link>
             </Button>
           </EmptyContent>
         </Empty>

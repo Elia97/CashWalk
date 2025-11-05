@@ -33,16 +33,15 @@ export default async function OverviewPage() {
             <EmptyMedia variant="icon">
               <Lock />
             </EmptyMedia>
-            <EmptyTitle>
-              You need to create transactions to see your overview
-            </EmptyTitle>
+            <EmptyTitle>Your overview is waiting!</EmptyTitle>
             <EmptyDescription>
-              Please create some transactions to see your financial overview.
+              Add some transactions to see your financial dashboard come to
+              life.
             </EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
             <Button asChild variant={"link"}>
-              <Link href="/transactions">Create some transactions</Link>
+              <Link href="/transactions">Add Your First Transaction</Link>
             </Button>
           </EmptyContent>
         </Empty>

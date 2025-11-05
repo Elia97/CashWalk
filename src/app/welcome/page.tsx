@@ -21,10 +21,10 @@ export default async function WelcomePage() {
     <section>
       <Card>
         <CardHeader>
-          <CardTitle>Welcome {session.user.name}</CardTitle>
+          <CardTitle>Welcome, {session.user.name}! 👋</CardTitle>
           <CardDescription>
-            Your first step is adding your main bank account to start tracking
-            your finances.
+            Let's get started! Add your first account and begin tracking your
+            money.
           </CardDescription>
         </CardHeader>
         <CardContent>
