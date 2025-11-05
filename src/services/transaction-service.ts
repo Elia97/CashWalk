@@ -85,7 +85,7 @@ export class TransactionService {
           ? parseFloat(account.balance)
           : account.balance;
       const newBalance = Number(currentBalance) + Number(amountAdjustment);
-      await insertTransaction(
+      return await insertTransaction(
         { ...data, amount: String(data.amount) },
         newBalance.toString(),
       );
@@ -109,7 +109,7 @@ export class TransactionService {
           ? parseFloat(account.balance)
           : account.balance;
       const newBalance = Number(currentBalance) + Number(amountAdjustment);
-      await deleteTransactionById(id, account.id, newBalance.toString());
+      return await deleteTransactionById(id, account.id, newBalance.toString());
     }, "Failed to delete transaction");
   }
 
@@ -134,7 +134,7 @@ export class TransactionService {
           : account.balance;
       const newBalance =
         Number(currentBalance) - Number(oldAdjustment) + Number(newAdjustment);
-      await updateTransactionById(id, newBalance.toString(), {
+      return await updateTransactionById(id, newBalance.toString(), {
         ...data,
         amount: String(data.amount),
       });
@@ -156,7 +156,7 @@ export class TransactionService {
     }, "Failed to retrieve transaction form data");
   }
 
-  static async handleErrors<T>(
+  private static async handleErrors<T>(
     fn: () => Promise<T>,
     defaultMessage = "An error occurred",
   ): Promise<TransactionActionResponse<T>> {

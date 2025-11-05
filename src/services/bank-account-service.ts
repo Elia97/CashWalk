@@ -103,7 +103,7 @@ export class BankAccountService {
     }, "Failed to retrieve primary bank account");
   }
 
-  static async handleErrors<T>(
+  private static async handleErrors<T>(
     fn: () => Promise<T>,
     defaultMessage = "An error occurred",
   ): Promise<BankAccountActionResponse<T>> {

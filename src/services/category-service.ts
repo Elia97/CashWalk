@@ -52,7 +52,7 @@ export class CategoryService {
     }, "Failed to update category");
   }
 
-  static async handleErrors<T>(
+  private static async handleErrors<T>(
     fn: () => Promise<T>,
     defaultMessage = "An error occurred",
   ): Promise<CategoryActionResponse<T>> {

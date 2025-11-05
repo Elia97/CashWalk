@@ -30,7 +30,6 @@ export const transaction = pgTable("transactions", {
   transactionType: transactionTypeEnum("transaction_type").notNull(),
   amount: decimal("amount", { precision: 14, scale: 2 }).notNull(),
   date: timestamp("date").notNull(),
-  description: text("description"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .notNull()

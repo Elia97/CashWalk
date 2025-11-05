@@ -82,7 +82,7 @@ export class WelcomeService {
     });
   }
 
-  static async handleErrors<T>(
+  private static async handleErrors<T>(
     fn: () => Promise<T>,
     defaultMessage = "An error occurred",
   ): Promise<WelcomeActionResponse<T>> {
