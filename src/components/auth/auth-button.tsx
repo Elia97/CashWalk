@@ -36,7 +36,11 @@ export function AuthButton() {
     return (
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
-          <Avatar className="size-9" role="button" tabIndex={0}>
+          <Avatar
+            className="size-9 hover:cursor-pointer"
+            role="button"
+            tabIndex={0}
+          >
             <AvatarImage src={session.user.image!} alt={session.user.name} />
             <AvatarFallback>
               {session.user.name
@@ -48,7 +52,11 @@ export function AuthButton() {
             </AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" aria-modal={false}>
+        <DropdownMenuContent
+          align="end"
+          aria-modal={false}
+          className="*:hover:cursor-pointer *:first:hover:cursor-auto"
+        >
           <div className="flex flex-col gap-2 py-3 px-2">
             <span className="text-sm">{session.user.name}</span>
             <span className="text-sm text-muted-foreground">
