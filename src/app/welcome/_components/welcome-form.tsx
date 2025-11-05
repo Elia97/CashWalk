@@ -41,6 +41,10 @@ import {
   MultiSelectValue,
 } from "@/components/ui/multi-select";
 import { createWelcomeDataAction } from "../actions/welcome-actions";
+import {
+  WELCOME_CATEGORIES,
+  getWelcomeCategoriesByType,
+} from "@/lib/welcome-categories";
 
 const welcomeSchema = z.object({
   name: z.string().min(1, "Name is required").max(50, "Name is too long"),
@@ -301,12 +305,21 @@ export function WelcomeForm() {
                     <MultiSelectValue placeholder="Choose categories..." />
                   </MultiSelectTrigger>
                   <MultiSelectContent>
-                    <MultiSelectGroup>
-                      <MultiSelectItem value="Salary">Salary</MultiSelectItem>
-                      <MultiSelectItem value="Groceries">
-                        Groceries
-                      </MultiSelectItem>
-                      <MultiSelectItem value="Rent">Rent</MultiSelectItem>
+                    <MultiSelectGroup heading="Income">
+                      {getWelcomeCategoriesByType().income.map((cat) => (
+                        <MultiSelectItem key={cat.value} value={cat.value}>
+                          <span className="mr-2">{cat.icon}</span>
+                          {cat.label}
+                        </MultiSelectItem>
+                      ))}
+                    </MultiSelectGroup>
+                    <MultiSelectGroup heading="Expenses">
+                      {getWelcomeCategoriesByType().expense.map((cat) => (
+                        <MultiSelectItem key={cat.value} value={cat.value}>
+                          <span className="mr-2">{cat.icon}</span>
+                          {cat.label}
+                        </MultiSelectItem>
+                      ))}
                     </MultiSelectGroup>
                   </MultiSelectContent>
                 </MultiSelect>

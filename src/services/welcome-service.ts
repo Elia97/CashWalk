@@ -2,6 +2,7 @@ import { findFirstUserById } from "@/repo/user-repository";
 import type { Category, ClientBankAccount } from "@/drizzle/schema";
 import { insertOnBoardingData } from "@/repo/welcome-repository";
 import { findFirstSystemCategoryByName } from "@/repo/category-repository";
+import { getWelcomeCategoryMapping } from "@/lib/welcome-categories";
 
 export type WelcomeActionResponse<T = void> = {
   error: boolean;
@@ -18,55 +19,32 @@ export class WelcomeService {
       const user = await findFirstUserById(data.bankAccount.userId);
       if (!user) throw new Error("User not found");
       const completedCategories: Category[] = [];
+
       if (data.categories.length > 0) {
-        for (const category of data.categories) {
-          switch (category) {
-            case "Salary":
-              {
-                const systemCategory = await findFirstSystemCategoryByName(
-                  "Work",
-                );
-                if (systemCategory) {
-                  completedCategories.push({
-                    parentId: systemCategory.id,
-                    userId: data.bankAccount.userId,
-                    name: category,
-                    icon: systemCategory.icon,
-                    categoryType: "income",
-                  } as Category);
-                }
-              }
-              break;
-            case "Groceries":
-              {
-                const systemCategory = await findFirstSystemCategoryByName(
-                  "Food & Dining",
-                );
-                if (systemCategory) {
-                  completedCategories.push({
-                    parentId: systemCategory.id,
-                    userId: data.bankAccount.userId,
-                    name: category,
-                    icon: systemCategory.icon,
-                    categoryType: "expense",
-                  } as Category);
-                }
-              }
-              break;
-            case "Rent": {
-              const systemCategory = await findFirstSystemCategoryByName(
-                "Housing",
-              );
-              if (systemCategory) {
-                completedCategories.push({
-                  parentId: systemCategory.id,
-                  userId: data.bankAccount.userId,
-                  name: category,
-                  icon: systemCategory.icon,
-                  categoryType: "expense",
-                } as Category);
-              }
-            }
+        for (const categoryValue of data.categories) {
+          const mapping = getWelcomeCategoryMapping(categoryValue);
+
+          if (!mapping) {
+            console.warn(`No mapping found for category: ${categoryValue}`);
+            continue;
+          }
+
+          const systemCategory = await findFirstSystemCategoryByName(
+            mapping.systemCategory,
+          );
+
+          if (systemCategory) {
+            completedCategories.push({
+              parentId: systemCategory.id,
+              userId: data.bankAccount.userId,
+              name: mapping.label,
+              icon: mapping.icon,
+              categoryType: mapping.categoryType,
+            } as Category);
+          } else {
+            console.warn(
+              `System category not found: ${mapping.systemCategory}`,
+            );
           }
         }
       }
