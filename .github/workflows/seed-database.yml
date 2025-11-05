@@ -1,0 +1,52 @@
+name: Seed Database
+
+# Run manually only via GitHub Actions UI
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type "seed" to confirm database seeding'
+        required: true
+        default: ""
+
+jobs:
+  seed:
+    runs-on: ubuntu-latest
+
+    # Run only if confirmation input is correct
+    if: github.event.inputs.confirm == 'seed'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run database migrations
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          echo "🔄 Running database migrations..."
+          npm run db:push
+          echo "✅ Migrations completed!"
+
+      - name: Run database seed
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          echo "🌱 Starting database seed..."
+          npm run db:seed
+          echo "✅ Database seed completed successfully!"
+
+      - name: Notify completion
+        if: success()
+        run: |
+          echo "✅ Database has been seeded with system categories!"
+          echo "This workflow should only be run once per environment."

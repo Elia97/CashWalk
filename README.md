@@ -1,48 +1,125 @@
-# Better Auth – Next.js Example
+# 💰 CashWalk
 
-This project is an advanced authentication example built with [better-auth](https://www.npmjs.com/package/better-auth) and Next.js, showcasing modern best practices for authentication flows in real-world applications.
+A modern, open-source personal finance management application built with Next.js 15, Better Auth, and Drizzle ORM.
 
-## Features
+## ✨ Features
+
+- 📊 **Transaction Management** - Track income and expenses with ease
+- 🏦 **Multiple Accounts** - Manage checking, savings, and cash accounts
+- 📁 **Smart Categories** - 28 pre-configured system categories optimized for personal checking accounts
+- 📈 **Analytics Dashboard** - Visualize your financial data (coming soon)
+- 🔐 **Secure Authentication** - 2FA, social login, and passkey support via better-auth
+- 🎨 **Modern UI** - Beautiful interface with Radix UI components and Tailwind CSS 4
+- 📱 **Responsive Design** - Works perfectly on desktop and mobile
+- 🌍 **Open Source** - Free to use, no ads, no tracking
+
+## 🚀 Tech Stack
 
 - **Next.js 15** with Turbopack support
 - **better-auth** for advanced authentication (2FA, social, passkey, etc.)
-- **drizzle-orm** for database management
+- **drizzle-orm** with PostgreSQL for database management
 - **React 19** and **Tailwind CSS 4**
-- Modern UI with Radix UI components
-- Includes examples for profile management, sessions, 2FA, emails, and more
+- **Radix UI** components for accessible UI
+- **React Hook Form** with Zod validation
 
-## How to use
+## 📋 Quick Start
 
-1. Clone this repository or use it as a template
-2. Install dependencies:
+For detailed setup instructions, see [SETUP.md](./SETUP.md).
+
+### Local Development
+
+1. Clone this repository
+
+   ```bash
+   git clone <your-repo-url>
+   cd CashWalk
+   ```
+
+2. Install dependencies
 
    ```bash
    npm install
    ```
 
-3. Configure environment variables and database as needed
-4. Start the development server:
+3. Configure environment variables
+
+   ```bash
+   cp .env.example .env
+   # Edit .env with your values
+   ```
+
+4. Setup database
+
+   ```bash
+   npm run db:push
+   npm run db:seed  # ONLY ONCE - Seeds system categories
+   ```
+
+5. Start development server
 
    ```bash
    npm run dev
    ```
 
-## Main scripts
+## 📚 Available Scripts
 
-- `dev` – Start development server
-- `build` – Production build
-- `db:generate`, `db:migrate`, `db:push` – Schema and migrations with drizzle-kit
-- `auth:generate` – Generate custom auth schema
-- `lint` – Code linting
+- `npm run dev` – Start development server with Turbopack
+- `npm run build` – Production build
+- `npm run db:generate` – Generate database migrations
+- `npm run db:migrate` – Run migrations
+- `npm run db:push` – Push schema to database (dev)
+- `npm run db:studio` – Open Drizzle Studio
+- `npm run db:seed` – Seed system categories (⚠️ run only once)
+- `npm run auth:generate` – Generate auth schema
 
-## Key dependencies
+## 🏗️ Project Structure
 
-- `better-auth`, `drizzle-orm`, `next`, `react`, `tailwindcss`, `@radix-ui/*`
+```tree
+src/
+├── app/                # Next.js app directory
+│   ├── (home)/         # Landing page
+│   ├── accounts/       # Account management
+│   ├── analytics/      # Analytics dashboard
+│   ├── settings/       # Settings & categories
+│   ├── transactions/   # Transaction management
+│   └── welcome/        # Onboarding flow
+├── components/         # Reusable UI components
+├── drizzle/            # Database schema & migrations
+│   └── seeds/          # Database seed files
+├── lib/                # Utilities & helpers
+├── repo/               # Data repositories
+└── services/           # Business logic
+```
+
+## 🎯 System Categories
+
+The app includes 28 professionally curated categories:
+
+**Income (5):** Salary & Wages, Freelance & Side Work, Gifts & Transfers, Refunds & Cashback, Other Income
+
+**Expense (23):** Housing, Utilities, Groceries, Dining & Takeout, Transportation, Auto & Vehicle, Healthcare, Fitness & Wellness, Personal Care, Shopping, Electronics & Tech, Home & Garden, Entertainment, Subscriptions & Streaming, Travel & Vacation, Education, Books & Learning, Bank Fees, Insurance, Childcare & Kids, Pets, Gifts & Celebrations, Charity & Donations, Miscellaneous
+
+## 🚢 Deployment
+
+### GitHub Actions
+
+This project includes a GitHub Action for database seeding:
+
+1. Configure `DATABASE_URL` secret in GitHub repository settings
+2. Go to Actions → "Seed Database" → Run workflow
+3. Type `seed` to confirm and execute
+
+See [.github/workflows/README.md](./.github/workflows/README.md) for details.
+
+## 🤝 Contributing
+
+This is currently in beta. Contributions, issues, and feature requests are welcome!
+
+## 📄 License
+
+This project is open source and available under the MIT License.
 
 ---
-
-This repository is intended as a reference for building secure, modern authentication flows in Next.js applications. Feel free to explore, adapt, and extend it for your own projects!
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
 
