@@ -99,9 +99,9 @@ export function WelcomeForm() {
         res.error || "An error occurred while creating welcome data.",
       );
     } else {
-      toast.success("Welcome data created successfully!");
+      toast.success("Data created successfully! Welcome aboard!");
       refetch();
-      router.push("/overview");
+      router.push("/transactions");
     }
   };
 
@@ -264,10 +264,11 @@ export function WelcomeForm() {
             />
           </Field>
         </FieldSet>
+        <FieldSeparator />
         <FieldSet>
-          <FieldLegend>Categories</FieldLegend>
+          <FieldLegend>Quick Start</FieldLegend>
           <FieldDescription>
-            Select the categories you want to start with.
+            You can select some common categories to get started quickly.
           </FieldDescription>
           <Controller
             name="categories"
@@ -282,7 +283,8 @@ export function WelcomeForm() {
                     {capitalize(field.name)}
                   </FieldLabel>
                   <FieldDescription>
-                    Choose from the list of common categories.
+                    Choose from the list of common categories. You can always
+                    add or modify categories later.
                   </FieldDescription>
                 </FieldContent>
                 <MultiSelect

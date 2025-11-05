@@ -269,7 +269,7 @@ export function CreateCategoryForm({
                     {...field}
                     id={field.name}
                     aria-invalid={fieldState.invalid}
-                    placeholder="Your Bank Account Name"
+                    placeholder="Your Category Name"
                     autoComplete="off"
                   />
                   {fieldState.error && (

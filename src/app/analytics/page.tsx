@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth/auth";
 import { headers } from "next/headers";
 import { getUserPrimaryBankAccount } from "../overview/actions/overview-actions";
-import { Link } from "lucide-react";
+import Link from "next/link";
 import {
   Empty,
   EmptyHeader,
@@ -13,11 +13,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { Lock } from "lucide-react";
 import { AnalyticsManagement } from "./_components/analytics-management";
+import { redirect } from "next/navigation";
 
 export default async function AnalyticsPage() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) throw new Error("User session is required");
+
   const res = await getUserPrimaryBankAccount(session.user.id);
+  if (!res.data) redirect("/welcome");
 
   return (
     <section className="animate-fade-up">
@@ -40,24 +43,6 @@ export default async function AnalyticsPage() {
           <EmptyContent>
             <Button asChild variant={"link"}>
               <Link href="/transactions">Create some transactions</Link>
-            </Button>
-          </EmptyContent>
-        </Empty>
-      )}
-      {res.error && (
-        <Empty>
-          <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <Lock />
-            </EmptyMedia>
-            <EmptyTitle>Something went wrong loading your analytics</EmptyTitle>
-            <EmptyDescription>
-              Please try again or create some transactions.
-            </EmptyDescription>
-          </EmptyHeader>
-          <EmptyContent>
-            <Button asChild variant={"link"}>
-              <Link href="/transactions">Create a Transaction</Link>
             </Button>
           </EmptyContent>
         </Empty>

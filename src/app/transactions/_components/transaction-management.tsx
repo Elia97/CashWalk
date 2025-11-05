@@ -116,12 +116,9 @@ export function TransactionManagement({
     if (filterTerms.length > 0) {
       const categoryName = tx.category.name.toLowerCase();
       const parentCategoryName = (tx.category.parent?.name ?? "").toLowerCase();
-      const description = (tx.description ?? "").toLowerCase();
       const textMatch = filterTerms.every(
         (term) =>
-          categoryName.includes(term) ||
-          parentCategoryName.includes(term) ||
-          description.includes(term),
+          categoryName.includes(term) || parentCategoryName.includes(term),
       );
       if (!textMatch) return false;
     }
@@ -186,9 +183,6 @@ export function TransactionManagement({
                 <li key={transaction.id} className="py-3 space-y-3">
                   <div className="flex justify-between items-center">
                     <div>
-                      <div className="font-semibold">
-                        {transaction.description}
-                      </div>
                       <div className="text-sm text-muted-foreground">
                         {formatDate(transaction.date)} •{" "}
                         {transaction.bankAccount.name}

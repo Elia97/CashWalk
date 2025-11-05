@@ -47,24 +47,6 @@ export default async function OverviewPage() {
           </EmptyContent>
         </Empty>
       )}
-      {res.error && (
-        <Empty>
-          <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <Lock />
-            </EmptyMedia>
-            <EmptyTitle>Something went wrong loading your overview</EmptyTitle>
-            <EmptyDescription>
-              Please try again or create a bank account.
-            </EmptyDescription>
-          </EmptyHeader>
-          <EmptyContent>
-            <Button asChild variant={"link"}>
-              <Link href="/accounts">Create a Bank Account</Link>
-            </Button>
-          </EmptyContent>
-        </Empty>
-      )}
     </section>
   );
 }

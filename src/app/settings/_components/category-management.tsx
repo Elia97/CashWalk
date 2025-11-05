@@ -118,7 +118,7 @@ export function CategoryManagement({
           ))}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Card className="flex justify-center items-center h-28 border-2 border-dashed cursor-pointer bg-transparent hover:bg-card">
+            <Card className="flex justify-center items-center h-[134px] border-2 border-dashed cursor-pointer bg-transparent hover:bg-card">
               <Button variant="link" asChild>
                 <Plus className="w-full h-full text-white" />
               </Button>
