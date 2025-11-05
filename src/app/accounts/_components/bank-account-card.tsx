@@ -34,7 +34,7 @@ import { ButtonGroup } from "@/components/ui/button-group";
 
 export function BankAccountCard({ account }: { account: ClientBankAccount }) {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-  console.log(account);
+
   return (
     <Card key={account.id} className="justify-between relative">
       {account.isPrimary && (

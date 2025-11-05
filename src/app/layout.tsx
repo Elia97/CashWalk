@@ -5,13 +5,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { ImpersonationIndicator } from "@/components/auth/impersonation-indicator";
 import { Toaster } from "@/components/ui/sonner";
 import Link from "next/link";
-import {
-  type LucideIcon,
-  ArrowRightLeft,
-  ChartColumn,
-  LayoutDashboard,
-  Wallet,
-} from "lucide-react";
 import { DesktopNavigation } from "@/components/layout/desktop-navigation";
 import { MobileNavigation } from "@/components/layout/mobile-navigation";
 import { AuthButton } from "@/components/auth/auth-button";
@@ -34,14 +27,14 @@ export const metadata: Metadata = {
 export type NavbarItem = {
   href: string;
   label: string;
-  Icon: LucideIcon;
+  icon: string;
 };
 
 const NAVBAR_ITEMS: NavbarItem[] = [
-  { href: "/overview", label: "Overview", Icon: LayoutDashboard },
-  { href: "/accounts", label: "Accounts", Icon: Wallet },
-  { href: "/transactions", label: "Transactions", Icon: ArrowRightLeft },
-  { href: "/analytics", label: "Analytics", Icon: ChartColumn },
+  { href: "/overview", label: "Overview", icon: "layout-dashboard" },
+  { href: "/accounts", label: "Accounts", icon: "wallet" },
+  { href: "/transactions", label: "Transactions", icon: "arrow-right-left" },
+  { href: "/analytics", label: "Analytics", icon: "chart-column" },
 ];
 
 export default function RootLayout({
@@ -57,7 +50,7 @@ export default function RootLayout({
         <header className="py-6 px-4 flex justify-center relative h-[84px]">
           <Link
             href="/"
-            className="absolute top-6 left-4 inline-flex items-center"
+            className="absolute top-6 left-8 inline-flex items-center"
           >
             <Image
               priority={true}
@@ -69,7 +62,7 @@ export default function RootLayout({
             <span className="font-bold text-lg">CashWalk</span>
           </Link>
           <DesktopNavigation navbarItems={NAVBAR_ITEMS} />
-          <div className="absolute top-6 right-4">
+          <div className="absolute top-6 right-8">
             <AuthButton />
           </div>
         </header>
