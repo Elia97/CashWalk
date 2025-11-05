@@ -30,7 +30,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { createUserCategory } from "../actions/category-actions";
-import { emojiList } from "@/lib/emoji-list";
+import { categoryIconGroups } from "@/lib/category-icons";
 import {
   Popover,
   PopoverContent,
@@ -215,28 +215,51 @@ export function CreateCategoryForm({
                       <Input
                         id={field.name}
                         placeholder="Choose an icon"
-                        value={field.value}
+                        value={field.value || ""}
                         readOnly
+                        className="text-2xl text-center cursor-pointer"
                       />
                     </PopoverTrigger>
-                    <PopoverContent className="text-center">
-                      {emojiList.map((emoji) => (
-                        <Button
-                          variant={"ghost"}
-                          key={emoji}
-                          className={`text-xl ${
-                            field.value === emoji
-                              ? "border-primary"
-                              : "border-transparent"
-                          }`}
-                          onClick={() => {
-                            field.onChange(emoji);
-                            setShowEmojiPicker(false);
-                          }}
-                        >
-                          {emoji}
-                        </Button>
-                      ))}
+                    <PopoverContent
+                      className="w-72 max-h-60 overflow-y-auto scrollbar"
+                      onWheel={(e) => e.stopPropagation()}
+                      side="top"
+                      align="center"
+                      sideOffset={5}
+                      avoidCollisions={false}
+                    >
+                      {/* Griglia icone organizzate per gruppo */}
+                      <div className="space-y-4">
+                        {Object.entries(categoryIconGroups)
+                          .filter(([key]) => key !== "all")
+                          .map(([key, group]) => (
+                            <div key={key}>
+                              <h4 className="text-xs font-semibold text-muted-foreground mb-2">
+                                {group.label}
+                              </h4>
+                              <div className="grid grid-cols-5 gap-1">
+                                {group.icons.map((icon) => (
+                                  <Button
+                                    type="button"
+                                    variant="ghost"
+                                    key={icon}
+                                    className={`h-10 w-10 p-0 text-xl ${
+                                      field.value === icon
+                                        ? "border-primary bg-primary/10"
+                                        : ""
+                                    }`}
+                                    onClick={() => {
+                                      field.onChange(icon);
+                                      setShowEmojiPicker(false);
+                                    }}
+                                  >
+                                    {icon}
+                                  </Button>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                      </div>
                     </PopoverContent>
                   </Popover>
                   {fieldState.error && (
