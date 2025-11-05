@@ -44,7 +44,7 @@ export function UserNotAuthenticated() {
           </EmptyMedia>
           <EmptyTitle>Hey there!</EmptyTitle>
           <EmptyDescription>
-            You'll need to log in to see your financial data.
+            You&apos;ll need to log in to see your financial data.
             <br />
             Redirecting in <span className="font-mono">{seconds}</span> second
             {seconds !== 1 ? "s" : ""}...

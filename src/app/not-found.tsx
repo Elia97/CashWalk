@@ -20,7 +20,7 @@ export default function NotFoundPage() {
           </EmptyMedia>
           <EmptyTitle>Oops! Page not found</EmptyTitle>
           <EmptyDescription>
-            This page doesn't exist. Let's get you back on track!
+            This page doesn&apos;t exist. Let&apos;s get you back on track!
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent className="flex gap-2">

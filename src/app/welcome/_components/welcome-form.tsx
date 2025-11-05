@@ -41,10 +41,7 @@ import {
   MultiSelectValue,
 } from "@/components/ui/multi-select";
 import { createWelcomeDataAction } from "../actions/welcome-actions";
-import {
-  WELCOME_CATEGORIES,
-  getWelcomeCategoriesByType,
-} from "@/lib/welcome-categories";
+import { getWelcomeCategoriesByType } from "@/lib/welcome-categories";
 
 const welcomeSchema = z.object({
   name: z.string().min(1, "Name is required").max(50, "Name is too long"),
@@ -116,7 +113,7 @@ export function WelcomeForm() {
         <FieldSet>
           <FieldLegend>Your First Account</FieldLegend>
           <FieldDescription>
-            Let's start by adding your primary bank account.
+            Let&apos;s start by adding your primary bank account.
           </FieldDescription>
           <Field orientation={"responsive"}>
             <Controller
@@ -289,8 +286,8 @@ export function WelcomeForm() {
                     {capitalize(field.name)}
                   </FieldLabel>
                   <FieldDescription>
-                    Select a few to begin with - don't worry, you can customize
-                    everything later!
+                    Select a few to begin with - don&apos;t worry, you can
+                    customize everything later!
                   </FieldDescription>
                 </FieldContent>
                 <MultiSelect

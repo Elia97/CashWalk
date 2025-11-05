@@ -23,8 +23,8 @@ export default async function WelcomePage() {
         <CardHeader>
           <CardTitle>Welcome, {session.user.name}! 👋</CardTitle>
           <CardDescription>
-            Let's get started! Add your first account and begin tracking your
-            money.
+            Let&apos;s get started! Add your first account and begin tracking
+            your money.
           </CardDescription>
         </CardHeader>
         <CardContent>

@@ -138,7 +138,7 @@ export function CreateTransactionForm({
           </EmptyMedia>
           <EmptyTitle>No categories yet</EmptyTitle>
           <EmptyDescription>
-            Let's create your first category before adding transactions.
+            Let&apos;s create your first category before adding transactions.
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>

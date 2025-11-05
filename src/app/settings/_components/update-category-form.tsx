@@ -89,7 +89,7 @@ export function UpdateCategoryForm({
                       {capitalize(field.name)}
                     </FieldLabel>
                     <FieldDescription>
-                      Pick a different icon if you'd like.
+                      Pick a different icon if you&apos;d like.
                     </FieldDescription>
                   </FieldContent>
                   <Popover

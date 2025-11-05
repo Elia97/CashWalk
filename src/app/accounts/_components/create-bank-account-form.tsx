@@ -109,7 +109,7 @@ export function CreateBankAccountForm({
                       {capitalize(field.name)}
                     </FieldLabel>
                     <FieldDescription>
-                      Give it a name you'll recognize.
+                      Give it a name you&apos;ll recognize.
                     </FieldDescription>
                   </FieldContent>
                   <Input
