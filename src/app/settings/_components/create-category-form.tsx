@@ -165,10 +165,26 @@ export function CreateCategoryForm({
                       >
                         <SelectValue placeholder="Choose parent" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="max-h-72">
                         {filteredCategories.map((category) => (
                           <SelectItem key={category.id} value={category.id}>
-                            {category.icon && category.icon} {category.name}
+                            <div className="flex flex-col gap-0.5 py-1">
+                              <div className="flex items-center gap-2">
+                                {category.icon && (
+                                  <span className="text-base">
+                                    {category.icon}
+                                  </span>
+                                )}
+                                <span className="font-medium">
+                                  {category.name}
+                                </span>
+                              </div>
+                              {category.description && (
+                                <span className="text-xs text-muted-foreground ml-6">
+                                  {category.description}
+                                </span>
+                              )}
+                            </div>
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -204,9 +220,7 @@ export function CreateCategoryForm({
                     <FieldLabel htmlFor={field.name}>
                       {capitalize(field.name)}
                     </FieldLabel>
-                    <FieldDescription>
-                      Choose a fun icon to represent this category.
-                    </FieldDescription>
+                    <FieldDescription>Choose a fun icon.</FieldDescription>
                   </FieldContent>
                   <Popover
                     open={showEmojiPicker}
