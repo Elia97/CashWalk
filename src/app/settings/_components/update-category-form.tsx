@@ -29,6 +29,7 @@ import {
   PopoverContent,
 } from "@/components/ui/popover";
 import { categoryIconGroups } from "@/lib/category-icons";
+import { useRouter } from "next/navigation";
 
 const categorySchema = z.object({
   name: z.string().min(1, "Name is required").max(50, "Name is too long"),
@@ -53,6 +54,8 @@ export function UpdateCategoryForm({
   });
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
+  const router = useRouter();
+
   const handleUpdateCategory = async (data: CategoryFormData) => {
     const res = await updateUserCategory(
       category.id,
@@ -62,6 +65,7 @@ export function UpdateCategoryForm({
       toast.error(res.message || "Failed to update category");
     } else {
       toast.success("Category updated successfully");
+      router.refresh();
       closeDialog();
     }
   };

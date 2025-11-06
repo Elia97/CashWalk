@@ -37,6 +37,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { capitalize } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 const categorySchema = z.object({
   name: z.string().min(1, "Name is required").max(50, "Name is too long"),
@@ -70,6 +71,8 @@ export function CreateCategoryForm({
   });
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
+  const router = useRouter();
+
   useEffect(() => {
     form.reset({
       ...form.getValues(),
@@ -83,6 +86,7 @@ export function CreateCategoryForm({
       toast.error(res.message || "Failed to create category");
     } else {
       toast.success("Category created successfully");
+      router.refresh();
       closeDialog();
     }
   };
@@ -163,7 +167,26 @@ export function CreateCategoryForm({
                         id={field.name}
                         aria-invalid={fieldState.invalid}
                       >
-                        <SelectValue placeholder="Choose parent" />
+                        <SelectValue placeholder="Choose parent">
+                          {field.value &&
+                            (() => {
+                              const selectedCategory = filteredCategories.find(
+                                (cat) => cat.id === field.value,
+                              );
+                              return selectedCategory ? (
+                                <div className="flex items-center gap-2">
+                                  {selectedCategory.icon && (
+                                    <span className="text-base">
+                                      {selectedCategory.icon}
+                                    </span>
+                                  )}
+                                  <span className="font-medium">
+                                    {selectedCategory.name}
+                                  </span>
+                                </div>
+                              ) : null;
+                            })()}
+                        </SelectValue>
                       </SelectTrigger>
                       <SelectContent className="max-h-72">
                         {filteredCategories.map((category) => (

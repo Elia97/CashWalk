@@ -30,6 +30,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { capitalize } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 const bankAccountSchema = z.object({
   name: z.string().min(1, "Name is required").max(50, "Name is too long"),
@@ -66,6 +67,8 @@ export function UpdateBankAccountForm({
     },
   });
 
+  const router = useRouter();
+
   const handleUpdateBankAccount = async (data: BankAccountFormData) => {
     const res = await updateUserBankAccount(
       account.id,
@@ -75,6 +78,7 @@ export function UpdateBankAccountForm({
       toast.error(res.message || "Failed to update bank account");
     } else {
       toast.success("Bank account updated successfully");
+      router.refresh();
       closeDialog();
     }
   };

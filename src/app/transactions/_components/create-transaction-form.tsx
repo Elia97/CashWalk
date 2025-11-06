@@ -47,6 +47,7 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 import { ButtonGroup } from "@/components/ui/button-group";
+import { useRouter } from "next/navigation";
 
 const transactionSchema = z.object({
   userId: z.string().min(1, "User ID is required"),
@@ -76,7 +77,11 @@ export function CreateTransactionForm({
       categoryId: "",
       transactionType: "expense",
       amount: 0,
-      date: new Date(),
+      date: (() => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return today;
+      })(),
     },
   });
   const [accounts, setAccounts] = useState<
@@ -87,6 +92,8 @@ export function CreateTransactionForm({
   >([]);
 
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
+
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchData() {
@@ -113,11 +120,18 @@ export function CreateTransactionForm({
   }, [form, session?.user.id]);
 
   const handleAddTransaction = async (data: TransactionFormData) => {
-    const res = await createTransaction(data as unknown as ClientTransaction);
+    const normalizedData = {
+      ...data,
+      date: new Date(data.date.setHours(0, 0, 0, 0)),
+    };
+    const res = await createTransaction(
+      normalizedData as unknown as ClientTransaction,
+    );
     if (res.error) {
       toast.error(res.message || "Failed to create transaction");
     } else {
       toast.success("Transaction created successfully");
+      router.refresh();
       closeDialog();
     }
   };

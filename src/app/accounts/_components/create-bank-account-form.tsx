@@ -32,6 +32,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { capitalize } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 const bankAccountSchema = z.object({
   name: z.string().min(1, "Name is required").max(50, "Name is too long"),
@@ -68,6 +69,7 @@ export function CreateBankAccountForm({
       accountNumber: "",
     },
   });
+  const router = useRouter();
 
   useEffect(() => {
     form.reset({
@@ -84,6 +86,7 @@ export function CreateBankAccountForm({
       toast.error(res.message || "Failed to create bank account");
     } else {
       toast.success("Bank account created successfully");
+      router.refresh();
       closeDialog();
     }
   };

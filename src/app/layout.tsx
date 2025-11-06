@@ -50,7 +50,7 @@ export default function RootLayout({
         <header className="py-6 px-4 flex justify-center relative h-[84px]">
           <Link
             href="/"
-            className="absolute top-6 left-8 inline-flex items-center"
+            className="absolute top-6 left-4 lg:left-8 inline-flex items-center"
           >
             <Image
               priority={true}
@@ -62,7 +62,7 @@ export default function RootLayout({
             <span className="font-bold text-lg">CashWalk</span>
           </Link>
           <DesktopNavigation navbarItems={NAVBAR_ITEMS} />
-          <div className="absolute top-6 right-8">
+          <div className="absolute top-6 right-4 lg:right-8">
             <AuthButton />
           </div>
         </header>

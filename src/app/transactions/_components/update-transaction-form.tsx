@@ -37,6 +37,7 @@ import {
   getTransactionFormData,
   updateTransaction,
 } from "../actions/transaction-actions";
+import { useRouter } from "next/navigation";
 
 const transactionSchema = z.object({
   bankAccountId: z.string().min(1, "Bank Account ID is required"),
@@ -75,6 +76,8 @@ export function UpdateTransactionForm({
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  const router = useRouter();
+
   useEffect(() => {
     setIsLoading(true);
     async function fetchData() {
@@ -98,6 +101,7 @@ export function UpdateTransactionForm({
       toast.error(res.message || "Failed to update transaction");
     } else {
       toast.success("Transaction updated successfully");
+      router.refresh();
       closeDialog();
     }
   };
