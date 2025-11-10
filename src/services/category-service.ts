@@ -1,12 +1,12 @@
-import { Category, CategoryWithChildren } from "@/drizzle/schema";
+import { Category, CategoryWithChildren } from '@/drizzle/schema';
 import {
   findManyCategoriesByUserId,
   insertCategory,
   deleteCategoryById,
   updateCategoryById,
   findFirstCategoryById,
-} from "@/repo/category-repository";
-import { findFirstUserById } from "@/repo/user-repository";
+} from '@/repo/category-repository';
+import { findFirstUserById } from '@/repo/user-repository';
 
 export type CategoryActionResponse<T = void> = {
   error: boolean;
@@ -20,41 +20,38 @@ export class CategoryService {
   ): Promise<CategoryActionResponse<CategoryWithChildren[]>> {
     return this.handleErrors(async () => {
       const user = await findFirstUserById(userId);
-      if (!user) throw new Error("User not found");
+      if (!user) throw new Error('User not found');
       return await findManyCategoriesByUserId(userId);
-    }, "Failed to retrieve categories");
+    }, 'Failed to retrieve categories');
   }
 
   static async createCategory(data: Category): Promise<CategoryActionResponse> {
     return this.handleErrors(async () => {
       const user = await findFirstUserById(data.userId!);
-      if (!user) throw new Error("User not found");
+      if (!user) throw new Error('User not found');
       return await insertCategory(data);
-    }, "Failed to create category");
+    }, 'Failed to create category');
   }
 
   static async deleteCategory(id: string): Promise<CategoryActionResponse> {
     return this.handleErrors(async () => {
       const category = await findFirstCategoryById(id);
-      if (!category) throw new Error("Category not found");
+      if (!category) throw new Error('Category not found');
       return await deleteCategoryById(id);
-    }, "Failed to delete category");
+    }, 'Failed to delete category');
   }
 
-  static async updateCategory(
-    id: string,
-    data: Category,
-  ): Promise<CategoryActionResponse> {
+  static async updateCategory(id: string, data: Category): Promise<CategoryActionResponse> {
     return this.handleErrors(async () => {
       const category = await findFirstCategoryById(id);
-      if (!category) throw new Error("Category not found");
+      if (!category) throw new Error('Category not found');
       return await updateCategoryById(id, data);
-    }, "Failed to update category");
+    }, 'Failed to update category');
   }
 
   private static async handleErrors<T>(
     fn: () => Promise<T>,
-    defaultMessage = "An error occurred",
+    defaultMessage = 'An error occurred',
   ): Promise<CategoryActionResponse<T>> {
     try {
       const data = await fn();

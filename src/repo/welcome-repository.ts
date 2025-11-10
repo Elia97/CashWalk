@@ -1,5 +1,5 @@
-import { db } from "@/drizzle/db";
-import { bankAccount, BankAccount, category, Category } from "@/drizzle/schema";
+import { db } from '@/drizzle/db';
+import { bankAccount, BankAccount, category, Category } from '@/drizzle/schema';
 
 export async function insertOnBoardingData(data: {
   bankAccount: BankAccount;

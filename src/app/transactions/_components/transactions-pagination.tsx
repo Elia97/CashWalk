@@ -4,15 +4,15 @@ import {
   PaginationItem,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination";
+} from '@/components/ui/pagination';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { useSearchParams, useRouter } from "next/navigation";
+} from '@/components/ui/select';
+import { useSearchParams, useRouter } from 'next/navigation';
 
 export function TransactionsPagination({
   totalCount,
@@ -27,7 +27,7 @@ export function TransactionsPagination({
   pageSize: number;
   from?: Date;
   to?: Date;
-  type?: "income" | "expense";
+  type?: 'income' | 'expense';
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -36,15 +36,15 @@ export function TransactionsPagination({
 
   function pushParams(nextPage: number, nextPageSize: number) {
     const params = new URLSearchParams(searchParams.toString());
-    if (nextPage > 1) params.set("page", String(nextPage));
-    else params.delete("page");
-    params.set("pageSize", String(nextPageSize));
-    if (from) params.set("from", from.toISOString());
-    else params.delete("from");
-    if (to) params.set("to", to.toISOString());
-    else params.delete("to");
-    if (type) params.set("type", type);
-    else params.delete("type");
+    if (nextPage > 1) params.set('page', String(nextPage));
+    else params.delete('page');
+    params.set('pageSize', String(nextPageSize));
+    if (from) params.set('from', from.toISOString());
+    else params.delete('from');
+    if (to) params.set('to', to.toISOString());
+    else params.delete('to');
+    if (type) params.set('type', type);
+    else params.delete('type');
     router.push(`?${params.toString()}`);
   }
 
@@ -78,9 +78,7 @@ export function TransactionsPagination({
             ))}
           </SelectContent>
         </Select>
-        <span className="hidden sm:inline whitespace-nowrap">
-          Totale {totalCount}
-        </span>
+        <span className="hidden sm:inline whitespace-nowrap">Totale {totalCount}</span>
       </div>
 
       {showPagination && (

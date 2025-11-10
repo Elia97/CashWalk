@@ -1,21 +1,15 @@
-"use client";
+'use client';
 
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
-import { CategoryWithChildren } from "@/drizzle/schema";
-import { Separator } from "@/components/ui/separator";
-import { ChevronUp, ChevronDown, SquarePen, Trash2 } from "lucide-react";
-import { useState } from "react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { ButtonGroup } from "@/components/ui/button-group";
-import { deleteUserCategory } from "../actions/category-actions";
-import { ActionButton } from "@/components/ui/action-button";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { CategoryWithChildren } from '@/drizzle/schema';
+import { Separator } from '@/components/ui/separator';
+import { ChevronUp, ChevronDown, SquarePen, Trash2 } from 'lucide-react';
+import { useState } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { ButtonGroup } from '@/components/ui/button-group';
+import { deleteUserCategory } from '../actions/category-actions';
+import { ActionButton } from '@/components/ui/action-button';
 import {
   Dialog,
   DialogContent,
@@ -23,14 +17,12 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { UpdateCategoryForm } from "./update-category-form";
+} from '@/components/ui/dialog';
+import { UpdateCategoryForm } from './update-category-form';
 
 export function CategoryCard({ category }: { category: CategoryWithChildren }) {
   const [editingSubcatId, setEditingSubcatId] = useState<string | null>(null);
-  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
-    new Set(),
-  );
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
 
   const toggleCategory = (categoryId: string) => {
     setExpandedCategories((prev) => {
@@ -77,15 +69,13 @@ export function CategoryCard({ category }: { category: CategoryWithChildren }) {
             <div key={subcat.id}>
               <Separator className="my-6" />
               <div className="grid sm:grid-cols-2 gap-3">
-                <Badge variant={"outline"} className="text-base px-4 py-1">
+                <Badge variant={'outline'} className="text-base px-4 py-1">
                   {subcat.icon} {subcat.name}
                 </Badge>
                 <ButtonGroup className="w-full sm:justify-self-end sm:w-auto">
                   <Dialog
                     open={editingSubcatId === subcat.id}
-                    onOpenChange={(open) =>
-                      setEditingSubcatId(open ? subcat.id : null)
-                    }
+                    onOpenChange={(open) => setEditingSubcatId(open ? subcat.id : null)}
                   >
                     <DialogTrigger asChild>
                       <Button variant="outline" size="sm" className="flex-1">

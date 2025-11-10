@@ -1,13 +1,9 @@
-import type { Account } from "../page";
-import { Card, CardContent } from "@/components/ui/card";
-import { SUPPORTED_O_AUTH_PROVIDERS } from "@/lib/auth/o-auth-providers";
-import { AccountCard } from "./account-card";
+import type { Account } from '../page';
+import { Card, CardContent } from '@/components/ui/card';
+import { SUPPORTED_O_AUTH_PROVIDERS } from '@/lib/auth/o-auth-providers';
+import { AccountCard } from './account-card';
 
-export function AccountLinking({
-  currentAccounts,
-}: {
-  currentAccounts: Account[];
-}) {
+export function AccountLinking({ currentAccounts }: { currentAccounts: Account[] }) {
   return (
     <div className="space-y-6">
       <div className="space-y-2">
@@ -19,11 +15,7 @@ export function AccountLinking({
         ) : (
           <div className="space-y-3">
             {currentAccounts.map((account) => (
-              <AccountCard
-                key={account.id}
-                provider={account.providerId}
-                account={account}
-              />
+              <AccountCard key={account.id} provider={account.providerId} account={account} />
             ))}
           </div>
         )}
@@ -32,8 +24,7 @@ export function AccountLinking({
         <h3 className="text-lg font-medium">Link Other Accounts</h3>
         <div className="grid gap-3">
           {SUPPORTED_O_AUTH_PROVIDERS.filter(
-            (provider) =>
-              !currentAccounts.find((acc) => acc.providerId === provider),
+            (provider) => !currentAccounts.find((acc) => acc.providerId === provider),
           ).map((provider) => (
             <AccountCard key={provider} provider={provider} />
           ))}

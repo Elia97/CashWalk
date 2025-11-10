@@ -1,27 +1,27 @@
-import "./globals.css";
-import Image from "next/image";
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import { ImpersonationIndicator } from "@/components/auth/impersonation-indicator";
-import { Toaster } from "@/components/ui/sonner";
-import Link from "next/link";
-import { DesktopNavigation } from "@/components/layout/desktop-navigation";
-import { MobileNavigation } from "@/components/layout/mobile-navigation";
-import { AuthButton } from "@/components/auth/auth-button";
+import './globals.css';
+import Image from 'next/image';
+import type { Metadata } from 'next';
+import { Geist, Geist_Mono } from 'next/font/google';
+import { ImpersonationIndicator } from '@/components/auth/impersonation-indicator';
+import { Toaster } from '@/components/ui/sonner';
+import Link from 'next/link';
+import { DesktopNavigation } from '@/components/layout/desktop-navigation';
+import { MobileNavigation } from '@/components/layout/mobile-navigation';
+import { AuthButton } from '@/components/auth/auth-button';
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
-  title: "CashWalk",
-  description: "Manage your finances effectively",
+  title: 'CashWalk',
+  description: 'Manage your finances effectively',
 };
 
 export type NavbarItem = {
@@ -31,10 +31,10 @@ export type NavbarItem = {
 };
 
 const NAVBAR_ITEMS: NavbarItem[] = [
-  { href: "/overview", label: "Overview", icon: "layout-dashboard" },
-  { href: "/accounts", label: "Accounts", icon: "wallet" },
-  { href: "/transactions", label: "Transactions", icon: "arrow-right-left" },
-  { href: "/analytics", label: "Analytics", icon: "chart-column" },
+  { href: '/overview', label: 'Overview', icon: 'layout-dashboard' },
+  { href: '/accounts', label: 'Accounts', icon: 'wallet' },
+  { href: '/transactions', label: 'Transactions', icon: 'arrow-right-left' },
+  { href: '/analytics', label: 'Analytics', icon: 'chart-column' },
 ];
 
 export default function RootLayout({
@@ -44,21 +44,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased dark min-h-screen`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased dark min-h-screen`}>
         <header className="py-6 px-4 flex justify-center relative h-[84px]">
-          <Link
-            href="/"
-            className="absolute top-6 left-4 lg:left-8 inline-flex items-center"
-          >
-            <Image
-              priority={true}
-              src="/CashWalk.svg"
-              alt="CashWalk"
-              width={40}
-              height={40}
-            />
+          <Link href="/" className="absolute top-6 left-4 lg:left-8 inline-flex items-center">
+            <Image priority={true} src="/CashWalk.svg" alt="CashWalk" width={40} height={40} />
             <span className="font-bold text-lg">CashWalk</span>
           </Link>
           <DesktopNavigation navbarItems={NAVBAR_ITEMS} />

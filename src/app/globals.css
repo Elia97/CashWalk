@@ -1,6 +1,6 @@
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "tailwindcss-animated";
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'tailwindcss-animated';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -121,7 +121,7 @@
     @apply bg-background text-foreground;
   }
   @media (max-width: 1023px) {
-    nav[data-orientation="horizontal"] > div {
+    nav[data-orientation='horizontal'] > div {
       width: 100vw !important;
     }
   }

@@ -1,34 +1,30 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { ButtonGroup } from "@/components/ui/button-group";
-import { Input } from "@/components/ui/input";
+import { Button } from '@/components/ui/button';
+import { ButtonGroup } from '@/components/ui/button-group';
+import { Input } from '@/components/ui/input';
 import {
   Dialog,
   DialogTrigger,
   DialogContent,
   DialogTitle,
   DialogDescription,
-} from "@/components/ui/dialog";
-import { Search, Plus, CalendarIcon } from "lucide-react";
+} from '@/components/ui/dialog';
+import { Search, Plus, CalendarIcon } from 'lucide-react';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { DateRange } from "react-day-picker";
-import { ClientTransaction } from "@/drizzle/schema";
-import { useState } from "react";
-import { formatDate } from "@/lib/utils";
-import { CreateTransactionForm } from "./create-transaction-form";
+} from '@/components/ui/select';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
+import { DateRange } from 'react-day-picker';
+import { ClientTransaction } from '@/drizzle/schema';
+import { useState } from 'react';
+import { formatDate } from '@/lib/utils';
+import { CreateTransactionForm } from './create-transaction-form';
 
 export function TransactionFilters({
   transactions,
@@ -48,8 +44,8 @@ export function TransactionFilters({
   setFilter: (value: string) => void;
   date: DateRange | undefined;
   setDate: (value: DateRange | undefined) => void;
-  selectedType: "income" | "expense" | "all";
-  setSelectedType: (value: "income" | "expense" | "all") => void;
+  selectedType: 'income' | 'expense' | 'all';
+  setSelectedType: (value: 'income' | 'expense' | 'all') => void;
   selectedAccount: string;
   setSelectedAccount: (value: string) => void;
   selectedCategory: string;
@@ -58,9 +54,7 @@ export function TransactionFilters({
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const userAccounts = Array.from(
-    new Map(
-      transactions.map((tx) => [tx.bankAccount.id, tx.bankAccount]),
-    ).values(),
+    new Map(transactions.map((tx) => [tx.bankAccount.id, tx.bankAccount])).values(),
   );
 
   const userCategories = Array.from(
@@ -107,22 +101,22 @@ export function TransactionFilters({
         </ButtonGroup>
         <ButtonGroup className="w-full lg:w-auto">
           <Button
-            variant={selectedType === "all" ? "default" : "outline"}
-            onClick={() => setSelectedType("all")}
+            variant={selectedType === 'all' ? 'default' : 'outline'}
+            onClick={() => setSelectedType('all')}
             className="w-1/3 lg:w-auto"
           >
             All
           </Button>
           <Button
-            variant={selectedType === "income" ? "default" : "outline"}
-            onClick={() => setSelectedType("income")}
+            variant={selectedType === 'income' ? 'default' : 'outline'}
+            onClick={() => setSelectedType('income')}
             className="w-1/3 lg:w-auto"
           >
             Income
           </Button>
           <Button
-            variant={selectedType === "expense" ? "default" : "outline"}
-            onClick={() => setSelectedType("expense")}
+            variant={selectedType === 'expense' ? 'default' : 'outline'}
+            onClick={() => setSelectedType('expense')}
             className="w-1/3 lg:w-auto"
           >
             Expenses
@@ -174,9 +168,7 @@ export function TransactionFilters({
               <DialogDescription>
                 Fill the form below to create a new transaction.
               </DialogDescription>
-              <CreateTransactionForm
-                closeDialog={() => setIsDialogOpen(false)}
-              />
+              <CreateTransactionForm closeDialog={() => setIsDialogOpen(false)} />
             </DialogContent>
           </Dialog>
         </ButtonGroup>

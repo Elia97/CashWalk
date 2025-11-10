@@ -1,4 +1,4 @@
-import { sendEmail } from "./send-email";
+import { sendEmail } from './send-email';
 
 export async function verificationEmail({
   user,
@@ -12,7 +12,7 @@ export async function verificationEmail({
 }) {
   await sendEmail({
     to: user.email,
-    subject: "Verify your email address",
+    subject: 'Verify your email address',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #333;">Verify Your Email</h2>

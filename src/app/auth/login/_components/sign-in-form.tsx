@@ -1,32 +1,26 @@
-"use client";
+'use client';
 
-import z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { BetterAuthActionButton } from "@/components/auth/better-auth-action-button";
-import { authClient } from "@/lib/auth/auth-client";
-import { useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { LoadingSwap } from "@/components/ui/loading-swap";
-import { PasswordInput } from "@/components/ui/password-input";
-import {
-  Field,
-  FieldContent,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
-import { capitalize } from "@/lib/utils";
+import z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Controller, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
+import { BetterAuthActionButton } from '@/components/auth/better-auth-action-button';
+import { authClient } from '@/lib/auth/auth-client';
+import { useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { LoadingSwap } from '@/components/ui/loading-swap';
+import { PasswordInput } from '@/components/ui/password-input';
+import { Field, FieldContent, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
+import { capitalize } from '@/lib/utils';
 
 const signInSchema = z.object({
-  email: z.email().min(1, "Email is required").max(100, "Email is too long"),
+  email: z.email().min(1, 'Email is required').max(100, 'Email is too long'),
   password: z
     .string()
-    .min(6, "Password must be at least 6 characters long")
-    .max(100, "Password is too long"),
+    .min(6, 'Password must be at least 6 characters long')
+    .max(100, 'Password is too long'),
 });
 
 type SignInFormData = z.infer<typeof signInSchema>;
@@ -43,8 +37,8 @@ export function SignInForm({
   const form = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
   });
 
@@ -54,7 +48,7 @@ export function SignInForm({
       {
         onSuccess: () => {
           refetch();
-          router.push("/");
+          router.push('/');
         },
       },
     );
@@ -62,16 +56,16 @@ export function SignInForm({
 
   const handleSignIn = async (data: SignInFormData) => {
     await authClient.signIn.email(
-      { ...data, callbackURL: "/overview" },
+      { ...data, callbackURL: '/overview' },
       {
         onError: (error) => {
-          if (error.error.code === "EMAIL_NOT_VERIFIED") {
+          if (error.error.code === 'EMAIL_NOT_VERIFIED') {
             openEmailVerificationTab(data.email);
           }
-          toast.error(error.error.message || "Failed to sign in");
+          toast.error(error.error.message || 'Failed to sign in');
         },
         onSuccess: () => {
-          toast.success("Successfully signed in");
+          toast.success('Successfully signed in');
         },
       },
     );
@@ -90,9 +84,7 @@ export function SignInForm({
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldContent>
-                    <FieldLabel htmlFor={field.name}>
-                      {capitalize(field.name)}
-                    </FieldLabel>
+                    <FieldLabel htmlFor={field.name}>{capitalize(field.name)}</FieldLabel>
                     <Input
                       {...field}
                       id={field.name}
@@ -100,9 +92,7 @@ export function SignInForm({
                       placeholder="Your Email"
                       autoComplete="email webauthn"
                     />
-                    {fieldState.error && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
+                    {fieldState.error && <FieldError errors={[fieldState.error]} />}
                   </FieldContent>
                 </Field>
               )}
@@ -115,9 +105,7 @@ export function SignInForm({
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldContent>
-                    <FieldLabel htmlFor={field.name}>
-                      {capitalize(field.name)}
-                    </FieldLabel>
+                    <FieldLabel htmlFor={field.name}>{capitalize(field.name)}</FieldLabel>
                     <PasswordInput
                       {...field}
                       id={field.name}
@@ -125,9 +113,7 @@ export function SignInForm({
                       placeholder="Your Password"
                       autoComplete="current-password webauthn"
                     />
-                    {fieldState.error && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
+                    {fieldState.error && <FieldError errors={[fieldState.error]} />}
                   </FieldContent>
                   <div className="flex justify-end">
                     <Button
@@ -145,23 +131,17 @@ export function SignInForm({
             />
           </FieldGroup>
           <Field orientation="horizontal">
-            <Button
-              type="submit"
-              className="flex-1"
-              disabled={form.formState.isSubmitting}
-            >
-              <LoadingSwap isLoading={form.formState.isSubmitting}>
-                Sign In
-              </LoadingSwap>
+            <Button type="submit" className="flex-1" disabled={form.formState.isSubmitting}>
+              <LoadingSwap isLoading={form.formState.isSubmitting}>Sign In</LoadingSwap>
             </Button>
             <BetterAuthActionButton
-              variant={"outline"}
+              variant={'outline'}
               className="flex-1"
               action={() =>
                 authClient.signIn.passkey(undefined, {
                   onSuccess: () => {
                     refetch();
-                    router.push("/overview");
+                    router.push('/overview');
                   },
                 })
               }

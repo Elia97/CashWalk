@@ -1,19 +1,13 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { CategoryWithChildren } from "@/drizzle/schema";
-import { Plus, Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { CategoryCard } from "./category-card";
-import { ButtonGroup } from "@/components/ui/button-group";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { CategoryWithChildren } from '@/drizzle/schema';
+import { Plus, Search } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { CategoryCard } from './category-card';
+import { ButtonGroup } from '@/components/ui/button-group';
 import {
   Dialog,
   DialogDescription,
@@ -21,40 +15,28 @@ import {
   DialogTrigger,
   DialogContent,
   DialogHeader,
-} from "@/components/ui/dialog";
-import { CreateCategoryForm } from "./create-category-form";
-import { useIsMobile } from "@/lib/hooks/use-is-mobile";
+} from '@/components/ui/dialog';
+import { CreateCategoryForm } from './create-category-form';
+import { useIsMobile } from '@/lib/hooks/use-is-mobile';
 
-export function CategoryManagement({
-  categories,
-}: {
-  categories: CategoryWithChildren[];
-}) {
+export function CategoryManagement({ categories }: { categories: CategoryWithChildren[] }) {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-  const [selectedType, setSelectedType] = useState<
-    "all" | "income" | "expense"
-  >("all");
-  const [filter, setFilter] = useState("");
+  const [selectedType, setSelectedType] = useState<'all' | 'income' | 'expense'>('all');
+  const [filter, setFilter] = useState('');
   const filterTerms = filter
     .toLowerCase()
     .split(/[\s,]+/)
     .filter(Boolean);
 
   const filteredCategories = categories.filter((cat) => {
-    if (selectedType !== "all" && cat.categoryType !== selectedType)
-      return false;
+    if (selectedType !== 'all' && cat.categoryType !== selectedType) return false;
 
     if (filterTerms.length > 0) {
       const name = cat.name.toLowerCase();
-      const description = (cat.description ?? "").toLowerCase();
-      const childrenNames = (cat.children ?? [])
-        .map((child) => child.name.toLowerCase())
-        .join(" ");
+      const description = (cat.description ?? '').toLowerCase();
+      const childrenNames = (cat.children ?? []).map((child) => child.name.toLowerCase()).join(' ');
       const textMatch = filterTerms.every(
-        (term) =>
-          name.includes(term) ||
-          description.includes(term) ||
-          childrenNames.includes(term),
+        (term) => name.includes(term) || description.includes(term) || childrenNames.includes(term),
       );
       if (!textMatch) return false;
     }
@@ -69,13 +51,8 @@ export function CategoryManagement({
     <Card>
       <CardHeader>
         <CardTitle>Your Categories</CardTitle>
-        <CardDescription>
-          Organize your spending and income with custom categories.
-        </CardDescription>
-        <ButtonGroup
-          className="w-full"
-          orientation={isMobile ? "vertical" : "horizontal"}
-        >
+        <CardDescription>Organize your spending and income with custom categories.</CardDescription>
+        <ButtonGroup className="w-full" orientation={isMobile ? 'vertical' : 'horizontal'}>
           <ButtonGroup className="w-full">
             <Input
               placeholder="Search..."
@@ -88,22 +65,22 @@ export function CategoryManagement({
           </ButtonGroup>
           <ButtonGroup className="w-full md:w-auto">
             <Button
-              variant={selectedType === "all" ? "default" : "outline"}
-              onClick={() => setSelectedType("all")}
+              variant={selectedType === 'all' ? 'default' : 'outline'}
+              onClick={() => setSelectedType('all')}
               className="w-1/3 md:w-auto"
             >
               All
             </Button>
             <Button
-              variant={selectedType === "income" ? "default" : "outline"}
-              onClick={() => setSelectedType("income")}
+              variant={selectedType === 'income' ? 'default' : 'outline'}
+              onClick={() => setSelectedType('income')}
               className="w-1/3 md:w-auto"
             >
               Income
             </Button>
             <Button
-              variant={selectedType === "expense" ? "default" : "outline"}
-              onClick={() => setSelectedType("expense")}
+              variant={selectedType === 'expense' ? 'default' : 'outline'}
+              onClick={() => setSelectedType('expense')}
               className="w-1/3 md:w-auto"
             >
               Expenses

@@ -1,11 +1,9 @@
-import type { Account } from "../page";
-import { Card, CardContent } from "@/components/ui/card";
-import { AccountLinking } from "./account-linking";
+import type { Account } from '../page';
+import { Card, CardContent } from '@/components/ui/card';
+import { AccountLinking } from './account-linking';
 
 export async function LinkedAccountsTab({ accounts }: { accounts: Account[] }) {
-  const notCredentialAccounts = accounts.filter(
-    (a) => a.providerId !== "credential",
-  );
+  const notCredentialAccounts = accounts.filter((a) => a.providerId !== 'credential');
 
   return (
     <Card>

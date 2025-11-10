@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import type { Session } from "better-auth";
-import { BetterAuthActionButton } from "@/components/auth/better-auth-action-button";
-import { authClient } from "@/lib/auth/auth-client";
-import { useRouter } from "next/navigation";
-import { SessionCard } from "./session-card";
-import { Card, CardContent } from "@/components/ui/card";
+import type { Session } from 'better-auth';
+import { BetterAuthActionButton } from '@/components/auth/better-auth-action-button';
+import { authClient } from '@/lib/auth/auth-client';
+import { useRouter } from 'next/navigation';
+import { SessionCard } from './session-card';
+import { Card, CardContent } from '@/components/ui/card';
 
 export function SessionManagement({
   sessions,
@@ -15,18 +15,12 @@ export function SessionManagement({
   currentSessionToken: string;
 }) {
   const router = useRouter();
-  const currentSession = sessions.find(
-    (session) => session.token === currentSessionToken,
-  );
-  const otherSessions = sessions.filter(
-    (session) => session.token !== currentSessionToken,
-  );
+  const currentSession = sessions.find((session) => session.token === currentSessionToken);
+  const otherSessions = sessions.filter((session) => session.token !== currentSessionToken);
 
   return (
     <div className="space-y-6">
-      {currentSession && (
-        <SessionCard session={currentSession} isCurrentSession />
-      )}
+      {currentSession && <SessionCard session={currentSession} isCurrentSession />}
 
       <div className="space-y-4">
         <div className="flex justify-between items-center">
@@ -34,7 +28,7 @@ export function SessionManagement({
           {otherSessions.length > 0 && (
             <BetterAuthActionButton
               variant="destructive"
-              size={"sm"}
+              size={'sm'}
               action={() =>
                 authClient.revokeOtherSessions(undefined, {
                   onSuccess: () => {

@@ -1,23 +1,17 @@
-"use client";
+'use client';
 
-import type { Account } from "../page";
-import { Plus, Shield, Trash } from "lucide-react";
+import type { Account } from '../page';
+import { Plus, Shield, Trash } from 'lucide-react';
 import {
   SUPPORTED_O_AUTH_PROVIDER_DETAILS,
   SupportedOAuthProviders,
-} from "@/lib/auth/o-auth-providers";
-import { BetterAuthActionButton } from "@/components/auth/better-auth-action-button";
-import { authClient } from "@/lib/auth/auth-client";
-import { useRouter } from "next/navigation";
-import { Card, CardContent } from "@/components/ui/card";
+} from '@/lib/auth/o-auth-providers';
+import { BetterAuthActionButton } from '@/components/auth/better-auth-action-button';
+import { authClient } from '@/lib/auth/auth-client';
+import { useRouter } from 'next/navigation';
+import { Card, CardContent } from '@/components/ui/card';
 
-export function AccountCard({
-  provider,
-  account,
-}: {
-  provider: string;
-  account?: Account;
-}) {
+export function AccountCard({ provider, account }: { provider: string; account?: Account }) {
   const router = useRouter();
   const providerDetails = SUPPORTED_O_AUTH_PROVIDER_DETAILS[
     provider as SupportedOAuthProviders
@@ -36,8 +30,7 @@ export function AccountCard({
               <p className="font-medium">{providerDetails.name}</p>
               {!account ? (
                 <p className="text-sm text-muted-foreground">
-                  Connect your {providerDetails.name} account for easier sign
-                  in.
+                  Connect your {providerDetails.name} account for easier sign in.
                 </p>
               ) : (
                 <p className="text-sm text-muted-foreground">
@@ -48,13 +41,13 @@ export function AccountCard({
           </div>
           {!account ? (
             <BetterAuthActionButton
-              variant={"outline"}
-              size={"sm"}
+              variant={'outline'}
+              size={'sm'}
               successMessage="Linked account successfully"
               action={() =>
                 authClient.linkSocial({
                   provider,
-                  callbackURL: "/profile",
+                  callbackURL: '/profile',
                 })
               }
             >
@@ -63,8 +56,8 @@ export function AccountCard({
             </BetterAuthActionButton>
           ) : (
             <BetterAuthActionButton
-              variant={"destructive"}
-              size={"sm"}
+              variant={'destructive'}
+              size={'sm'}
               successMessage="Unlinked account successfully"
               action={() =>
                 authClient.unlinkAccount(

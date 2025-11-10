@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { BetterAuthActionButton } from "@/components/auth/better-auth-action-button";
-import { authClient } from "@/lib/auth/auth-client";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { BetterAuthActionButton } from '@/components/auth/better-auth-action-button';
+import { authClient } from '@/lib/auth/auth-client';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export function PasskeyButton() {
   const router = useRouter();
@@ -15,7 +15,7 @@ export function PasskeyButton() {
       {
         onSuccess: () => {
           refetch();
-          router.push("/");
+          router.push('/');
         },
       },
     );
@@ -23,13 +23,13 @@ export function PasskeyButton() {
 
   return (
     <BetterAuthActionButton
-      variant={"outline"}
+      variant={'outline'}
       className="w-full"
       action={() =>
         authClient.signIn.passkey(undefined, {
           onSuccess: () => {
             refetch();
-            router.push("/");
+            router.push('/');
           },
         })
       }

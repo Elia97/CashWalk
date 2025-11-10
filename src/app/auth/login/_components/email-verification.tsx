@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { BetterAuthActionButton } from "@/components/auth/better-auth-action-button";
-import { authClient } from "@/lib/auth/auth-client";
-import { useEffect, useRef, useState } from "react";
+import { BetterAuthActionButton } from '@/components/auth/better-auth-action-button';
+import { authClient } from '@/lib/auth/auth-client';
+import { useEffect, useRef, useState } from 'react';
 
 export function EmailVerification({ email }: { email: string }) {
   const [timeToNextResend, setTimeToNextResend] = useState(30);
@@ -28,12 +28,11 @@ export function EmailVerification({ email }: { email: string }) {
   return (
     <div className="space-y-4">
       <p className="text-sm text-muted-foreground mt-2">
-        A verification email has been sent to <strong>{email}</strong>. Please
-        check your inbox and click the verification link to verify your email
-        address.
+        A verification email has been sent to <strong>{email}</strong>. Please check your inbox and
+        click the verification link to verify your email address.
       </p>
       <BetterAuthActionButton
-        variant={"outline"}
+        variant={'outline'}
         className="w-full"
         successMessage="Verification email sent!"
         disabled={timeToNextResend > 0}
@@ -41,13 +40,13 @@ export function EmailVerification({ email }: { email: string }) {
           startEmailVerificationCountdown();
           return authClient.sendVerificationEmail({
             email,
-            callbackURL: "/",
+            callbackURL: '/',
           });
         }}
       >
         {timeToNextResend > 0
           ? `Resend verification email in ${timeToNextResend}s`
-          : "Resend verification email"}
+          : 'Resend verification email'}
       </BetterAuthActionButton>
     </div>
   );

@@ -1,9 +1,9 @@
-import { seedCategories } from "./seeds/system-categories";
+import { seedCategories } from './seeds/system-categories';
 
 async function runAllSeeds() {
   try {
     await Promise.all([seedCategories()]);
-    console.log("✅ Tutti i seed sono stati eseguiti con successo.");
+    console.log('✅ Tutti i seed sono stati eseguiti con successo.');
   } catch (error) {
     console.error("❌ Errore durante l'esecuzione dei seed:", error);
   }

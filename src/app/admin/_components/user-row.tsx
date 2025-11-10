@@ -1,17 +1,14 @@
-"use client";
+'use client';
 
-import { authClient } from "@/lib/auth/auth-client";
-import { UserWithRole } from "better-auth/plugins";
-import { MoreHorizontal } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import {
-  AlertDialogHeader,
-  AlertDialogFooter,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { TableRow, TableCell } from "@/components/ui/table";
+import { authClient } from '@/lib/auth/auth-client';
+import { UserWithRole } from 'better-auth/plugins';
+import { MoreHorizontal } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
+import { AlertDialogHeader, AlertDialogFooter } from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import { TableRow, TableCell } from '@/components/ui/table';
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -20,23 +17,17 @@ import {
   AlertDialogDescription,
   AlertDialogCancel,
   AlertDialogAction,
-} from "@/components/ui/alert-dialog";
+} from '@/components/ui/alert-dialog';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
-import { formatDate } from "@/lib/utils";
+} from '@/components/ui/dropdown-menu';
+import { formatDate } from '@/lib/utils';
 
-export function UserRow({
-  user,
-  selfId,
-}: {
-  user: UserWithRole;
-  selfId: string;
-}) {
+export function UserRow({ user, selfId }: { user: UserWithRole; selfId: string }) {
   const isSelf = user.id === selfId;
   const router = useRouter();
   const { refetch } = authClient.useSession();
@@ -46,11 +37,11 @@ export function UserRow({
       { userId },
       {
         onError: (error) => {
-          toast.error(error.error.message || "Failed to impersonate user");
+          toast.error(error.error.message || 'Failed to impersonate user');
         },
         onSuccess: () => {
           refetch();
-          router.push("/");
+          router.push('/');
         },
       },
     );
@@ -61,10 +52,10 @@ export function UserRow({
       { userId },
       {
         onError: (error) => {
-          toast.error(error.error.message || "Failed to revoke sessions");
+          toast.error(error.error.message || 'Failed to revoke sessions');
         },
         onSuccess: () => {
-          toast.success("User sessions revoked successfully");
+          toast.success('User sessions revoked successfully');
         },
       },
     );
@@ -75,10 +66,10 @@ export function UserRow({
       { userId },
       {
         onError: (error) => {
-          toast.error(error.error.message || "Failed to ban user");
+          toast.error(error.error.message || 'Failed to ban user');
         },
         onSuccess: () => {
-          toast.success("User banned successfully");
+          toast.success('User banned successfully');
           router.refresh();
         },
       },
@@ -90,10 +81,10 @@ export function UserRow({
       { userId },
       {
         onError: (error) => {
-          toast.error(error.error.message || "Failed to unban user");
+          toast.error(error.error.message || 'Failed to unban user');
         },
         onSuccess: () => {
-          toast.success("User unbanned successfully");
+          toast.success('User unbanned successfully');
           router.refresh();
         },
       },
@@ -105,10 +96,10 @@ export function UserRow({
       { userId },
       {
         onError: (error) => {
-          toast.error(error.error.message || "Failed to remove user");
+          toast.error(error.error.message || 'Failed to remove user');
         },
         onSuccess: () => {
-          toast.success("User removed successfully");
+          toast.success('User removed successfully');
           router.refresh();
         },
       },
@@ -119,10 +110,8 @@ export function UserRow({
     <TableRow>
       <TableCell>
         <div>
-          <div className="font-medium">{user.name || "No name"}</div>
-          <div className="text-sm text-muted-foreground">
-            {user.email || "No email"}
-          </div>
+          <div className="font-medium">{user.name || 'No name'}</div>
+          <div className="text-sm text-muted-foreground">{user.email || 'No email'}</div>
           <div className="flex items-center gap-2 not-empty:mt-2">
             {user.banned && <Badge variant="destructive">Banned</Badge>}
             {!user.emailVerified && <Badge variant="outline">Unverified</Badge>}
@@ -131,8 +120,8 @@ export function UserRow({
         </div>
       </TableCell>
       <TableCell>
-        <Badge variant={user.role === "admin" ? "default" : "secondary"}>
-          {user.role || "No role"}
+        <Badge variant={user.role === 'admin' ? 'default' : 'secondary'}>
+          {user.role || 'No role'}
         </Badge>
       </TableCell>
       <TableCell>{formatDate(user.createdAt)}</TableCell>
@@ -141,14 +130,12 @@ export function UserRow({
           <AlertDialog>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant={"ghost"} size={"icon"}>
+                <Button variant={'ghost'} size={'icon'}>
                   <MoreHorizontal />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem
-                  onClick={() => handleImpersonateUser(user.id)}
-                >
+                <DropdownMenuItem onClick={() => handleImpersonateUser(user.id)}>
                   Impersonate
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => handleRevokeSessions(user.id)}>
@@ -166,9 +153,7 @@ export function UserRow({
                 <DropdownMenuSeparator />
 
                 <AlertDialogTrigger asChild>
-                  <DropdownMenuItem variant="destructive">
-                    Delete User
-                  </DropdownMenuItem>
+                  <DropdownMenuItem variant="destructive">Delete User</DropdownMenuItem>
                 </AlertDialogTrigger>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -176,8 +161,7 @@ export function UserRow({
               <AlertDialogHeader>
                 <AlertDialogTitle>Delete User</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Are you sure you want to delete this user? This action cannot
-                  be undone.
+                  Are you sure you want to delete this user? This action cannot be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>

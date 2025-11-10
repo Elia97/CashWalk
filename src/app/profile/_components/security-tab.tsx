@@ -1,16 +1,10 @@
-import type { Account, Passkey } from "../page";
-import { ChangePasswordForm } from "./change-password-form";
-import { SetPasswordButton } from "./set-password-button";
-import { TwoFactorAuthForm } from "./two-factor-auth-form";
-import { PasskeyManagement } from "./passkey-management";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import type { Account, Passkey } from '../page';
+import { ChangePasswordForm } from './change-password-form';
+import { SetPasswordButton } from './set-password-button';
+import { TwoFactorAuthForm } from './two-factor-auth-form';
+import { PasskeyManagement } from './passkey-management';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
 export async function SecurityTab({
   accounts,
@@ -23,9 +17,7 @@ export async function SecurityTab({
   email: string;
   isTwoFactorEnabled: boolean;
 }) {
-  const hasPasswordAccount = accounts.some(
-    (a) => a.providerId === "credential",
-  );
+  const hasPasswordAccount = accounts.some((a) => a.providerId === 'credential');
 
   if (hasPasswordAccount) {
     return (
@@ -33,9 +25,7 @@ export async function SecurityTab({
         <Card>
           <CardHeader>
             <CardTitle>Change Password</CardTitle>
-            <CardDescription>
-              Update your password for improved security
-            </CardDescription>
+            <CardDescription>Update your password for improved security</CardDescription>
           </CardHeader>
           <CardContent>
             <ChangePasswordForm />
@@ -44,8 +34,8 @@ export async function SecurityTab({
         <Card>
           <CardHeader className="flex justify-between items-center gap-2">
             <CardTitle>Two Factor Authentication</CardTitle>
-            <Badge variant={isTwoFactorEnabled ? "default" : "destructive"}>
-              {isTwoFactorEnabled ? "Enabled" : "Disabled"}
+            <Badge variant={isTwoFactorEnabled ? 'default' : 'destructive'}>
+              {isTwoFactorEnabled ? 'Enabled' : 'Disabled'}
             </Badge>
           </CardHeader>
           <CardContent>

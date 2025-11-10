@@ -1,27 +1,21 @@
-"use client";
+'use client';
 
-import z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
-import { authClient } from "@/lib/auth/auth-client";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { QrCodeVerify } from "./qr-code-verify";
-import { Button } from "@/components/ui/button";
-import { LoadingSwap } from "@/components/ui/loading-swap";
-import { PasswordInput } from "@/components/ui/password-input";
-import {
-  Field,
-  FieldContent,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
-import { capitalize } from "@/lib/utils";
+import z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Controller, useForm } from 'react-hook-form';
+import { authClient } from '@/lib/auth/auth-client';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { QrCodeVerify } from './qr-code-verify';
+import { Button } from '@/components/ui/button';
+import { LoadingSwap } from '@/components/ui/loading-swap';
+import { PasswordInput } from '@/components/ui/password-input';
+import { Field, FieldContent, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
+import { capitalize } from '@/lib/utils';
 
 const twoFactorAuthSchema = z.object({
-  password: z.string().min(1, "Password is required"),
+  password: z.string().min(1, 'Password is required'),
 });
 
 type TwoFactorAuthFormData = z.infer<typeof twoFactorAuthSchema>;
@@ -31,13 +25,11 @@ export type TwoFactorData = {
 };
 
 export function TwoFactorAuthForm({ isEnabled }: { isEnabled: boolean }) {
-  const [twoFactorData, setTwoFactorData] = useState<TwoFactorData | null>(
-    null,
-  );
+  const [twoFactorData, setTwoFactorData] = useState<TwoFactorData | null>(null);
   const router = useRouter();
   const form = useForm<TwoFactorAuthFormData>({
     resolver: zodResolver(twoFactorAuthSchema),
-    defaultValues: { password: "" },
+    defaultValues: { password: '' },
   });
 
   const handleDisableTwoFactorAuth = async (data: TwoFactorAuthFormData) => {
@@ -47,7 +39,7 @@ export function TwoFactorAuthForm({ isEnabled }: { isEnabled: boolean }) {
       },
       {
         onError: (error) => {
-          toast.error(error.error.message || "Failed to disable 2FA.");
+          toast.error(error.error.message || 'Failed to disable 2FA.');
         },
         onSuccess: () => {
           form.reset();
@@ -63,7 +55,7 @@ export function TwoFactorAuthForm({ isEnabled }: { isEnabled: boolean }) {
     });
 
     if (res.error) {
-      toast.error(res.error.message || "Failed to enable 2FA.");
+      toast.error(res.error.message || 'Failed to enable 2FA.');
     } else {
       setTwoFactorData(res.data);
     }
@@ -94,9 +86,7 @@ export function TwoFactorAuthForm({ isEnabled }: { isEnabled: boolean }) {
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid} className="flex-1">
               <FieldContent>
-                <FieldLabel htmlFor={field.name}>
-                  {capitalize(field.name)}
-                </FieldLabel>
+                <FieldLabel htmlFor={field.name}>{capitalize(field.name)}</FieldLabel>
                 <PasswordInput
                   {...field}
                   id={field.name}
@@ -105,10 +95,7 @@ export function TwoFactorAuthForm({ isEnabled }: { isEnabled: boolean }) {
                   autoComplete="current-password webauthn"
                 />
                 {fieldState.error && (
-                  <FieldError
-                    errors={[fieldState.error]}
-                    className="text-nowrap"
-                  />
+                  <FieldError errors={[fieldState.error]} className="text-nowrap" />
                 )}
               </FieldContent>
             </Field>
@@ -120,10 +107,10 @@ export function TwoFactorAuthForm({ isEnabled }: { isEnabled: boolean }) {
             type="submit"
             className="w-full mt-4"
             disabled={form.formState.isSubmitting}
-            variant={isEnabled ? "destructive" : "default"}
+            variant={isEnabled ? 'destructive' : 'default'}
           >
             <LoadingSwap isLoading={form.formState.isSubmitting}>
-              {isEnabled ? "Disable" : "Enable"} 2FA
+              {isEnabled ? 'Disable' : 'Enable'} 2FA
             </LoadingSwap>
           </Button>
         </Field>

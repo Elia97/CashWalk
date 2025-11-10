@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   FieldGroup,
@@ -10,28 +10,28 @@ import {
   FieldDescription,
   FieldLegend,
   FieldSeparator,
-} from "@/components/ui/field";
-import { Controller, useForm } from "react-hook-form";
-import z from "zod";
-import { ClientBankAccount } from "@/drizzle/schema";
-import { toast } from "sonner";
-import { authClient } from "@/lib/auth/auth-client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { DialogFooter } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { LoadingSwap } from "@/components/ui/loading-swap";
-import { NumberInput } from "@/components/ui/number-input";
+} from '@/components/ui/field';
+import { Controller, useForm } from 'react-hook-form';
+import z from 'zod';
+import { ClientBankAccount } from '@/drizzle/schema';
+import { toast } from 'sonner';
+import { authClient } from '@/lib/auth/auth-client';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { DialogFooter } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { LoadingSwap } from '@/components/ui/loading-swap';
+import { NumberInput } from '@/components/ui/number-input';
 import {
   Select,
   SelectTrigger,
   SelectValue,
   SelectContent,
   SelectItem,
-} from "@/components/ui/select";
-import { capitalize } from "@/lib/utils";
-import { useRouter } from "next/navigation";
+} from '@/components/ui/select';
+import { capitalize } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 import {
   MultiSelect,
   MultiSelectContent,
@@ -39,24 +39,21 @@ import {
   MultiSelectItem,
   MultiSelectTrigger,
   MultiSelectValue,
-} from "@/components/ui/multi-select";
-import { createWelcomeDataAction } from "../actions/welcome-actions";
-import { getWelcomeCategoriesByType } from "@/lib/welcome-categories";
+} from '@/components/ui/multi-select';
+import { createWelcomeDataAction } from '../actions/welcome-actions';
+import { getWelcomeCategoriesByType } from '@/lib/welcome-categories';
 
 const welcomeSchema = z.object({
-  name: z.string().min(1, "Name is required").max(50, "Name is too long"),
-  userId: z.string().min(1, "User ID is required"),
-  balance: z
-    .number()
-    .min(0, "Balance must be at least 0")
-    .max(10_000_000, "Balance is too high"),
-  accountType: z.enum(["checking", "savings", "cash"], {
-    message: "Type is required",
+  name: z.string().min(1, 'Name is required').max(50, 'Name is too long'),
+  userId: z.string().min(1, 'User ID is required'),
+  balance: z.number().min(0, 'Balance must be at least 0').max(10_000_000, 'Balance is too high'),
+  accountType: z.enum(['checking', 'savings', 'cash'], {
+    message: 'Type is required',
   }),
-  currency: z.enum(["USD", "EUR", "GBP"], {
-    message: "Currency is required",
+  currency: z.enum(['USD', 'EUR', 'GBP'], {
+    message: 'Currency is required',
   }),
-  accountNumber: z.string().max(18, "Account number is too long").optional(),
+  accountNumber: z.string().max(18, 'Account number is too long').optional(),
   categories: z.array(z.string()).optional(),
 });
 
@@ -67,19 +64,19 @@ export function WelcomeForm() {
   const form = useForm<WelcomeFormData>({
     resolver: zodResolver(welcomeSchema),
     defaultValues: {
-      name: "",
-      userId: "",
+      name: '',
+      userId: '',
       balance: 0,
-      accountType: "checking",
-      currency: "EUR",
-      accountNumber: "",
+      accountType: 'checking',
+      currency: 'EUR',
+      accountNumber: '',
     },
   });
 
   const router = useRouter();
 
   useEffect(() => {
-    form.setValue("userId", session?.user.id || "", { shouldValidate: true });
+    form.setValue('userId', session?.user.id || '', { shouldValidate: true });
   }, [form, session?.user.id]);
 
   const handleAddWelcomeData = async (data: WelcomeFormData) => {
@@ -96,13 +93,11 @@ export function WelcomeForm() {
     });
 
     if (res.error) {
-      toast.error(
-        res.error || "An error occurred while creating welcome data.",
-      );
+      toast.error(res.error || 'An error occurred while creating welcome data.');
     } else {
-      toast.success("Data created successfully! Welcome aboard!");
+      toast.success('Data created successfully! Welcome aboard!');
       refetch();
-      router.push("/transactions");
+      router.push('/transactions');
     }
   };
 
@@ -112,25 +107,16 @@ export function WelcomeForm() {
         <FieldSeparator />
         <FieldSet>
           <FieldLegend>Your First Account</FieldLegend>
-          <FieldDescription>
-            Let&apos;s start by adding your primary bank account.
-          </FieldDescription>
-          <Field orientation={"responsive"}>
+          <FieldDescription>Let&apos;s start by adding your primary bank account.</FieldDescription>
+          <Field orientation={'responsive'}>
             <Controller
               name="name"
               control={form.control}
               render={({ field, fieldState }) => (
-                <Field
-                  data-invalid={fieldState.invalid}
-                  className="relative flex-1"
-                >
+                <Field data-invalid={fieldState.invalid} className="relative flex-1">
                   <FieldContent>
-                    <FieldLabel htmlFor={field.name}>
-                      {capitalize(field.name)}
-                    </FieldLabel>
-                    <FieldDescription>
-                      Give your account a friendly name.
-                    </FieldDescription>
+                    <FieldLabel htmlFor={field.name}>{capitalize(field.name)}</FieldLabel>
+                    <FieldDescription>Give your account a friendly name.</FieldDescription>
                   </FieldContent>
                   <Input
                     {...field}
@@ -140,10 +126,7 @@ export function WelcomeForm() {
                     autoComplete="off"
                   />
                   {fieldState.error && (
-                    <FieldError
-                      errors={[fieldState.error]}
-                      className="absolute top-full text-xs"
-                    />
+                    <FieldError errors={[fieldState.error]} className="absolute top-full text-xs" />
                   )}
                 </Field>
               )}
@@ -153,17 +136,10 @@ export function WelcomeForm() {
               name="accountNumber"
               control={form.control}
               render={({ field, fieldState }) => (
-                <Field
-                  data-invalid={fieldState.invalid}
-                  className="relative flex-1"
-                >
+                <Field data-invalid={fieldState.invalid} className="relative flex-1">
                   <FieldContent>
-                    <FieldLabel htmlFor={field.name}>
-                      {capitalize(field.name)}
-                    </FieldLabel>
-                    <FieldDescription>
-                      Optional - add it for easy reference.
-                    </FieldDescription>
+                    <FieldLabel htmlFor={field.name}>{capitalize(field.name)}</FieldLabel>
+                    <FieldDescription>Optional - add it for easy reference.</FieldDescription>
                   </FieldContent>
                   <Input
                     {...field}
@@ -173,10 +149,7 @@ export function WelcomeForm() {
                     autoComplete="off"
                   />
                   {fieldState.error && (
-                    <FieldError
-                      errors={[fieldState.error]}
-                      className="absolute top-full text-xs"
-                    />
+                    <FieldError errors={[fieldState.error]} className="absolute top-full text-xs" />
                   )}
                 </Field>
               )}
@@ -186,32 +159,19 @@ export function WelcomeForm() {
         <FieldSeparator />
         <FieldSet>
           <FieldLegend>Account Settings</FieldLegend>
-          <FieldDescription>
-            Choose your currency and set your starting balance.
-          </FieldDescription>
+          <FieldDescription>Choose your currency and set your starting balance.</FieldDescription>
           <Field orientation="responsive">
             <Controller
               name="currency"
               control={form.control}
               render={({ field, fieldState }) => (
-                <Field
-                  data-invalid={fieldState.invalid}
-                  className="relative flex-1"
-                >
+                <Field data-invalid={fieldState.invalid} className="relative flex-1">
                   <FieldContent>
-                    <FieldLabel htmlFor={field.name}>
-                      {capitalize(field.name)}
-                    </FieldLabel>
-                    <FieldDescription>
-                      Choose your preferred currency.
-                    </FieldDescription>
+                    <FieldLabel htmlFor={field.name}>{capitalize(field.name)}</FieldLabel>
+                    <FieldDescription>Choose your preferred currency.</FieldDescription>
                   </FieldContent>
                   <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger
-                      {...field}
-                      id={field.name}
-                      aria-invalid={fieldState.invalid}
-                    >
+                    <SelectTrigger {...field} id={field.name} aria-invalid={fieldState.invalid}>
                       <SelectValue placeholder="Choose currency" />
                     </SelectTrigger>
                     <SelectContent>
@@ -221,10 +181,7 @@ export function WelcomeForm() {
                     </SelectContent>
                   </Select>
                   {fieldState.error && (
-                    <FieldError
-                      errors={[fieldState.error]}
-                      className="absolute top-full text-xs"
-                    />
+                    <FieldError errors={[fieldState.error]} className="absolute top-full text-xs" />
                   )}
                 </Field>
               )}
@@ -233,17 +190,10 @@ export function WelcomeForm() {
               name="balance"
               control={form.control}
               render={({ field, fieldState }) => (
-                <Field
-                  data-invalid={fieldState.invalid}
-                  className="relative flex-1"
-                >
+                <Field data-invalid={fieldState.invalid} className="relative flex-1">
                   <FieldContent>
-                    <FieldLabel htmlFor={field.name}>
-                      {capitalize(field.name)}
-                    </FieldLabel>
-                    <FieldDescription>
-                      How much do you have right now?
-                    </FieldDescription>
+                    <FieldLabel htmlFor={field.name}>{capitalize(field.name)}</FieldLabel>
+                    <FieldDescription>How much do you have right now?</FieldDescription>
                   </FieldContent>
                   <NumberInput
                     {...field}
@@ -256,10 +206,7 @@ export function WelcomeForm() {
                     step={0.01}
                   />
                   {fieldState.error && (
-                    <FieldError
-                      errors={[fieldState.error]}
-                      className="absolute top-full text-xs"
-                    />
+                    <FieldError errors={[fieldState.error]} className="absolute top-full text-xs" />
                   )}
                 </Field>
               )}
@@ -270,35 +217,22 @@ export function WelcomeForm() {
         <FieldSet>
           <FieldLegend>Quick Start</FieldLegend>
           <FieldDescription>
-            Pick some common categories to get started faster (you can add more
-            later).
+            Pick some common categories to get started faster (you can add more later).
           </FieldDescription>
           <Controller
             name="categories"
             control={form.control}
             render={({ field, fieldState }) => (
-              <Field
-                data-invalid={fieldState.invalid}
-                className="relative flex-1"
-              >
+              <Field data-invalid={fieldState.invalid} className="relative flex-1">
                 <FieldContent>
-                  <FieldLabel htmlFor={field.name}>
-                    {capitalize(field.name)}
-                  </FieldLabel>
+                  <FieldLabel htmlFor={field.name}>{capitalize(field.name)}</FieldLabel>
                   <FieldDescription>
-                    Select a few to begin with - don&apos;t worry, you can
-                    customize everything later!
+                    Select a few to begin with - don&apos;t worry, you can customize everything
+                    later!
                   </FieldDescription>
                 </FieldContent>
-                <MultiSelect
-                  onValuesChange={field.onChange}
-                  values={field.value}
-                >
-                  <MultiSelectTrigger
-                    {...field}
-                    id={field.name}
-                    aria-invalid={fieldState.invalid}
-                  >
+                <MultiSelect onValuesChange={field.onChange} values={field.value}>
+                  <MultiSelectTrigger {...field} id={field.name} aria-invalid={fieldState.invalid}>
                     <MultiSelectValue placeholder="Choose categories..." />
                   </MultiSelectTrigger>
                   <MultiSelectContent>
@@ -321,10 +255,7 @@ export function WelcomeForm() {
                   </MultiSelectContent>
                 </MultiSelect>
                 {fieldState.error && (
-                  <FieldError
-                    errors={[fieldState.error]}
-                    className="absolute top-full text-xs"
-                  />
+                  <FieldError errors={[fieldState.error]} className="absolute top-full text-xs" />
                 )}
               </Field>
             )}
@@ -333,14 +264,8 @@ export function WelcomeForm() {
         <FieldSeparator />
         <DialogFooter>
           <Field orientation="horizontal" className="mt-4">
-            <Button
-              type="submit"
-              className="flex-1"
-              disabled={form.formState.isSubmitting}
-            >
-              <LoadingSwap isLoading={form.formState.isSubmitting}>
-                Get Started
-              </LoadingSwap>
+            <Button type="submit" className="flex-1" disabled={form.formState.isSubmitting}>
+              <LoadingSwap isLoading={form.formState.isSubmitting}>Get Started</LoadingSwap>
             </Button>
           </Field>
         </DialogFooter>

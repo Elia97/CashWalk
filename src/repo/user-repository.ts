@@ -1,4 +1,4 @@
-import { db } from "@/drizzle/db";
+import { db } from '@/drizzle/db';
 
 export function findFirstUserById(userId: string) {
   return db.query.user.findFirst({

@@ -5,22 +5,18 @@ import {
   CardContent,
   CardFooter,
   CardDescription,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { Progress } from "@/components/ui/progress";
-import { ClientBankAccountWithTransactions } from "@/drizzle/schema";
-import { formatCurrency } from "@/lib/utils";
+} from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { Progress } from '@/components/ui/progress';
+import { ClientBankAccountWithTransactions } from '@/drizzle/schema';
+import { formatCurrency } from '@/lib/utils';
 
-export function OverviewManagement({
-  account,
-}: {
-  account: ClientBankAccountWithTransactions;
-}) {
+export function OverviewManagement({ account }: { account: ClientBankAccountWithTransactions }) {
   const totalIncome = account.transactions
-    .filter((tx) => tx.transactionType === "income")
+    .filter((tx) => tx.transactionType === 'income')
     .reduce((sum, tx) => sum + Number(tx.amount), 0);
   const totalExpenses = account.transactions
-    .filter((tx) => tx.transactionType === "expense")
+    .filter((tx) => tx.transactionType === 'expense')
     .reduce((sum, tx) => sum + Number(tx.amount), 0);
 
   const currentMonthIncome = account.transactions
@@ -29,7 +25,7 @@ export function OverviewManagement({
       return (
         txDate.getMonth() === new Date().getMonth() &&
         txDate.getFullYear() === new Date().getFullYear() &&
-        tx.transactionType === "income"
+        tx.transactionType === 'income'
       );
     })
     .reduce((sum, tx) => sum + Number(tx.amount), 0);
@@ -40,7 +36,7 @@ export function OverviewManagement({
       return (
         txDate.getMonth() === new Date().getMonth() &&
         txDate.getFullYear() === new Date().getFullYear() &&
-        tx.transactionType === "expense"
+        tx.transactionType === 'expense'
       );
     })
     .reduce((sum, tx) => sum + Number(tx.amount), 0);
@@ -48,13 +44,13 @@ export function OverviewManagement({
   const getFinancialHealthStatus = (savingRate: number) => {
     switch (true) {
       case savingRate >= 20:
-        return "Great financial health! Keep up the good work.";
+        return 'Great financial health! Keep up the good work.';
       case savingRate >= 10:
-        return "Good financial health. Consider saving more.";
+        return 'Good financial health. Consider saving more.';
       case savingRate >= 0:
-        return "Fair financial health. Try to reduce expenses.";
+        return 'Fair financial health. Try to reduce expenses.';
       default:
-        return "Poor financial health. Take action immediately.";
+        return 'Poor financial health. Take action immediately.';
     }
   };
 
@@ -63,9 +59,7 @@ export function OverviewManagement({
       <CardHeader>
         <CardTitle className="text-2xl">{account.name}</CardTitle>
         <CardDescription>
-          {getFinancialHealthStatus(
-            ((totalIncome - totalExpenses) / totalIncome) * 100,
-          )}
+          {getFinancialHealthStatus(((totalIncome - totalExpenses) / totalIncome) * 100)}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -79,7 +73,7 @@ export function OverviewManagement({
           <div className="flex justify-between text-sm">
             <span>Annual Progress</span>
             <span className="text-right">
-              {formatCurrency(totalExpenses, account.currency)} /{" "}
+              {formatCurrency(totalExpenses, account.currency)} /{' '}
               {formatCurrency(totalIncome, account.currency)}
             </span>
           </div>
@@ -99,16 +93,11 @@ export function OverviewManagement({
           </div>
           <div>
             <div className="text-muted-foreground">Annual Balance</div>
-            <div>
-              {formatCurrency(totalIncome - totalExpenses, account.currency)}
-            </div>
+            <div>{formatCurrency(totalIncome - totalExpenses, account.currency)}</div>
           </div>
           <div>
             <div className="text-muted-foreground">Savings Rate</div>
-            <div>
-              {(((totalIncome - totalExpenses) / totalIncome) * 100).toFixed(2)}
-              %
-            </div>
+            <div>{(((totalIncome - totalExpenses) / totalIncome) * 100).toFixed(2)}%</div>
           </div>
         </div>
         <Separator />
@@ -116,14 +105,12 @@ export function OverviewManagement({
       <CardFooter>
         <div className="w-full">
           <h3 className="text-lg font-semibold mb-3 text-center">
-            {new Date().toLocaleString("en-US", { month: "long" })}
+            {new Date().toLocaleString('en-US', { month: 'long' })}
           </h3>
           <div className="grid sm:grid-cols-3 gap-4 text-center">
             <div>
               <div className="text-sm text-muted-foreground">Income</div>
-              <div className="text-2xl">
-                {formatCurrency(currentMonthIncome, account.currency)}
-              </div>
+              <div className="text-2xl">{formatCurrency(currentMonthIncome, account.currency)}</div>
             </div>
             <div>
               <div className="text-sm text-muted-foreground">Expenses</div>
@@ -134,10 +121,7 @@ export function OverviewManagement({
             <div>
               <div className="text-sm text-muted-foreground">Balance</div>
               <div className="text-2xl">
-                {formatCurrency(
-                  currentMonthIncome - currentMonthExpenses,
-                  account.currency,
-                )}
+                {formatCurrency(currentMonthIncome - currentMonthExpenses, account.currency)}
               </div>
             </div>
           </div>

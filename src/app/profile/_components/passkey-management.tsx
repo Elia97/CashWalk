@@ -1,43 +1,32 @@
-"use client";
+'use client';
 
-import z from "zod";
-import { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
-import { authClient } from "@/lib/auth/auth-client";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { Passkey } from "better-auth/plugins/passkey";
-import { BetterAuthActionButton } from "@/components/auth/better-auth-action-button";
-import { Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { DialogHeader } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { LoadingSwap } from "@/components/ui/loading-swap";
+import z from 'zod';
+import { useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Controller, useForm } from 'react-hook-form';
+import { authClient } from '@/lib/auth/auth-client';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
+import { Passkey } from 'better-auth/plugins/passkey';
+import { BetterAuthActionButton } from '@/components/auth/better-auth-action-button';
+import { Trash2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { DialogHeader } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { LoadingSwap } from '@/components/ui/loading-swap';
 import {
   Dialog,
   DialogTrigger,
   DialogContent,
   DialogTitle,
   DialogDescription,
-} from "@/components/ui/dialog";
-import {
-  Field,
-  FieldContent,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
-import { capitalize } from "@/lib/utils";
+} from '@/components/ui/dialog';
+import { Field, FieldContent, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
+import { capitalize } from '@/lib/utils';
 
 const passkeySchema = z.object({
-  name: z.string().min(1, "Name is required").max(100, "Name is too long"),
+  name: z.string().min(1, 'Name is required').max(100, 'Name is too long'),
 });
 
 type PasskeyFormData = z.infer<typeof passkeySchema>;
@@ -47,7 +36,7 @@ export function PasskeyManagement({ passkeys }: { passkeys: Passkey[] }) {
   const form = useForm<PasskeyFormData>({
     resolver: zodResolver(passkeySchema),
     defaultValues: {
-      name: "",
+      name: '',
     },
   });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -55,7 +44,7 @@ export function PasskeyManagement({ passkeys }: { passkeys: Passkey[] }) {
   const handleAddPasskey = async (data: PasskeyFormData) => {
     await authClient.passkey.addPasskey(data, {
       onError: (error) => {
-        toast.error(error.error.message || "Failed to add passkey");
+        toast.error(error.error.message || 'Failed to add passkey');
       },
       onSuccess: () => {
         router.refresh();
@@ -83,14 +72,13 @@ export function PasskeyManagement({ passkeys }: { passkeys: Passkey[] }) {
                 <div className="space-y-1">
                   <CardTitle>{passkey.name}</CardTitle>
                   <CardDescription>
-                    Created at:{" "}
-                    {new Date(passkey.createdAt).toLocaleDateString()}
+                    Created at: {new Date(passkey.createdAt).toLocaleDateString()}
                   </CardDescription>
                 </div>
                 <BetterAuthActionButton
                   requireAreYouSure
-                  variant={"destructive"}
-                  size={"icon"}
+                  variant={'destructive'}
+                  size={'icon'}
                   action={() =>
                     authClient.passkey.deletePasskey(
                       { id: passkey.id },
@@ -133,9 +121,7 @@ export function PasskeyManagement({ passkeys }: { passkeys: Passkey[] }) {
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid} className="flex-1">
                     <FieldContent>
-                      <FieldLabel htmlFor={field.name}>
-                        {capitalize(field.name)}
-                      </FieldLabel>
+                      <FieldLabel htmlFor={field.name}>{capitalize(field.name)}</FieldLabel>
                       <Input
                         {...field}
                         id={field.name}
@@ -143,9 +129,7 @@ export function PasskeyManagement({ passkeys }: { passkeys: Passkey[] }) {
                         placeholder="Passkey Name"
                         autoComplete="off"
                       />
-                      {fieldState.error && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
+                      {fieldState.error && <FieldError errors={[fieldState.error]} />}
                     </FieldContent>
                   </Field>
                 )}
@@ -157,9 +141,7 @@ export function PasskeyManagement({ passkeys }: { passkeys: Passkey[] }) {
                   className="w-full mt-4"
                   disabled={form.formState.isSubmitting}
                 >
-                  <LoadingSwap isLoading={form.formState.isSubmitting}>
-                    Add
-                  </LoadingSwap>
+                  <LoadingSwap isLoading={form.formState.isSubmitting}>Add</LoadingSwap>
                 </Button>
               </Field>
             </FieldGroup>

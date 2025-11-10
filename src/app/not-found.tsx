@@ -1,5 +1,5 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 import {
   Empty,
   EmptyHeader,
@@ -7,8 +7,8 @@ import {
   EmptyTitle,
   EmptyDescription,
   EmptyContent,
-} from "@/components/ui/empty";
-import { Compass } from "lucide-react";
+} from '@/components/ui/empty';
+import { Compass } from 'lucide-react';
 
 export default function NotFoundPage() {
   return (
@@ -24,7 +24,7 @@ export default function NotFoundPage() {
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent className="flex gap-2">
-          <Button variant={"link"} asChild>
+          <Button variant={'link'} asChild>
             <Link href="/">Go home</Link>
           </Button>
         </EmptyContent>

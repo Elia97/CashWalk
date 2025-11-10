@@ -1,8 +1,8 @@
-import { auth } from "@/lib/auth/auth";
-import { TransactionManagement } from "./_components/transaction-management";
-import { getUserTransactions } from "./actions/transaction-actions";
-import { headers } from "next/headers";
-import { DEFAULT_PAGE_SIZE } from "@/repo/transaction-repository";
+import { auth } from '@/lib/auth/auth';
+import { TransactionManagement } from './_components/transaction-management';
+import { getUserTransactions } from './actions/transaction-actions';
+import { headers } from 'next/headers';
+import { DEFAULT_PAGE_SIZE } from '@/repo/transaction-repository';
 
 export default async function TransactionsPage({
   searchParams,
@@ -12,11 +12,11 @@ export default async function TransactionsPage({
     pageSize?: string;
     from?: string;
     to?: string;
-    type?: "income" | "expense";
+    type?: 'income' | 'expense';
   };
 }) {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (!session) throw new Error("User session is required");
+  if (!session) throw new Error('User session is required');
   const params = await Promise.resolve(searchParams);
   const page = Number(params?.page ?? 1);
   const pageSize = Number(params?.pageSize ?? DEFAULT_PAGE_SIZE);
@@ -25,9 +25,7 @@ export default async function TransactionsPage({
     : new Date(new Date().getFullYear(), new Date().getMonth(), 1);
   const to = params?.to ? new Date(params.to) : new Date();
   const transactionType =
-    params?.type === "income" || params?.type === "expense"
-      ? params.type
-      : undefined;
+    params?.type === 'income' || params?.type === 'expense' ? params.type : undefined;
   const res = await getUserTransactions(session.user.id, {
     page,
     pageSize,

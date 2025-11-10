@@ -1,14 +1,14 @@
-import { auth } from "@/lib/auth/auth";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
-import { BackupCodeForm } from "./_components/backup-code-form";
-import { TotpForm } from "./_components/totp-form";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { auth } from '@/lib/auth/auth';
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { BackupCodeForm } from './_components/backup-code-form';
+import { TotpForm } from './_components/totp-form';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
 export default async function TwoFactorPage() {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (session != null) return redirect("/");
+  if (session != null) return redirect('/');
 
   return (
     <section className="animate-fade-up">

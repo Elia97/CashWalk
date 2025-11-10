@@ -1,4 +1,4 @@
-import { sendEmail } from "./send-email";
+import { sendEmail } from './send-email';
 
 export async function deleteAccountVerificationEmail({
   user,
@@ -12,7 +12,7 @@ export async function deleteAccountVerificationEmail({
 }) {
   await sendEmail({
     to: user.email,
-    subject: "Delete your account",
+    subject: 'Delete your account',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #333;">Confirm Account Deletion</h2>

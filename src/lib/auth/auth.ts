@@ -1,19 +1,19 @@
-import { betterAuth } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { db } from "@/drizzle/db";
-import { nextCookies } from "better-auth/next-js";
-import { passwordResetEmail } from "../emails/password-reset-email";
-import { verificationEmail } from "../emails/verification-email";
-import { createAuthMiddleware } from "better-auth/api";
-import { welcomeEmail } from "../emails/welcome-email";
-import { deleteAccountVerificationEmail } from "../emails/delete-account-verification-email";
-import { twoFactor, admin as adminPlugin } from "better-auth/plugins";
-import { passkey } from "better-auth/plugins/passkey";
-import { ac, admin, user } from "./permissions";
+import { betterAuth } from 'better-auth';
+import { drizzleAdapter } from 'better-auth/adapters/drizzle';
+import { db } from '@/drizzle/db';
+import { nextCookies } from 'better-auth/next-js';
+import { passwordResetEmail } from '../emails/password-reset-email';
+import { verificationEmail } from '../emails/verification-email';
+import { createAuthMiddleware } from 'better-auth/api';
+import { welcomeEmail } from '../emails/welcome-email';
+import { deleteAccountVerificationEmail } from '../emails/delete-account-verification-email';
+import { twoFactor, admin as adminPlugin } from 'better-auth/plugins';
+import { passkey } from 'better-auth/plugins/passkey';
+import { ac, admin, user } from './permissions';
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
-    provider: "pg",
+    provider: 'pg',
   }),
   user: {
     changeEmail: {
@@ -73,7 +73,7 @@ export const auth = betterAuth({
   ],
   hooks: {
     after: createAuthMiddleware(async (ctx) => {
-      if (ctx.path.startsWith("/sign-up")) {
+      if (ctx.path.startsWith('/sign-up')) {
         const user = ctx.context.newSession?.user ?? {
           name: ctx.body.name,
           email: ctx.body.email,

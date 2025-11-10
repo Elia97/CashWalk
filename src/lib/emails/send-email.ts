@@ -1,4 +1,4 @@
-import { ServerClient } from "postmark";
+import { ServerClient } from 'postmark';
 
 const pmClient = new ServerClient(process.env.POSTMARK_SERVER_TOKEN!);
 

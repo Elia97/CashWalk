@@ -1,28 +1,26 @@
-import Image from "next/image";
-import { auth } from "@/lib/auth/auth";
-import { Key, LinkIcon, Shield, Trash2, User } from "lucide-react";
-import { headers } from "next/headers";
-import { ProfileUpdateForm } from "./_components/profile-update-form";
-import { SecurityTab } from "./_components/security-tab";
-import { SessionsTab } from "./_components/sessions-tab";
-import { LinkedAccountsTab } from "./_components/linked-accounts-tab";
-import { AccountDeletion } from "./_components/account-deletion";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { LoadingSuspense } from "@/components/ui/loading-suspence";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import Image from 'next/image';
+import { auth } from '@/lib/auth/auth';
+import { Key, LinkIcon, Shield, Trash2, User } from 'lucide-react';
+import { headers } from 'next/headers';
+import { ProfileUpdateForm } from './_components/profile-update-form';
+import { SecurityTab } from './_components/security-tab';
+import { SessionsTab } from './_components/sessions-tab';
+import { LinkedAccountsTab } from './_components/linked-accounts-tab';
+import { AccountDeletion } from './_components/account-deletion';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { LoadingSuspense } from '@/components/ui/loading-suspence';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
 export type Passkey = Awaited<ReturnType<typeof auth.api.listPasskeys>>[number];
 
-export type Account = Awaited<
-  ReturnType<typeof auth.api.listUserAccounts>
->[number];
+export type Account = Awaited<ReturnType<typeof auth.api.listUserAccounts>>[number];
 
 export type Session = Awaited<ReturnType<typeof auth.api.listSessions>>[number];
 
 export default async function ProfilePage() {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (!session) throw new Error("User session is required");
+  if (!session) throw new Error('User session is required');
 
   const [passkeys, accounts, sessions] = await Promise.all([
     auth.api.listPasskeys({
@@ -44,7 +42,7 @@ export default async function ProfilePage() {
                 width={64}
                 height={64}
                 src={session.user.image}
-                alt={session.user.name || "User Avatar"}
+                alt={session.user.name || 'User Avatar'}
                 className="object-cover"
               />
             ) : (
@@ -53,9 +51,7 @@ export default async function ProfilePage() {
           </div>
           <div className="flex-1">
             <div className="flex gap-1 justify-between items-start">
-              <h1 className="text-3xl font-bold">
-                {session.user.name || "User Profile"}
-              </h1>
+              <h1 className="text-3xl font-bold">{session.user.name || 'User Profile'}</h1>
               <Badge>{session.user?.role}</Badge>
             </div>
             <p className="text-muted-foreground">{session.user.email}</p>
@@ -105,10 +101,7 @@ export default async function ProfilePage() {
         </TabsContent>
         <TabsContent value="sessions">
           <LoadingSuspense>
-            <SessionsTab
-              sessions={sessions}
-              currentSessionToken={session.session.token}
-            />
+            <SessionsTab sessions={sessions} currentSessionToken={session.session.token} />
           </LoadingSuspense>
         </TabsContent>
         <TabsContent value="linked-accounts">

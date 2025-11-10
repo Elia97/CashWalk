@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   FieldGroup,
@@ -10,63 +10,56 @@ import {
   FieldDescription,
   FieldLegend,
   FieldSeparator,
-} from "@/components/ui/field";
-import { Controller, useForm } from "react-hook-form";
-import { createUserBankAccount } from "../actions/bank-account-actions";
-import z from "zod";
-import { ClientBankAccount } from "@/drizzle/schema";
-import { toast } from "sonner";
-import { authClient } from "@/lib/auth/auth-client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { DialogFooter } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { LoadingSwap } from "@/components/ui/loading-swap";
-import { NumberInput } from "@/components/ui/number-input";
+} from '@/components/ui/field';
+import { Controller, useForm } from 'react-hook-form';
+import { createUserBankAccount } from '../actions/bank-account-actions';
+import z from 'zod';
+import { ClientBankAccount } from '@/drizzle/schema';
+import { toast } from 'sonner';
+import { authClient } from '@/lib/auth/auth-client';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { DialogFooter } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { LoadingSwap } from '@/components/ui/loading-swap';
+import { NumberInput } from '@/components/ui/number-input';
 import {
   Select,
   SelectTrigger,
   SelectValue,
   SelectContent,
   SelectItem,
-} from "@/components/ui/select";
-import { capitalize } from "@/lib/utils";
-import { useRouter } from "next/navigation";
+} from '@/components/ui/select';
+import { capitalize } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 
 const bankAccountSchema = z.object({
-  name: z.string().min(1, "Name is required").max(50, "Name is too long"),
-  userId: z.string().min(1, "User ID is required"),
-  balance: z
-    .number()
-    .min(0, "Balance must be at least 0")
-    .max(10_000_000, "Balance is too high"),
-  accountType: z.enum(["checking", "savings", "cash"], {
-    message: "Type is required",
+  name: z.string().min(1, 'Name is required').max(50, 'Name is too long'),
+  userId: z.string().min(1, 'User ID is required'),
+  balance: z.number().min(0, 'Balance must be at least 0').max(10_000_000, 'Balance is too high'),
+  accountType: z.enum(['checking', 'savings', 'cash'], {
+    message: 'Type is required',
   }),
-  currency: z.enum(["USD", "EUR", "GBP"], {
-    message: "Currency is required",
+  currency: z.enum(['USD', 'EUR', 'GBP'], {
+    message: 'Currency is required',
   }),
-  accountNumber: z.string().max(18, "Account number is too long").optional(),
+  accountNumber: z.string().max(18, 'Account number is too long').optional(),
 });
 
 type BankAccountFormData = z.infer<typeof bankAccountSchema>;
 
-export function CreateBankAccountForm({
-  closeDialog,
-}: {
-  closeDialog: () => void;
-}) {
+export function CreateBankAccountForm({ closeDialog }: { closeDialog: () => void }) {
   const { data: session } = authClient.useSession();
   const form = useForm<BankAccountFormData>({
     resolver: zodResolver(bankAccountSchema),
     defaultValues: {
-      name: "",
-      userId: "",
+      name: '',
+      userId: '',
       balance: 0,
-      accountType: "checking",
-      currency: "EUR",
-      accountNumber: "",
+      accountType: 'checking',
+      currency: 'EUR',
+      accountNumber: '',
     },
   });
   const router = useRouter();
@@ -74,18 +67,16 @@ export function CreateBankAccountForm({
   useEffect(() => {
     form.reset({
       ...form.getValues(),
-      userId: session?.user.id || "",
+      userId: session?.user.id || '',
     });
   }, [form, session?.user.id]);
 
   const handleAddBankAccount = async (data: BankAccountFormData) => {
-    const res = await createUserBankAccount(
-      data as unknown as ClientBankAccount,
-    );
+    const res = await createUserBankAccount(data as unknown as ClientBankAccount);
     if (res.error) {
-      toast.error(res.message || "Failed to create bank account");
+      toast.error(res.message || 'Failed to create bank account');
     } else {
-      toast.success("Bank account created successfully");
+      toast.success('Bank account created successfully');
       router.refresh();
       closeDialog();
     }
@@ -98,22 +89,15 @@ export function CreateBankAccountForm({
         <FieldSet>
           <FieldLegend>Account Details</FieldLegend>
           <FieldDescription>Tell us about your new account.</FieldDescription>
-          <Field orientation={"responsive"}>
+          <Field orientation={'responsive'}>
             <Controller
               name="name"
               control={form.control}
               render={({ field, fieldState }) => (
-                <Field
-                  data-invalid={fieldState.invalid}
-                  className="relative flex-1"
-                >
+                <Field data-invalid={fieldState.invalid} className="relative flex-1">
                   <FieldContent>
-                    <FieldLabel htmlFor={field.name}>
-                      {capitalize(field.name)}
-                    </FieldLabel>
-                    <FieldDescription>
-                      Give it a name you&apos;ll recognize.
-                    </FieldDescription>
+                    <FieldLabel htmlFor={field.name}>{capitalize(field.name)}</FieldLabel>
+                    <FieldDescription>Give it a name you&apos;ll recognize.</FieldDescription>
                   </FieldContent>
                   <Input
                     {...field}
@@ -123,10 +107,7 @@ export function CreateBankAccountForm({
                     autoComplete="off"
                   />
                   {fieldState.error && (
-                    <FieldError
-                      errors={[fieldState.error]}
-                      className="absolute top-full text-xs"
-                    />
+                    <FieldError errors={[fieldState.error]} className="absolute top-full text-xs" />
                   )}
                 </Field>
               )}
@@ -136,24 +117,13 @@ export function CreateBankAccountForm({
               name="accountType"
               control={form.control}
               render={({ field, fieldState }) => (
-                <Field
-                  data-invalid={fieldState.invalid}
-                  className="relative flex-1"
-                >
+                <Field data-invalid={fieldState.invalid} className="relative flex-1">
                   <FieldContent>
-                    <FieldLabel htmlFor={field.name}>
-                      {capitalize(field.name)}
-                    </FieldLabel>
-                    <FieldDescription>
-                      What kind of account is this?
-                    </FieldDescription>
+                    <FieldLabel htmlFor={field.name}>{capitalize(field.name)}</FieldLabel>
+                    <FieldDescription>What kind of account is this?</FieldDescription>
                   </FieldContent>
                   <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger
-                      {...field}
-                      id={field.name}
-                      aria-invalid={fieldState.invalid}
-                    >
+                    <SelectTrigger {...field} id={field.name} aria-invalid={fieldState.invalid}>
                       <SelectValue placeholder="Choose type" />
                     </SelectTrigger>
                     <SelectContent>
@@ -163,10 +133,7 @@ export function CreateBankAccountForm({
                     </SelectContent>
                   </Select>
                   {fieldState.error && (
-                    <FieldError
-                      errors={[fieldState.error]}
-                      className="absolute top-full text-xs"
-                    />
+                    <FieldError errors={[fieldState.error]} className="absolute top-full text-xs" />
                   )}
                 </Field>
               )}
@@ -176,32 +143,19 @@ export function CreateBankAccountForm({
         <FieldSeparator />
         <FieldSet>
           <FieldLegend>Financial Details</FieldLegend>
-          <FieldDescription>
-            Set your currency and starting balance.
-          </FieldDescription>
+          <FieldDescription>Set your currency and starting balance.</FieldDescription>
           <Field orientation="responsive">
             <Controller
               name="currency"
               control={form.control}
               render={({ field, fieldState }) => (
-                <Field
-                  data-invalid={fieldState.invalid}
-                  className="relative flex-1"
-                >
+                <Field data-invalid={fieldState.invalid} className="relative flex-1">
                   <FieldContent>
-                    <FieldLabel htmlFor={field.name}>
-                      {capitalize(field.name)}
-                    </FieldLabel>
-                    <FieldDescription>
-                      Which currency do you use?
-                    </FieldDescription>
+                    <FieldLabel htmlFor={field.name}>{capitalize(field.name)}</FieldLabel>
+                    <FieldDescription>Which currency do you use?</FieldDescription>
                   </FieldContent>
                   <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger
-                      {...field}
-                      id={field.name}
-                      aria-invalid={fieldState.invalid}
-                    >
+                    <SelectTrigger {...field} id={field.name} aria-invalid={fieldState.invalid}>
                       <SelectValue placeholder="Choose currency" />
                     </SelectTrigger>
                     <SelectContent>
@@ -211,10 +165,7 @@ export function CreateBankAccountForm({
                     </SelectContent>
                   </Select>
                   {fieldState.error && (
-                    <FieldError
-                      errors={[fieldState.error]}
-                      className="absolute top-full text-xs"
-                    />
+                    <FieldError errors={[fieldState.error]} className="absolute top-full text-xs" />
                   )}
                 </Field>
               )}
@@ -223,17 +174,10 @@ export function CreateBankAccountForm({
               name="balance"
               control={form.control}
               render={({ field, fieldState }) => (
-                <Field
-                  data-invalid={fieldState.invalid}
-                  className="relative flex-1"
-                >
+                <Field data-invalid={fieldState.invalid} className="relative flex-1">
                   <FieldContent>
-                    <FieldLabel htmlFor={field.name}>
-                      {capitalize(field.name)}
-                    </FieldLabel>
-                    <FieldDescription>
-                      Current balance in this account.
-                    </FieldDescription>
+                    <FieldLabel htmlFor={field.name}>{capitalize(field.name)}</FieldLabel>
+                    <FieldDescription>Current balance in this account.</FieldDescription>
                   </FieldContent>
                   <NumberInput
                     {...field}
@@ -246,10 +190,7 @@ export function CreateBankAccountForm({
                     step={0.01}
                   />
                   {fieldState.error && (
-                    <FieldError
-                      errors={[fieldState.error]}
-                      className="absolute top-full text-xs"
-                    />
+                    <FieldError errors={[fieldState.error]} className="absolute top-full text-xs" />
                   )}
                 </Field>
               )}
@@ -260,17 +201,10 @@ export function CreateBankAccountForm({
             name="accountNumber"
             control={form.control}
             render={({ field, fieldState }) => (
-              <Field
-                data-invalid={fieldState.invalid}
-                className="relative flex-1"
-              >
+              <Field data-invalid={fieldState.invalid} className="relative flex-1">
                 <FieldContent>
-                  <FieldLabel htmlFor={field.name}>
-                    {capitalize(field.name)}
-                  </FieldLabel>
-                  <FieldDescription>
-                    Optional - for your reference only.
-                  </FieldDescription>
+                  <FieldLabel htmlFor={field.name}>{capitalize(field.name)}</FieldLabel>
+                  <FieldDescription>Optional - for your reference only.</FieldDescription>
                 </FieldContent>
                 <Input
                   {...field}
@@ -280,10 +214,7 @@ export function CreateBankAccountForm({
                   autoComplete="off"
                 />
                 {fieldState.error && (
-                  <FieldError
-                    errors={[fieldState.error]}
-                    className="absolute top-full text-xs"
-                  />
+                  <FieldError errors={[fieldState.error]} className="absolute top-full text-xs" />
                 )}
               </Field>
             )}
@@ -292,22 +223,11 @@ export function CreateBankAccountForm({
         <FieldSeparator />
         <DialogFooter>
           <Field orientation="horizontal" className="mt-4">
-            <Button
-              variant="outline"
-              className="flex-1"
-              type="reset"
-              onClick={() => closeDialog()}
-            >
+            <Button variant="outline" className="flex-1" type="reset" onClick={() => closeDialog()}>
               Cancel
             </Button>
-            <Button
-              type="submit"
-              className="flex-1"
-              disabled={form.formState.isSubmitting}
-            >
-              <LoadingSwap isLoading={form.formState.isSubmitting}>
-                Add Account
-              </LoadingSwap>
+            <Button type="submit" className="flex-1" disabled={form.formState.isSubmitting}>
+              <LoadingSwap isLoading={form.formState.isSubmitting}>Add Account</LoadingSwap>
             </Button>
           </Field>
         </DialogFooter>

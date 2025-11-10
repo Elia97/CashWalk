@@ -1,52 +1,39 @@
-"use client";
+'use client';
 
-import {
-  FieldGroup,
-  Field,
-  FieldLabel,
-  FieldError,
-  FieldSeparator,
-} from "@/components/ui/field";
-import { Controller, useForm } from "react-hook-form";
-import z from "zod";
-import { toast } from "sonner";
-import { authClient } from "@/lib/auth/auth-client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { CalendarIcon, Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { DialogFooter } from "@/components/ui/dialog";
-import { LoadingSwap } from "@/components/ui/loading-swap";
-import { NumberInput } from "@/components/ui/number-input";
+import { FieldGroup, Field, FieldLabel, FieldError, FieldSeparator } from '@/components/ui/field';
+import { Controller, useForm } from 'react-hook-form';
+import z from 'zod';
+import { toast } from 'sonner';
+import { authClient } from '@/lib/auth/auth-client';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { CalendarIcon, Loader2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { DialogFooter } from '@/components/ui/dialog';
+import { LoadingSwap } from '@/components/ui/loading-swap';
+import { NumberInput } from '@/components/ui/number-input';
 import {
   Select,
   SelectTrigger,
   SelectValue,
   SelectContent,
   SelectItem,
-} from "@/components/ui/select";
-import { ClientTransaction } from "@/drizzle/schema";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { capitalize, formatDate } from "@/lib/utils";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  getTransactionFormData,
-  updateTransaction,
-} from "../actions/transaction-actions";
-import { useRouter } from "next/navigation";
+} from '@/components/ui/select';
+import { ClientTransaction } from '@/drizzle/schema';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { capitalize, formatDate } from '@/lib/utils';
+import { Calendar } from '@/components/ui/calendar';
+import { getTransactionFormData, updateTransaction } from '../actions/transaction-actions';
+import { useRouter } from 'next/navigation';
 
 const transactionSchema = z.object({
-  bankAccountId: z.string().min(1, "Bank Account ID is required"),
-  categoryId: z.string().min(1, "Category ID is required"),
-  transactionType: z.enum(["income", "expense"], {
-    message: "Transaction type is required",
+  bankAccountId: z.string().min(1, 'Bank Account ID is required'),
+  categoryId: z.string().min(1, 'Category ID is required'),
+  transactionType: z.enum(['income', 'expense'], {
+    message: 'Transaction type is required',
   }),
-  amount: z.number().min(0.01, "Amount must be greater than 0"),
-  date: z.date({ message: "Date is required" }),
+  amount: z.number().min(0.01, 'Amount must be greater than 0'),
+  date: z.date({ message: 'Date is required' }),
 });
 
 type TransactionFormData = z.infer<typeof transactionSchema>;
@@ -82,7 +69,7 @@ export function UpdateTransactionForm({
     setIsLoading(true);
     async function fetchData() {
       const { bankAccounts: accountsData, categories: categoriesData } =
-        await getTransactionFormData(session?.user.id || "").then(
+        await getTransactionFormData(session?.user.id || '').then(
           (res) => res.data || { bankAccounts: [], categories: [] },
         );
       setAccounts(accountsData);
@@ -93,14 +80,11 @@ export function UpdateTransactionForm({
   }, [form, session?.user.id]);
 
   const handleUpdateTransaction = async (data: TransactionFormData) => {
-    const res = await updateTransaction(
-      transaction.id,
-      data as unknown as ClientTransaction,
-    );
+    const res = await updateTransaction(transaction.id, data as unknown as ClientTransaction);
     if (res.error) {
-      toast.error(res.message || "Failed to update transaction");
+      toast.error(res.message || 'Failed to update transaction');
     } else {
-      toast.success("Transaction updated successfully");
+      toast.success('Transaction updated successfully');
       router.refresh();
       closeDialog();
     }
@@ -121,13 +105,8 @@ export function UpdateTransactionForm({
           name="date"
           control={form.control}
           render={({ field, fieldState }) => (
-            <Field
-              data-invalid={fieldState.invalid}
-              className="relative flex-1"
-            >
-              <FieldLabel htmlFor={field.name}>
-                {capitalize(field.name)}
-              </FieldLabel>
+            <Field data-invalid={fieldState.invalid} className="relative flex-1">
+              <FieldLabel htmlFor={field.name}>{capitalize(field.name)}</FieldLabel>
               <Popover open={showCalendar} onOpenChange={setShowCalendar}>
                 <PopoverTrigger asChild>
                   <Button
@@ -152,33 +131,21 @@ export function UpdateTransactionForm({
                 </PopoverContent>
               </Popover>
               {fieldState.error && (
-                <FieldError
-                  errors={[fieldState.error]}
-                  className="absolute top-full text-xs"
-                />
+                <FieldError errors={[fieldState.error]} className="absolute top-full text-xs" />
               )}
             </Field>
           )}
         />
 
-        <Field orientation={"responsive"}>
+        <Field orientation={'responsive'}>
           <Controller
             name="bankAccountId"
             control={form.control}
             render={({ field, fieldState }) => (
-              <Field
-                data-invalid={fieldState.invalid}
-                className="relative flex-1"
-              >
-                <FieldLabel htmlFor={field.name}>
-                  {capitalize(field.name)}
-                </FieldLabel>
+              <Field data-invalid={fieldState.invalid} className="relative flex-1">
+                <FieldLabel htmlFor={field.name}>{capitalize(field.name)}</FieldLabel>
                 <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger
-                    {...field}
-                    id={field.name}
-                    aria-invalid={fieldState.invalid}
-                  >
+                  <SelectTrigger {...field} id={field.name} aria-invalid={fieldState.invalid}>
                     <SelectValue placeholder="Select Bank Account" />
                   </SelectTrigger>
                   <SelectContent>
@@ -190,10 +157,7 @@ export function UpdateTransactionForm({
                   </SelectContent>
                 </Select>
                 {fieldState.error && (
-                  <FieldError
-                    errors={[fieldState.error]}
-                    className="absolute top-full text-xs"
-                  />
+                  <FieldError errors={[fieldState.error]} className="absolute top-full text-xs" />
                 )}
               </Field>
             )}
@@ -203,13 +167,8 @@ export function UpdateTransactionForm({
             name="amount"
             control={form.control}
             render={({ field, fieldState }) => (
-              <Field
-                data-invalid={fieldState.invalid}
-                className="relative flex-1"
-              >
-                <FieldLabel htmlFor={field.name}>
-                  {capitalize(field.name)}
-                </FieldLabel>
+              <Field data-invalid={fieldState.invalid} className="relative flex-1">
+                <FieldLabel htmlFor={field.name}>{capitalize(field.name)}</FieldLabel>
                 <NumberInput
                   {...field}
                   id={field.name}
@@ -221,34 +180,22 @@ export function UpdateTransactionForm({
                   aria-invalid={fieldState.invalid}
                 />
                 {fieldState.error && (
-                  <FieldError
-                    errors={[fieldState.error]}
-                    className="absolute top-full text-xs"
-                  />
+                  <FieldError errors={[fieldState.error]} className="absolute top-full text-xs" />
                 )}
               </Field>
             )}
           />
         </Field>
 
-        <Field orientation={"responsive"}>
+        <Field orientation={'responsive'}>
           <Controller
             name="transactionType"
             control={form.control}
             render={({ field, fieldState }) => (
-              <Field
-                data-invalid={fieldState.invalid}
-                className="relative flex-1"
-              >
-                <FieldLabel htmlFor={field.name}>
-                  {capitalize(field.name)}
-                </FieldLabel>
+              <Field data-invalid={fieldState.invalid} className="relative flex-1">
+                <FieldLabel htmlFor={field.name}>{capitalize(field.name)}</FieldLabel>
                 <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger
-                    {...field}
-                    id={field.name}
-                    aria-invalid={fieldState.invalid}
-                  >
+                  <SelectTrigger {...field} id={field.name} aria-invalid={fieldState.invalid}>
                     <SelectValue placeholder="Select Transaction Type" />
                   </SelectTrigger>
                   <SelectContent>
@@ -257,10 +204,7 @@ export function UpdateTransactionForm({
                   </SelectContent>
                 </Select>
                 {fieldState.error && (
-                  <FieldError
-                    errors={[fieldState.error]}
-                    className="absolute top-full text-xs"
-                  />
+                  <FieldError errors={[fieldState.error]} className="absolute top-full text-xs" />
                 )}
               </Field>
             )}
@@ -270,24 +214,15 @@ export function UpdateTransactionForm({
             name="categoryId"
             control={form.control}
             render={({ field, fieldState }) => {
-              const selectedType = form.watch("transactionType");
+              const selectedType = form.watch('transactionType');
               const filteredCategories = categories.filter(
                 (cat) => cat.categoryType === selectedType,
               );
               return (
-                <Field
-                  data-invalid={fieldState.invalid}
-                  className="relative flex-1"
-                >
-                  <FieldLabel htmlFor={field.name}>
-                    {capitalize(field.name)}
-                  </FieldLabel>
+                <Field data-invalid={fieldState.invalid} className="relative flex-1">
+                  <FieldLabel htmlFor={field.name}>{capitalize(field.name)}</FieldLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger
-                      {...field}
-                      id={field.name}
-                      aria-invalid={fieldState.invalid}
-                    >
+                    <SelectTrigger {...field} id={field.name} aria-invalid={fieldState.invalid}>
                       <SelectValue placeholder="Select Category" />
                     </SelectTrigger>
                     <SelectContent>
@@ -299,10 +234,7 @@ export function UpdateTransactionForm({
                     </SelectContent>
                   </Select>
                   {fieldState.error && (
-                    <FieldError
-                      errors={[fieldState.error]}
-                      className="absolute top-full text-xs"
-                    />
+                    <FieldError errors={[fieldState.error]} className="absolute top-full text-xs" />
                   )}
                 </Field>
               );
@@ -312,22 +244,11 @@ export function UpdateTransactionForm({
         <FieldSeparator />
         <DialogFooter>
           <Field orientation="horizontal" className="mt-4">
-            <Button
-              variant="outline"
-              className="flex-1"
-              type="reset"
-              onClick={() => closeDialog()}
-            >
+            <Button variant="outline" className="flex-1" type="reset" onClick={() => closeDialog()}>
               Cancel
             </Button>
-            <Button
-              type="submit"
-              className="flex-1"
-              disabled={form.formState.isSubmitting}
-            >
-              <LoadingSwap isLoading={form.formState.isSubmitting}>
-                Update
-              </LoadingSwap>
+            <Button type="submit" className="flex-1" disabled={form.formState.isSubmitting}>
+              <LoadingSwap isLoading={form.formState.isSubmitting}>Update</LoadingSwap>
             </Button>
           </Field>
         </DialogFooter>

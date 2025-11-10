@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   FieldGroup,
@@ -10,30 +10,26 @@ import {
   FieldDescription,
   FieldLegend,
   FieldSet,
-} from "@/components/ui/field";
-import { Controller, useForm } from "react-hook-form";
-import z from "zod";
-import { Category } from "@/drizzle/schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
-import { DialogFooter } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { LoadingSwap } from "@/components/ui/loading-swap";
-import { useState } from "react";
-import { updateUserCategory } from "../actions/category-actions";
-import { toast } from "sonner";
-import { capitalize } from "@/lib/utils";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover";
-import { categoryIconGroups } from "@/lib/category-icons";
-import { useRouter } from "next/navigation";
+} from '@/components/ui/field';
+import { Controller, useForm } from 'react-hook-form';
+import z from 'zod';
+import { Category } from '@/drizzle/schema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Button } from '@/components/ui/button';
+import { DialogFooter } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { LoadingSwap } from '@/components/ui/loading-swap';
+import { useState } from 'react';
+import { updateUserCategory } from '../actions/category-actions';
+import { toast } from 'sonner';
+import { capitalize } from '@/lib/utils';
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
+import { categoryIconGroups } from '@/lib/category-icons';
+import { useRouter } from 'next/navigation';
 
 const categorySchema = z.object({
-  name: z.string().min(1, "Name is required").max(50, "Name is too long"),
-  icon: z.string().max(100, "Icon URL is too long").optional(),
+  name: z.string().min(1, 'Name is required').max(50, 'Name is too long'),
+  icon: z.string().max(100, 'Icon URL is too long').optional(),
 });
 
 type CategoryFormData = z.infer<typeof categorySchema>;
@@ -57,14 +53,11 @@ export function UpdateCategoryForm({
   const router = useRouter();
 
   const handleUpdateCategory = async (data: CategoryFormData) => {
-    const res = await updateUserCategory(
-      category.id,
-      data as unknown as Category,
-    );
+    const res = await updateUserCategory(category.id, data as unknown as Category);
     if (res.error) {
-      toast.error(res.message || "Failed to update category");
+      toast.error(res.message || 'Failed to update category');
     } else {
-      toast.success("Category updated successfully");
+      toast.success('Category updated successfully');
       router.refresh();
       closeDialog();
     }
@@ -76,35 +69,23 @@ export function UpdateCategoryForm({
         <FieldSeparator />
         <FieldSet>
           <FieldLegend>Update Category</FieldLegend>
-          <FieldDescription>
-            Change the name or icon to better suit your needs.
-          </FieldDescription>
-          <Field orientation={"responsive"}>
+          <FieldDescription>Change the name or icon to better suit your needs.</FieldDescription>
+          <Field orientation={'responsive'}>
             <Controller
               name="icon"
               control={form.control}
               render={({ field, fieldState }) => (
-                <Field
-                  data-invalid={fieldState.invalid}
-                  className="relative flex-1"
-                >
+                <Field data-invalid={fieldState.invalid} className="relative flex-1">
                   <FieldContent>
-                    <FieldLabel htmlFor={field.name}>
-                      {capitalize(field.name)}
-                    </FieldLabel>
-                    <FieldDescription>
-                      Pick a different icon if you&apos;d like.
-                    </FieldDescription>
+                    <FieldLabel htmlFor={field.name}>{capitalize(field.name)}</FieldLabel>
+                    <FieldDescription>Pick a different icon if you&apos;d like.</FieldDescription>
                   </FieldContent>
-                  <Popover
-                    open={showEmojiPicker}
-                    onOpenChange={setShowEmojiPicker}
-                  >
+                  <Popover open={showEmojiPicker} onOpenChange={setShowEmojiPicker}>
                     <PopoverTrigger asChild>
                       <Input
                         id={field.name}
                         placeholder="Pick an icon"
-                        value={field.value || ""}
+                        value={field.value || ''}
                         readOnly
                         className="text-2xl text-center cursor-pointer"
                       />
@@ -120,7 +101,7 @@ export function UpdateCategoryForm({
                       {/* Griglia icone organizzate per gruppo */}
                       <div className="space-y-4">
                         {Object.entries(categoryIconGroups)
-                          .filter(([key]) => key !== "all")
+                          .filter(([key]) => key !== 'all')
                           .map(([key, group]) => (
                             <div key={key}>
                               <h4 className="text-xs font-semibold text-muted-foreground mb-2">
@@ -133,9 +114,7 @@ export function UpdateCategoryForm({
                                     variant="ghost"
                                     key={icon}
                                     className={`h-10 w-10 p-0 text-xl ${
-                                      field.value === icon
-                                        ? "border-primary bg-primary/10"
-                                        : ""
+                                      field.value === icon ? 'border-primary bg-primary/10' : ''
                                     }`}
                                     onClick={() => {
                                       field.onChange(icon);
@@ -152,10 +131,7 @@ export function UpdateCategoryForm({
                     </PopoverContent>
                   </Popover>
                   {fieldState.error && (
-                    <FieldError
-                      errors={[fieldState.error]}
-                      className="absolute top-full text-xs"
-                    />
+                    <FieldError errors={[fieldState.error]} className="absolute top-full text-xs" />
                   )}
                 </Field>
               )}
@@ -165,17 +141,10 @@ export function UpdateCategoryForm({
               name="name"
               control={form.control}
               render={({ field, fieldState }) => (
-                <Field
-                  data-invalid={fieldState.invalid}
-                  className="relative flex-1"
-                >
+                <Field data-invalid={fieldState.invalid} className="relative flex-1">
                   <FieldContent>
-                    <FieldLabel htmlFor={field.name}>
-                      {capitalize(field.name)}
-                    </FieldLabel>
-                    <FieldDescription>
-                      Give it a new name if needed.
-                    </FieldDescription>
+                    <FieldLabel htmlFor={field.name}>{capitalize(field.name)}</FieldLabel>
+                    <FieldDescription>Give it a new name if needed.</FieldDescription>
                   </FieldContent>
                   <Input
                     {...field}
@@ -185,10 +154,7 @@ export function UpdateCategoryForm({
                     autoComplete="off"
                   />
                   {fieldState.error && (
-                    <FieldError
-                      errors={[fieldState.error]}
-                      className="absolute top-full text-xs"
-                    />
+                    <FieldError errors={[fieldState.error]} className="absolute top-full text-xs" />
                   )}
                 </Field>
               )}
@@ -198,22 +164,11 @@ export function UpdateCategoryForm({
         <FieldSeparator />
         <DialogFooter>
           <Field orientation="horizontal" className="mt-4">
-            <Button
-              variant="outline"
-              className="flex-1"
-              type="reset"
-              onClick={() => closeDialog()}
-            >
+            <Button variant="outline" className="flex-1" type="reset" onClick={() => closeDialog()}>
               Cancel
             </Button>
-            <Button
-              type="submit"
-              className="flex-1"
-              disabled={form.formState.isSubmitting}
-            >
-              <LoadingSwap isLoading={form.formState.isSubmitting}>
-                Save Changes
-              </LoadingSwap>
+            <Button type="submit" className="flex-1" disabled={form.formState.isSubmitting}>
+              <LoadingSwap isLoading={form.formState.isSubmitting}>Save Changes</LoadingSwap>
             </Button>
           </Field>
         </DialogFooter>

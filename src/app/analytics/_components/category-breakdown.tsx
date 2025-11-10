@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from "recharts";
-import { formatCurrency } from "@/lib/utils";
+import { useState } from 'react';
+import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
+import { formatCurrency } from '@/lib/utils';
 
 type CategoryDatum = { name: string; value: number; color: string };
 type Props = { data: CategoryDatum[]; currency: string };
 
 const palette = [
-  "#0ea5e9",
-  "#22d3ee",
-  "#a855f7",
-  "#f97316",
-  "#f43f5e",
-  "#10b981",
-  "#6366f1",
-  "#eab308",
+  '#0ea5e9',
+  '#22d3ee',
+  '#a855f7',
+  '#f97316',
+  '#f43f5e',
+  '#10b981',
+  '#6366f1',
+  '#eab308',
 ];
 
 type CategoryTooltipPayload = {
@@ -31,19 +31,14 @@ type CategoryTooltipProps = {
   currency: string;
 };
 
-const CategoryTooltip = ({
-  active,
-  payload,
-  currency,
-}: CategoryTooltipProps) => {
+const CategoryTooltip = ({ active, payload, currency }: CategoryTooltipProps) => {
   if (!active || !payload?.length) return null;
   const details = payload[0].payload!;
   return (
     <div className="rounded-md border bg-background/95 px-3 py-2 text-sm shadow-md">
       <div className="font-semibold">{details.name}</div>
       <div className="text-xs text-muted-foreground">
-        {formatCurrency(details.value, currency)} ·{" "}
-        {details.percentage.toFixed(1)}%
+        {formatCurrency(details.value, currency)} · {details.percentage.toFixed(1)}%
       </div>
     </div>
   );
@@ -85,17 +80,11 @@ export function CategoryBreakdown({ data, currency }: Props) {
                   fill={entry.color}
                   stroke="#0f172a"
                   strokeWidth={1}
-                  opacity={
-                    activeIndex === null || activeIndex === index ? 1 : 0.45
-                  }
+                  opacity={activeIndex === null || activeIndex === index ? 1 : 0.45}
                 />
               ))}
             </Pie>
-            <Tooltip
-              content={(props) => (
-                <CategoryTooltip {...props} currency={currency} />
-              )}
-            />
+            <Tooltip content={(props) => <CategoryTooltip {...props} currency={currency} />} />
           </PieChart>
         </ResponsiveContainer>
       </div>
@@ -106,17 +95,14 @@ export function CategoryBreakdown({ data, currency }: Props) {
             onMouseEnter={() => setActiveIndex(index)}
             onMouseLeave={handleSliceLeave}
             className={`relative flex items-center gap-3 rounded-lg border px-3 py-2 transition ${
-              activeIndex === index && "scale-110"
+              activeIndex === index && 'scale-110'
             }`}
             style={{ borderColor: item.color }}
           >
             <div className="flex flex-col">
-              <span className="block max-w-[100px] truncate text-sm font-medium">
-                {item.name}
-              </span>
+              <span className="block max-w-[100px] truncate text-sm font-medium">{item.name}</span>
               <span className="text-xs text-muted-foreground">
-                {formatCurrency(item.value, currency)} ·{" "}
-                {item.percentage.toFixed(1)}%
+                {formatCurrency(item.value, currency)} · {item.percentage.toFixed(1)}%
               </span>
             </div>
           </li>

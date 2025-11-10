@@ -1,6 +1,6 @@
-import { eq, sql, and, lte, gte } from "drizzle-orm";
-import { db } from "@/drizzle/db";
-import { type Transaction, bankAccount, transaction } from "@/drizzle/schema";
+import { eq, sql, and, lte, gte } from 'drizzle-orm';
+import { db } from '@/drizzle/db';
+import { type Transaction, bankAccount, transaction } from '@/drizzle/schema';
 
 export const DEFAULT_PAGE_SIZE = 25;
 const MAX_PAGE_SIZE = 100;
@@ -18,7 +18,7 @@ export async function findManyTransactionsByUserId(
     pageSize?: number;
     from?: Date;
     to?: Date;
-    transactionType?: "income" | "expense";
+    transactionType?: 'income' | 'expense';
   } = {},
 ): Promise<{ transactions: Transaction[]; totalCount: number }> {
   const size = Math.min(Math.max(pageSize, 1), MAX_PAGE_SIZE);
@@ -28,9 +28,7 @@ export async function findManyTransactionsByUserId(
     eq(transaction.userId, userId),
     from ? gte(transaction.date, from) : undefined,
     to ? lte(transaction.date, to) : undefined,
-    transactionType
-      ? eq(transaction.transactionType, transactionType)
-      : undefined,
+    transactionType ? eq(transaction.transactionType, transactionType) : undefined,
   );
 
   const [countResult, transactions] = await Promise.all([
@@ -53,9 +51,7 @@ export async function findManyTransactionsByUserId(
   };
 }
 
-export async function findFirstTransactionById(
-  id: string,
-): Promise<Transaction | undefined> {
+export async function findFirstTransactionById(id: string): Promise<Transaction | undefined> {
   return await db.query.transaction.findFirst({
     where(fields, operators) {
       return operators.eq(fields.id, id);
@@ -71,10 +67,7 @@ export async function findFirstTransactionById(
   });
 }
 
-export async function insertTransaction(
-  data: Transaction,
-  newBalance: string,
-): Promise<void> {
+export async function insertTransaction(data: Transaction, newBalance: string): Promise<void> {
   await db.transaction(async (tx) => {
     await tx.insert(transaction).values(data);
     await tx

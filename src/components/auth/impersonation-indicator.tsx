@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { authClient } from "@/lib/auth/auth-client";
-import { UserX } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { BetterAuthActionButton } from "./better-auth-action-button";
+import { authClient } from '@/lib/auth/auth-client';
+import { UserX } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { BetterAuthActionButton } from './better-auth-action-button';
 
 export function ImpersonationIndicator() {
   const router = useRouter();
@@ -17,13 +17,13 @@ export function ImpersonationIndicator() {
         action={() =>
           authClient.admin.stopImpersonating(undefined, {
             onSuccess: () => {
-              router.push("/admin");
+              router.push('/admin');
               refetch();
             },
           })
         }
-        variant={"destructive"}
-        size={"sm"}
+        variant={'destructive'}
+        size={'sm'}
       >
         <UserX />
       </BetterAuthActionButton>

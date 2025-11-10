@@ -1,10 +1,7 @@
-"use server";
+'use server';
 
-import { ClientBankAccount } from "@/drizzle/schema";
-import {
-  WelcomeActionResponse,
-  WelcomeService,
-} from "@/services/welcome-service";
+import { ClientBankAccount } from '@/drizzle/schema';
+import { WelcomeActionResponse, WelcomeService } from '@/services/welcome-service';
 
 export async function createWelcomeDataAction(data: {
   bankAccount: ClientBankAccount;

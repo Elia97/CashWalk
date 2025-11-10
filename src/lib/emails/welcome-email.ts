@@ -1,4 +1,4 @@
-import { sendEmail } from "./send-email";
+import { sendEmail } from './send-email';
 
 export async function welcomeEmail({
   user,
@@ -10,7 +10,7 @@ export async function welcomeEmail({
 }) {
   await sendEmail({
     to: user.email,
-    subject: "Welcome to Our App!",
+    subject: 'Welcome to Our App!',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #333;">Welcome to Our App!</h2>

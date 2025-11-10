@@ -1,39 +1,33 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { authClient } from "@/lib/auth/auth-client";
-import { useRouter } from "next/navigation";
-import { SignInForm } from "./_components/sign-in-form";
-import { SignUpForm } from "./_components/sign-up-form";
-import { SocialAuthButtons } from "./_components/social-auth-buttons";
-import { EmailVerification } from "./_components/email-verification";
-import { ForgotPasswordForm } from "./_components/forgot-password-form";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
+import { useEffect, useState } from 'react';
+import { authClient } from '@/lib/auth/auth-client';
+import { useRouter } from 'next/navigation';
+import { SignInForm } from './_components/sign-in-form';
+import { SignUpForm } from './_components/sign-up-form';
+import { SocialAuthButtons } from './_components/social-auth-buttons';
+import { EmailVerification } from './_components/email-verification';
+import { ForgotPasswordForm } from './_components/forgot-password-form';
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
 
-type Tab = "signin" | "signup" | "email-verification" | "forgot-password";
+type Tab = 'signin' | 'signup' | 'email-verification' | 'forgot-password';
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [selectedTab, setSelectedTab] = useState<Tab>("signin");
+  const [email, setEmail] = useState('');
+  const [selectedTab, setSelectedTab] = useState<Tab>('signin');
   const router = useRouter();
   useEffect(() => {
     authClient.getSession().then((session) => {
-      if (session.data !== null) router.push("/");
+      if (session.data !== null) router.push('/');
     });
   }, [router]);
 
   const openEmailVerificationTab = (email: string) => {
     setEmail(email);
-    setSelectedTab("email-verification");
+    setSelectedTab('email-verification');
   };
 
   return (
@@ -57,7 +51,7 @@ export default function LoginPage() {
             <CardContent>
               <SignInForm
                 openEmailVerificationTab={openEmailVerificationTab}
-                openForgotPasswordTab={() => setSelectedTab("forgot-password")}
+                openForgotPasswordTab={() => setSelectedTab('forgot-password')}
               />
             </CardContent>
             <CardFooter className="justify-center">
@@ -66,7 +60,7 @@ export default function LoginPage() {
                 variant="link"
                 size="sm"
                 className="text-sm font-normal hover:underline"
-                onClick={() => setSelectedTab("signup")}
+                onClick={() => setSelectedTab('signup')}
               >
                 Don&apos;t have an account?
               </Button>
@@ -92,7 +86,7 @@ export default function LoginPage() {
                 variant="link"
                 size="sm"
                 className="text-sm font-normal hover:underline"
-                onClick={() => setSelectedTab("signin")}
+                onClick={() => setSelectedTab('signin')}
               >
                 Already have an account?
               </Button>
@@ -115,9 +109,7 @@ export default function LoginPage() {
               <CardTitle>Forgot password</CardTitle>
             </CardHeader>
             <CardContent>
-              <ForgotPasswordForm
-                openSignInTab={() => setSelectedTab("signin")}
-              />
+              <ForgotPasswordForm openSignInTab={() => setSelectedTab('signin')} />
             </CardContent>
           </Card>
         </TabsContent>

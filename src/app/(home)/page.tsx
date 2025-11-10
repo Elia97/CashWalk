@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
-import Link from "next/link";
-import Image from "next/image";
-import { cn } from "@/lib/utils";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { ArrowRight } from 'lucide-react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { cn } from '@/lib/utils';
 
 export default function Home() {
   const [animateOut, setAnimateOut] = useState(false);
@@ -14,8 +14,8 @@ export default function Home() {
       <div className="grid lg:grid-cols-2 gap-8">
         <div
           className={cn(
-            "space-y-6 sm:space-y-8 text-center lg:text-right",
-            !animateOut ? "animate-fade-right" : "animate-fade-out-left",
+            'space-y-6 sm:space-y-8 text-center lg:text-right',
+            !animateOut ? 'animate-fade-right' : 'animate-fade-out-left',
           )}
         >
           <div className="inline-flex items-center max-w-max mx-auto lg:mx-0 gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
@@ -24,13 +24,13 @@ export default function Home() {
           </div>
 
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-balance">
-            Your year, <span className="text-primary">your story</span>,{" "}
+            Your year, <span className="text-primary">your story</span>,{' '}
             <span className="text-secondary">your numbers</span>
           </h1>
 
           <p className="text-lg md:text-xl text-muted-foreground leading-relaxed text-pretty max-w-2xl mx-auto lg:mx-0">
-            Turn your finances into a visual journey. <br /> The spreadsheet
-            that finally feels alive.
+            Turn your finances into a visual journey. <br /> The spreadsheet that finally feels
+            alive.
           </p>
 
           <Button size="lg" className="text-lg px-8 py-6 group" asChild>
@@ -58,8 +58,8 @@ export default function Home() {
           width={500}
           height={500}
           className={cn(
-            "mx-auto bg-transparent self-center size-[250px] sm:size-[350px]",
-            !animateOut ? "animate-jump-in" : "animate-jump-out",
+            'mx-auto bg-transparent self-center size-[250px] sm:size-[350px]',
+            !animateOut ? 'animate-jump-in' : 'animate-jump-out',
           )}
         />
       </div>

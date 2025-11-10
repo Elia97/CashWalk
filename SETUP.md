@@ -28,7 +28,6 @@
    ```
 
    Fill in the `.env` file with your values:
-
    - `DATABASE_URL`: Your PostgreSQL connection string
    - `BETTER_AUTH_SECRET`: Generate with `openssl rand -base64 32`
    - Other values as needed

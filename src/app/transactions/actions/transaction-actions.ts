@@ -1,9 +1,9 @@
-"use server";
+'use server';
 
-import { ClientTransaction } from "@/drizzle/schema";
-import { TransactionService } from "@/services/transaction-service";
-import type { TransactionActionResponse } from "@/services/transaction-service";
-import { revalidatePath } from "next/cache";
+import { ClientTransaction } from '@/drizzle/schema';
+import { TransactionService } from '@/services/transaction-service';
+import type { TransactionActionResponse } from '@/services/transaction-service';
+import { revalidatePath } from 'next/cache';
 
 export async function getUserTransactions(
   userId: string,
@@ -18,7 +18,7 @@ export async function getUserTransactions(
     pageSize?: number;
     from?: Date;
     to?: Date;
-    transactionType?: "income" | "expense";
+    transactionType?: 'income' | 'expense';
   } = {},
 ): Promise<
   TransactionActionResponse<{
@@ -28,7 +28,7 @@ export async function getUserTransactions(
     pageSize: number;
   }>
 > {
-  if (!userId || typeof userId !== "string") throw new Error("Invalid user ID");
+  if (!userId || typeof userId !== 'string') throw new Error('Invalid user ID');
   return TransactionService.getAllTransactions(userId, {
     page,
     pageSize,
@@ -44,24 +44,21 @@ export async function getTransactionFormData(userId: string): Promise<
     categories: { id: string; name: string; categoryType: string }[];
   }>
 > {
-  if (!userId || typeof userId !== "string") throw new Error("Invalid user ID");
+  if (!userId || typeof userId !== 'string') throw new Error('Invalid user ID');
   return TransactionService.getTransactionFormData(userId);
 }
 
 export async function createTransaction(
   data: ClientTransaction,
 ): Promise<TransactionActionResponse> {
-  if (!data.userId || typeof data.userId !== "string")
-    throw new Error("Invalid user ID");
-  revalidatePath("/transactions");
+  if (!data.userId || typeof data.userId !== 'string') throw new Error('Invalid user ID');
+  revalidatePath('/transactions');
   return await TransactionService.createTransaction(data);
 }
 
-export async function deleteTransaction(
-  id: string,
-): Promise<TransactionActionResponse> {
-  if (!id || typeof id !== "string") throw new Error("Invalid transaction ID");
-  revalidatePath("/transactions");
+export async function deleteTransaction(id: string): Promise<TransactionActionResponse> {
+  if (!id || typeof id !== 'string') throw new Error('Invalid transaction ID');
+  revalidatePath('/transactions');
   return await TransactionService.deleteTransaction(id);
 }
 
@@ -69,10 +66,9 @@ export async function updateTransaction(
   transactionId: string,
   data: ClientTransaction,
 ): Promise<TransactionActionResponse> {
-  if (!transactionId || typeof transactionId !== "string")
-    throw new Error("Invalid transaction ID");
-  if (!data || typeof data !== "object")
-    throw new Error("Invalid transaction data");
-  revalidatePath("/transactions");
+  if (!transactionId || typeof transactionId !== 'string')
+    throw new Error('Invalid transaction ID');
+  if (!data || typeof data !== 'object') throw new Error('Invalid transaction data');
+  revalidatePath('/transactions');
   return await TransactionService.updateTransaction(transactionId, data);
 }

@@ -1,5 +1,5 @@
-import { auth } from "@/lib/auth/auth";
-import { toNextJsHandler } from "better-auth/next-js";
+import { auth } from '@/lib/auth/auth';
+import { toNextJsHandler } from 'better-auth/next-js';
 import arcjet, {
   BotOptions,
   detectBot,
@@ -8,34 +8,34 @@ import arcjet, {
   shield,
   slidingWindow,
   SlidingWindowRateLimitOptions,
-} from "@arcjet/next";
-import { findIp } from "@arcjet/ip";
+} from '@arcjet/next';
+import { findIp } from '@arcjet/ip';
 
 const aj = arcjet({
   key: process.env.ARCJET_KEY!,
-  characteristics: ["userIdOrIp"],
-  rules: [shield({ mode: "LIVE" })],
+  characteristics: ['userIdOrIp'],
+  rules: [shield({ mode: 'LIVE' })],
 });
 
-const botSettings = { mode: "LIVE", allow: [] } satisfies BotOptions;
+const botSettings = { mode: 'LIVE', allow: [] } satisfies BotOptions;
 
-const isDev = process.env.NODE_ENV === "development";
+const isDev = process.env.NODE_ENV === 'development';
 
 const restrictiveRateLimitSettings = {
-  mode: "LIVE",
+  mode: 'LIVE',
   max: isDev ? 1000 : 60,
-  interval: isDev ? "1m" : "1m",
+  interval: isDev ? '1m' : '1m',
 } satisfies SlidingWindowRateLimitOptions<[]>;
 
 const laxRateLimitSettings = {
-  mode: "LIVE",
+  mode: 'LIVE',
   max: isDev ? 1000 : 10,
-  interval: isDev ? "1m" : "10m",
+  interval: isDev ? '1m' : '10m',
 } satisfies SlidingWindowRateLimitOptions<[]>;
 
 const emailSettings = {
-  mode: "LIVE",
-  block: ["DISPOSABLE", "INVALID", "NO_MX_RECORDS"],
+  mode: 'LIVE',
+  block: ['DISPOSABLE', 'INVALID', 'NO_MX_RECORDS'],
 } satisfies EmailOptions;
 
 const authHandlers = toNextJsHandler(auth);
@@ -51,14 +51,14 @@ export async function POST(request: Request) {
     } else if (decision.reason.isEmail()) {
       let message: string;
 
-      if (decision.reason.emailTypes.includes("INVALID")) {
-        message = "The provided email address is invalid.";
-      } else if (decision.reason.emailTypes.includes("DISPOSABLE")) {
-        message = "Disposable email addresses are not allowed.";
-      } else if (decision.reason.emailTypes.includes("NO_MX_RECORDS")) {
-        message = "The email domain has no valid MX records.";
+      if (decision.reason.emailTypes.includes('INVALID')) {
+        message = 'The provided email address is invalid.';
+      } else if (decision.reason.emailTypes.includes('DISPOSABLE')) {
+        message = 'Disposable email addresses are not allowed.';
+      } else if (decision.reason.emailTypes.includes('NO_MX_RECORDS')) {
+        message = 'The email domain has no valid MX records.';
       } else {
-        message = "The provided email address is not allowed.";
+        message = 'The provided email address is not allowed.';
       }
 
       return Response.json({ message }, { status: 400 });
@@ -77,23 +77,18 @@ async function checkArcjet(request: Request) {
     const clonedRequest = request.clone();
     const text = await clonedRequest.text();
 
-    if (text && text.trim() !== "") {
+    if (text && text.trim() !== '') {
       body = JSON.parse(text);
     }
   } catch (error) {
-    console.warn("Failed to parse request body as JSON:", error);
+    console.warn('Failed to parse request body as JSON:', error);
     body = {};
   }
   const session = await auth.api.getSession({ headers: request.headers });
-  const userIdOrIp = (session?.user.id ?? findIp(request)) || "127.0.0.1";
+  const userIdOrIp = (session?.user.id ?? findIp(request)) || '127.0.0.1';
 
-  if (request.url.endsWith("/auth/sign-up")) {
-    if (
-      body &&
-      typeof body === "object" &&
-      "email" in body &&
-      typeof body.email === "string"
-    ) {
+  if (request.url.endsWith('/auth/sign-up')) {
+    if (body && typeof body === 'object' && 'email' in body && typeof body.email === 'string') {
       return aj
         .withRule(
           protectSignup({
