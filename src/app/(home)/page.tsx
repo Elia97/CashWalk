@@ -1,23 +1,13 @@
-'use client';
-
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { cn } from '@/lib/utils';
 
 export default function Home() {
-  const [animateOut, setAnimateOut] = useState(false);
   return (
     <section>
       <div className="grid lg:grid-cols-2 gap-8">
-        <div
-          className={cn(
-            'space-y-6 sm:space-y-8 text-center lg:text-right',
-            !animateOut ? 'animate-fade-right' : 'animate-fade-out-left',
-          )}
-        >
+        <div className="space-y-6 sm:space-y-8 text-center lg:text-right animate-fade-right">
           <div className="inline-flex items-center max-w-max mx-auto lg:mx-0 gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
             <span className="w-2 h-2 rounded-full bg-secondary animate-pulse text-left" />
             Now in Early Access
@@ -34,7 +24,7 @@ export default function Home() {
           </p>
 
           <Button size="lg" className="text-lg px-8 py-6 group" asChild>
-            <Link href="/overview" onClick={() => setAnimateOut(true)}>
+            <Link href="/overview">
               Get Started for Free
               <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Link>
@@ -44,23 +34,19 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row sm:gap-3">
               🎯<span>No ads, no tracking</span>
             </div>
-            <div className="h-4 w-px bg-border" />
+            <div className="h-4 w-px bg-muted" />
             <div className="flex flex-col sm:flex-row sm:gap-3">
               💯<span>Free to use</span>
             </div>
           </div>
         </div>
         <Image
-          priority={true}
-          fetchPriority="high"
+          priority
           src="/CashWalk.svg"
           alt="Homepage Mockup"
           width={500}
           height={500}
-          className={cn(
-            'mx-auto bg-transparent self-center size-[250px] sm:size-[350px]',
-            !animateOut ? 'animate-jump-in' : 'animate-jump-out',
-          )}
+          className="mx-auto bg-transparent self-center size-[250px] sm:size-[350px] animate-jump-in"
         />
       </div>
     </section>
