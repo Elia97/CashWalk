@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { db } from '@/drizzle/db';
 import { type BankAccount, bankAccount, BankAccountWithTransactions } from '@/drizzle/schema';
 
@@ -40,9 +40,7 @@ export async function findFirstPrimaryBankAccountByUserId(
   userId: string,
 ): Promise<BankAccountWithTransactions | undefined> {
   return await db.query.bankAccount.findFirst({
-    where(fields, operators) {
-      return operators.eq(fields.userId, userId) && operators.eq(fields.isPrimary, true);
-    },
+    where: and(eq(bankAccount.userId, userId), eq(bankAccount.isPrimary, true)),
     with: {
       transactions: {
         where(fields, operators) {
