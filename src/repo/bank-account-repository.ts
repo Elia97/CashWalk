@@ -1,82 +1,66 @@
-import { and, eq } from 'drizzle-orm';
 import { db } from '@/drizzle/db';
-import { type BankAccount, bankAccount, BankAccountWithTransactions } from '@/drizzle/schema';
+import { bankAccount } from '@/drizzle/schema';
+import { and, eq } from 'drizzle-orm';
 
-export async function findManyBankAccountsByUserId(userId: string): Promise<BankAccount[]> {
-  return await db.query.bankAccount.findMany({
-    where(fields, operators) {
-      return operators.eq(fields.userId, userId);
-    },
-    orderBy(fields, operators) {
-      return operators.asc(fields.createdAt);
-    },
-  });
-}
+export class BankAccountRepository {
+  async findAll(userId: string) {
+    return await db.query.bankAccount.findMany({
+      where: eq(bankAccount.userId, userId),
+    });
+  }
 
-export async function findManyBankAccountIdAndNameByUserId(
-  userId: string,
-): Promise<{ id: string; name: string; isPrimary: boolean }[]> {
-  return await db.query.bankAccount.findMany({
-    where(fields, operators) {
-      return operators.eq(fields.userId, userId);
-    },
-    columns: {
-      id: true,
-      name: true,
-      isPrimary: true,
-    },
-  });
-}
+  async findById(id: string) {
+    return await db.query.bankAccount.findFirst({
+      where: eq(bankAccount.id, id),
+    });
+  }
 
-export async function findFirstBankAccountById(id: string): Promise<BankAccount | undefined> {
-  return await db.query.bankAccount.findFirst({
-    where(fields, operators) {
-      return operators.eq(fields.id, id);
-    },
-  });
-}
+  async insert(data: typeof bankAccount.$inferInsert) {
+    return await db
+      .insert(bankAccount)
+      .values(data)
+      .returning()
+      .then((rows) => rows[0]);
+  }
 
-export async function findFirstPrimaryBankAccountByUserId(
-  userId: string,
-): Promise<BankAccountWithTransactions | undefined> {
-  return await db.query.bankAccount.findFirst({
-    where: and(eq(bankAccount.userId, userId), eq(bankAccount.isPrimary, true)),
-    with: {
-      transactions: {
-        where(fields, operators) {
-          return operators.gte(fields.date, new Date(new Date().getFullYear(), 0, 1));
-        },
-        orderBy(fields, operators) {
-          return operators.desc(fields.date);
-        },
-        with: {
-          category: {
-            with: {
-              parent: true,
+  async update(id: string, data: Partial<typeof bankAccount.$inferInsert>) {
+    return await db
+      .update(bankAccount)
+      .set(data)
+      .where(eq(bankAccount.id, id))
+      .returning()
+      .then((rows) => rows[0]);
+  }
+
+  async delete(id: string) {
+    return await db
+      .delete(bankAccount)
+      .where(eq(bankAccount.id, id))
+      .returning()
+      .then((rows) => rows[0]);
+  }
+
+  async findPrimary(userId: string) {
+    return await db.query.bankAccount.findFirst({
+      where: and(eq(bankAccount.userId, userId), eq(bankAccount.isPrimary, true)),
+      with: {
+        transactions: {
+          with: {
+            category: {
+              with: {
+                parent: true,
+              },
             },
           },
         },
       },
-    },
-  });
-}
+    });
+  }
 
-export async function insertBankAccount(data: BankAccount): Promise<void> {
-  await db.insert(bankAccount).values(data).returning();
-}
-
-export async function deleteBankAccountById(id: string): Promise<void> {
-  await db.delete(bankAccount).where(eq(bankAccount.id, id));
-}
-
-export async function updateBankAccountById(id: string, data: Partial<BankAccount>): Promise<void> {
-  await db.update(bankAccount).set(data).where(eq(bankAccount.id, id));
-}
-
-export async function setPrimaryBankAccount(userId: string, accountId: string): Promise<void> {
-  await db.transaction(async (tx) => {
-    await tx.update(bankAccount).set({ isPrimary: false }).where(eq(bankAccount.userId, userId));
-
-    await tx.update(bankAccount).set({ isPrimary: true }).where(eq(bankAccount.id, accountId));
-  });
+  async setPrimary(userId: string, accountId: string) {
+    return await db.transaction(async (tx) => {
+      await tx.update(bankAccount).set({ isPrimary: false }).where(eq(bankAccount.userId, userId));
+      await tx.update(bankAccount).set({ isPrimary: true }).where(eq(bankAccount.id, accountId));
+    });
+  }
 }

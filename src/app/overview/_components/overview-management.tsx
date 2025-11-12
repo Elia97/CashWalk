@@ -8,10 +8,10 @@ import {
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Progress } from '@/components/ui/progress';
-import { ClientBankAccountWithTransactions } from '@/drizzle/schema';
+import { PrimaryBankAccountWithRelations } from '@/drizzle/schema';
 import { formatCurrency } from '@/lib/utils';
 
-export function OverviewManagement({ account }: { account: ClientBankAccountWithTransactions }) {
+export function OverviewManagement({ account }: { account: PrimaryBankAccountWithRelations }) {
   const totalIncome = account.transactions
     .filter((tx) => tx.transactionType === 'income')
     .reduce((sum, tx) => sum + Number(tx.amount), 0);

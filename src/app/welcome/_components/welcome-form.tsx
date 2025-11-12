@@ -53,7 +53,7 @@ const welcomeSchema = z.object({
   currency: z.enum(['USD', 'EUR', 'GBP'], {
     message: 'Currency is required',
   }),
-  accountNumber: z.string().max(18, 'Account number is too long').optional(),
+  accountNumber: z.string().max(30, 'Account number is too long').optional(),
   categories: z.array(z.string()).optional(),
 });
 

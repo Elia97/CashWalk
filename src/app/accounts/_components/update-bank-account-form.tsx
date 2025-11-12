@@ -12,7 +12,7 @@ import {
   FieldSet,
 } from '@/components/ui/field';
 import { Controller, useForm } from 'react-hook-form';
-import { updateUserBankAccount } from '../actions/bank-account-actions';
+import { updateBankAccount } from '../actions/bank-account-actions';
 import z from 'zod';
 import { ClientBankAccount } from '@/drizzle/schema';
 import { toast } from 'sonner';
@@ -67,7 +67,7 @@ export function UpdateBankAccountForm({
   const router = useRouter();
 
   const handleUpdateBankAccount = async (data: BankAccountFormData) => {
-    const res = await updateUserBankAccount(account.id, data as unknown as ClientBankAccount);
+    const res = await updateBankAccount(account.id, data as unknown as ClientBankAccount);
     if (res.error) {
       toast.error(res.message || 'Failed to update bank account');
     } else {

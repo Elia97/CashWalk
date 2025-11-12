@@ -1,33 +1,46 @@
 'use server';
 
 import { Category, CategoryWithChildren } from '@/drizzle/schema';
-import { type CategoryActionResponse, CategoryService } from '@/services/category-service';
+import { CategoryService } from '@/services/category-service';
 import { revalidatePath } from 'next/cache';
 
-export async function getUserCategories(
+type ActionResult<T = void> = {
+  error: boolean;
+  data?: T;
+  message?: string;
+};
+
+const service = new CategoryService();
+
+export async function getAllUserCategories(
   userId: string,
-): Promise<CategoryActionResponse<CategoryWithChildren[]>> {
-  if (!userId || typeof userId !== 'string') throw new Error('Invalid user ID');
-  return await CategoryService.findUserCategories(userId);
+): Promise<ActionResult<CategoryWithChildren[]>> {
+  return await service.getAll(userId);
 }
 
-export async function createUserCategory(data: Category): Promise<CategoryActionResponse> {
-  if (!data.userId || typeof data.userId !== 'string') throw new Error('Invalid user ID');
-  revalidatePath('/settings');
-  return await CategoryService.createCategory(data);
+export async function createUserCategory(data: Category): Promise<ActionResult<Category>> {
+  const result = await service.create(data);
+  if (!result.error) {
+    revalidatePath('/settings');
+  }
+  return result;
 }
 
-export async function deleteUserCategory(id: string): Promise<CategoryActionResponse> {
-  if (!id || typeof id !== 'string') throw new Error('Invalid category ID');
-  revalidatePath('/settings');
-  return await CategoryService.deleteCategory(id);
+export async function deleteUserCategory(id: string): Promise<ActionResult<Category>> {
+  const result = await service.delete(id);
+  if (!result.error) {
+    revalidatePath('/settings');
+  }
+  return result;
 }
 
 export async function updateUserCategory(
   categoryId: string,
   data: Category,
-): Promise<CategoryActionResponse> {
-  if (!categoryId || typeof categoryId !== 'string') throw new Error('Invalid category ID');
-  revalidatePath('/settings');
-  return await CategoryService.updateCategory(categoryId, data);
+): Promise<ActionResult<Category>> {
+  const result = await service.update(categoryId, data);
+  if (!result.error) {
+    revalidatePath('/settings');
+  }
+  return result;
 }

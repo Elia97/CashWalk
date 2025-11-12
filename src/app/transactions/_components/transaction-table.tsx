@@ -15,7 +15,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { ColumnDef } from '@tanstack/react-table';
-import { ClientTransaction } from '@/drizzle/schema';
+import { ClientTransactionWithRelations } from '@/drizzle/schema';
 import { formatCurrency, formatDate } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { BrushCleaning, SquarePen, Trash2 } from 'lucide-react';
@@ -42,9 +42,9 @@ declare module '@tanstack/react-table' {
   }
 }
 
-export function TransactionTable({ data }: { data: ClientTransaction[] }) {
+export function TransactionTable({ data }: { data: ClientTransactionWithRelations[] }) {
   const [editingId, setEditingId] = useState<string | null>(null);
-  const transactionColumns: ColumnDef<ClientTransaction>[] = [
+  const transactionColumns: ColumnDef<ClientTransactionWithRelations>[] = [
     {
       accessorKey: 'date',
       header: 'Date',

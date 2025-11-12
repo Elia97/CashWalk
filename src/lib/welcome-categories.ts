@@ -1,14 +1,9 @@
-/**
- * Mapping delle categorie comuni per il welcome form
- * Collega le scelte user-friendly alle categorie di sistema
- */
-
 export type WelcomeCategoryMapping = {
-  label: string; // Nome mostrato all'utente
-  value: string; // Valore univoco
-  systemCategory: string; // Nome della categoria di sistema a cui collegarla
+  label: string;
+  value: string;
+  systemCategory: string;
   categoryType: 'income' | 'expense';
-  icon: string; // Icona suggerita
+  icon: string;
 };
 
 export const WELCOME_CATEGORIES: WelcomeCategoryMapping[] = [
@@ -143,16 +138,10 @@ export const WELCOME_CATEGORIES: WelcomeCategoryMapping[] = [
   },
 ];
 
-/**
- * Trova la configurazione della categoria in base al value
- */
 export function getWelcomeCategoryMapping(value: string): WelcomeCategoryMapping | undefined {
   return WELCOME_CATEGORIES.find((cat) => cat.value === value);
 }
 
-/**
- * Raggruppa le categorie per tipo
- */
 export function getWelcomeCategoriesByType() {
   return {
     income: WELCOME_CATEGORIES.filter((cat) => cat.categoryType === 'income'),

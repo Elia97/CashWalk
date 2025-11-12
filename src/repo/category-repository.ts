@@ -1,85 +1,59 @@
 import { db } from '@/drizzle/db';
-import { category, Category, CategoryWithChildren } from '@/drizzle/schema';
-import { eq } from 'drizzle-orm';
+import { category } from '@/drizzle/schema';
+import { and, eq, isNull } from 'drizzle-orm';
 
-export async function findManyCategoriesByUserId(userId: string): Promise<CategoryWithChildren[]> {
-  return db.query.category.findMany({
-    where(fields, operators) {
-      return operators.isNull(fields.userId);
-    },
-    orderBy(fields, operators) {
-      return operators.asc(fields.name);
-    },
-    columns: {
-      id: true,
-      name: true,
-      description: true,
-      icon: true,
-      color: true,
-      createdAt: true,
-      updatedAt: true,
-      userId: true,
-      parentId: true,
-      categoryType: true,
-    },
-    with: {
-      children: {
-        where(fields, operators) {
-          return operators.eq(fields.userId, userId);
-        },
-        columns: {
-          id: true,
-          name: true,
-          description: true,
-          icon: true,
-          color: true,
-          createdAt: true,
-          updatedAt: true,
-          userId: true,
-          parentId: true,
-          categoryType: true,
+export class CategoryRepository {
+  async findAll(userId: string) {
+    return await db.query.category.findMany({
+      where: and(isNull(category.userId), isNull(category.parentId)),
+      with: {
+        children: {
+          where: eq(category.userId, userId),
         },
       },
-    },
-  });
-}
+    });
+  }
 
-export async function findManyCategoryIdAndNameByUserId(
-  userId: string,
-): Promise<{ id: string; name: string; categoryType: string }[]> {
-  return await db.query.category.findMany({
-    where(fields, operators) {
-      return operators.eq(fields.userId, userId);
-    },
-    columns: {
-      id: true,
-      name: true,
-      categoryType: true,
-    },
-  });
-}
+  async findByUserId(userId: string) {
+    return await db.query.category.findMany({
+      where: eq(category.userId, userId),
+    });
+  }
 
-export async function findFirstCategoryById(id: string): Promise<Category | undefined> {
-  return await db.query.category.findFirst({
-    where: (fields, operators) => operators.eq(fields.id, id),
-  });
-}
+  async findById(id: string) {
+    return await db.query.category.findFirst({
+      where: eq(category.id, id),
+    });
+  }
 
-export async function findFirstSystemCategoryByName(name: string): Promise<Category | undefined> {
-  return await db.query.category.findFirst({
-    where: (fields, operators) =>
-      operators.and(operators.eq(fields.name, name), operators.isNull(fields.userId)),
-  });
-}
+  async findByName(name: string) {
+    return await db.query.category.findFirst({
+      where: eq(category.name, name),
+    });
+  }
 
-export async function insertCategory(data: Category): Promise<void> {
-  await db.insert(category).values(data);
-}
+  async insert(data: typeof category.$inferInsert) {
+    return await db
+      .insert(category)
+      .values(data)
+      .returning()
+      .then((rows) => rows[0]);
+  }
 
-export async function deleteCategoryById(id: string): Promise<void> {
-  await db.delete(category).where(eq(category.id, id));
-}
+  async update(id: string, data: Partial<typeof category.$inferInsert>) {
+    return await db
+      .update(category)
+      .set(data)
+      .where(eq(category.id, id))
+      .returning()
+      .then((rows) => rows[0]);
+  }
 
-export async function updateCategoryById(id: string, data: Partial<Category>): Promise<void> {
-  await db.update(category).set(data).where(eq(category.id, id));
+  async delete(id: string) {
+    return await db
+      .delete(category)
+      .where(eq(category.id, id))
+      .returning()
+      .then((rows) => rows[0]);
+  }
 }

@@ -1,110 +1,111 @@
-import { eq, sql, and, lte, gte } from 'drizzle-orm';
 import { db } from '@/drizzle/db';
-import { type Transaction, bankAccount, transaction } from '@/drizzle/schema';
+import { transaction, bankAccount } from '@/drizzle/schema';
+import { and, desc, eq, gte, lte } from 'drizzle-orm';
 
-export const DEFAULT_PAGE_SIZE = 25;
-const MAX_PAGE_SIZE = 100;
+export class TransactionRepository {
+  async findAll(
+    userId: string,
+    {
+      page = 1,
+      pageSize = 25,
+      from,
+      to,
+      transactionType,
+    }: {
+      page?: number;
+      pageSize?: number;
+      from?: Date;
+      to?: Date;
+      transactionType?: 'income' | 'expense';
+    } = {},
+  ) {
+    const size = Math.max(1, Math.min(pageSize, 100));
+    const offset = (Math.max(page, 1) - 1) * size;
 
-export async function findManyTransactionsByUserId(
-  userId: string,
-  {
-    page = 1,
-    pageSize = DEFAULT_PAGE_SIZE,
-    from,
-    to,
-    transactionType,
-  }: {
-    page?: number;
-    pageSize?: number;
-    from?: Date;
-    to?: Date;
-    transactionType?: 'income' | 'expense';
-  } = {},
-): Promise<{ transactions: Transaction[]; totalCount: number }> {
-  const size = Math.min(Math.max(pageSize, 1), MAX_PAGE_SIZE);
-  const offset = Math.max(page - 1, 0) * size;
+    const whereClause = and(
+      eq(transaction.userId, userId),
+      from ? gte(transaction.date, from) : undefined,
+      to ? lte(transaction.date, to) : undefined,
+      transactionType ? eq(transaction.transactionType, transactionType) : undefined,
+    );
 
-  const whereClause = and(
-    eq(transaction.userId, userId),
-    from ? gte(transaction.date, from) : undefined,
-    to ? lte(transaction.date, to) : undefined,
-    transactionType ? eq(transaction.transactionType, transactionType) : undefined,
-  );
-
-  const [countResult, transactions] = await Promise.all([
-    db
-      .select({ count: sql<number>`count(*)` })
-      .from(transaction)
-      .where(whereClause),
-    db.query.transaction.findMany({
-      where: () => whereClause,
-      orderBy: (fields, operators) => operators.desc(fields.date),
-      with: { bankAccount: true, category: { with: { parent: true } } },
+    const res = await db.query.transaction.findMany({
+      where: whereClause,
       limit: size,
-      offset,
-    }),
-  ]);
-
-  return {
-    transactions,
-    totalCount: countResult[0]?.count ?? 0,
-  };
-}
-
-export async function findFirstTransactionById(id: string): Promise<Transaction | undefined> {
-  return await db.query.transaction.findFirst({
-    where(fields, operators) {
-      return operators.eq(fields.id, id);
-    },
-    with: {
-      bankAccount: {
-        columns: {
-          id: true,
-          balance: true,
+      offset: offset,
+      with: {
+        category: {
+          with: {
+            parent: true,
+          },
         },
+        bankAccount: true,
       },
-    },
-  });
-}
+      orderBy: desc(transaction.createdAt),
+    });
 
-export async function insertTransaction(data: Transaction, newBalance: string): Promise<void> {
-  await db.transaction(async (tx) => {
-    await tx.insert(transaction).values(data);
-    await tx
-      .update(bankAccount)
-      .set({
-        balance: newBalance,
-      })
-      .where(eq(bankAccount.id, data.bankAccountId));
-  });
-}
+    return res;
+  }
 
-export async function deleteTransactionById(
-  id: string,
-  accountId: string,
-  newBalance: string,
-): Promise<void> {
-  await db.transaction(async (tx) => {
-    await tx
-      .update(bankAccount)
-      .set({
-        balance: newBalance.toString(),
-      })
-      .where(eq(bankAccount.id, accountId));
-    await tx.delete(transaction).where(eq(transaction.id, id));
-  });
-}
+  async findById(id: string) {
+    return await db.query.transaction.findFirst({
+      where: eq(transaction.id, id),
+      with: {
+        category: true,
+        bankAccount: true,
+      },
+    });
+  }
 
-export async function updateTransactionById(
-  id: string,
-  newBalance: string,
-  data: Transaction,
-): Promise<void> {
-  await db.transaction(async (tx) => {
-    await tx.update(transaction).set(data).where(eq(transaction.id, id));
-    await tx
-      .update(bankAccount)
-      .set({ balance: newBalance })
-      .where(eq(bankAccount.id, data.bankAccountId));
-  });
+  async insert(data: typeof transaction.$inferInsert, newBalance: string) {
+    return await db.transaction(async (tx) => {
+      const insertedTransactions = await tx
+        .insert(transaction)
+        .values(data)
+        .returning()
+        .then((rows) => rows[0]);
+
+      await tx
+        .update(bankAccount)
+        .set({ balance: newBalance })
+        .where(eq(bankAccount.id, data.bankAccountId));
+
+      return insertedTransactions;
+    });
+  }
+
+  async update(id: string, newBalance: string, data: Partial<typeof transaction.$inferInsert>) {
+    return await db.transaction(async (tx) => {
+      const updatedTransactions = await tx
+        .update(transaction)
+        .set(data)
+        .where(eq(transaction.id, id))
+        .returning()
+        .then((rows) => rows[0]);
+
+      await tx
+        .update(bankAccount)
+        .set({ balance: newBalance })
+        .where(eq(bankAccount.id, updatedTransactions.bankAccountId));
+
+      return updatedTransactions;
+    });
+  }
+
+  async delete(id: string, newBalance: string) {
+    return await db.transaction(async (tx) => {
+      const deletedTransactions = await tx
+        .delete(transaction)
+        .where(eq(transaction.id, id))
+        .returning()
+        .then((rows) => rows[0]);
+
+      await tx
+        .update(bankAccount)
+        .set({ balance: newBalance })
+        .where(eq(bankAccount.id, deletedTransactions.bankAccountId));
+
+      return deletedTransactions;
+    });
+  }
 }

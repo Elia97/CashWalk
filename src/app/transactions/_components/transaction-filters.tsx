@@ -21,7 +21,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { DateRange } from 'react-day-picker';
-import { ClientTransaction } from '@/drizzle/schema';
+import { ClientTransactionWithRelations } from '@/drizzle/schema';
 import { useState } from 'react';
 import { formatDate } from '@/lib/utils';
 import { CreateTransactionForm } from './create-transaction-form';
@@ -39,7 +39,7 @@ export function TransactionFilters({
   selectedCategory,
   setSelectedCategory,
 }: {
-  transactions: ClientTransaction[];
+  transactions: ClientTransactionWithRelations[];
   filter: string;
   setFilter: (value: string) => void;
   date: DateRange | undefined;

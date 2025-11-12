@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { ClientTransaction } from '@/drizzle/schema';
+import { ClientTransactionWithRelations } from '@/drizzle/schema';
 import { formatCurrency, formatDate } from '@/lib/utils';
 import { TransactionTable } from './transaction-table';
 import { DateRange } from 'react-day-picker';
@@ -39,7 +39,7 @@ export function TransactionManagement({
   page,
   pageSize,
 }: {
-  initialData: ClientTransaction[];
+  initialData: ClientTransactionWithRelations[];
   totalCount: number;
   page: number;
   pageSize: number;

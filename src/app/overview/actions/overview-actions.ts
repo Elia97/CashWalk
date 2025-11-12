@@ -1,25 +1,30 @@
 'use server';
 
-import { ClientBankAccountWithTransactions } from '@/drizzle/schema';
-import {
-  type BankAccountActionResponse,
-  BankAccountService,
-} from '@/services/bank-account-service';
+import { PrimaryBankAccountWithRelations } from '@/drizzle/schema';
+import { BankAccountService } from '@/services/bank-account-service';
 import { revalidatePath } from 'next/cache';
+
+type ActionResult<T = void> = {
+  error: boolean;
+  data?: T;
+  message?: string;
+};
+
+const service = new BankAccountService();
 
 export async function getUserPrimaryBankAccount(
   userId: string,
-): Promise<BankAccountActionResponse<ClientBankAccountWithTransactions | undefined>> {
+): Promise<ActionResult<PrimaryBankAccountWithRelations | undefined>> {
   if (!userId || typeof userId !== 'string') throw new Error('Invalid user ID');
-  return await BankAccountService.getPrimaryBankAccount(userId);
+  return await service.getPrimaryBankAccount(userId);
 }
 
 export async function setUserPrimaryBankAccount(
   userId: string,
   accountId: string,
-): Promise<BankAccountActionResponse> {
+): Promise<ActionResult> {
   if (!userId || typeof userId !== 'string') throw new Error('Invalid user ID');
   if (!accountId || typeof accountId !== 'string') throw new Error('Invalid account ID');
   revalidatePath('/overview');
-  return await BankAccountService.setPrimaryBankAccount(userId, accountId);
+  return await service.setPrimaryBankAccount(userId, accountId);
 }

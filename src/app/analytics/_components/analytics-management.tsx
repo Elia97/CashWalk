@@ -1,10 +1,10 @@
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { ClientBankAccountWithTransactions } from '@/drizzle/schema';
+import { PrimaryBankAccountWithRelations } from '@/drizzle/schema';
 import { BarChart3, PieChart } from 'lucide-react';
 import { MonthlyTrend } from './monthly-trend';
 import { CategoryBreakdown } from './category-breakdown';
 
-export function AnalyticsManagement({ account }: { account: ClientBankAccountWithTransactions }) {
+export function AnalyticsManagement({ account }: { account: PrimaryBankAccountWithRelations }) {
   const transactions = account.transactions || [];
   const currentYear = new Date().getFullYear();
   const monthlyTemplate = Array.from({ length: 12 }, (_, index) => {

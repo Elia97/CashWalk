@@ -1,38 +1,48 @@
 'use server';
 
-import { ClientBankAccount } from '@/drizzle/schema';
-import {
-  type BankAccountActionResponse,
-  BankAccountService,
-} from '@/services/bank-account-service';
+import { BankAccount, ClientBankAccount } from '@/drizzle/schema';
+import { BankAccountService } from '@/services/bank-account-service';
 import { revalidatePath } from 'next/cache';
 
-export async function getUserBankAccounts(
+type ActionResult<T = void> = {
+  error: boolean;
+  data?: T;
+  message?: string;
+};
+
+const service = new BankAccountService();
+
+export async function getAllUserBankAccounts(
   userId: string,
-): Promise<BankAccountActionResponse<ClientBankAccount[]>> {
-  if (!userId || typeof userId !== 'string') throw new Error('Invalid user ID');
-  return await BankAccountService.getAllBankAccounts(userId);
+): Promise<ActionResult<ClientBankAccount[]>> {
+  return await service.getAll(userId);
 }
 
-export async function createUserBankAccount(
+export async function createBankAccount(
   data: ClientBankAccount,
-): Promise<BankAccountActionResponse> {
-  if (!data.userId || typeof data.userId !== 'string') throw new Error('Invalid user ID');
-  revalidatePath('/accounts');
-  return await BankAccountService.createBankAccount(data);
+): Promise<ActionResult<BankAccount>> {
+  const result = await service.create(data);
+  if (!result.error) {
+    revalidatePath('/accounts');
+  }
+  return result;
 }
 
-export async function deleteUserBankAccount(accountId: string): Promise<BankAccountActionResponse> {
-  if (!accountId) throw new Error('Invalid account ID');
-  revalidatePath('/accounts');
-  return await BankAccountService.deleteBankAccount(accountId);
-}
-
-export async function updateUserBankAccount(
-  accountId: string,
+export async function updateBankAccount(
+  id: string,
   data: ClientBankAccount,
-): Promise<BankAccountActionResponse> {
-  if (!accountId) throw new Error('Invalid account ID');
-  revalidatePath('/accounts');
-  return await BankAccountService.updateBankAccount(accountId, data);
+): Promise<ActionResult<BankAccount>> {
+  const result = await service.update(id, data);
+  if (!result.error) {
+    revalidatePath('/accounts');
+  }
+  return result;
+}
+
+export async function deleteBankAccount(id: string): Promise<ActionResult<BankAccount>> {
+  const result = await service.delete(id);
+  if (!result.error) {
+    revalidatePath('/accounts');
+  }
+  return result;
 }

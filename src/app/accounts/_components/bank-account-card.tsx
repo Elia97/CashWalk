@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import type { ClientBankAccount } from '@/drizzle/schema';
 import { getAccountIcon, getAccountTypeLabel, formatCurrency, formatDate } from '@/lib/utils';
 import { SquarePen, Trash2 } from 'lucide-react';
-import { deleteUserBankAccount } from '../actions/bank-account-actions';
+import { deleteBankAccount } from '../actions/bank-account-actions';
 import { UpdateBankAccountForm } from './update-bank-account-form';
 import { ActionButton } from '@/components/ui/action-button';
 import { Button } from '@/components/ui/button';
@@ -77,7 +77,7 @@ export function BankAccountCard({ account }: { account: ClientBankAccount }) {
             variant="destructive"
             size="icon"
             className="w-1/2"
-            action={() => deleteUserBankAccount(account.id)}
+            action={() => deleteBankAccount(account.id)}
           >
             <Trash2 />
           </ActionButton>

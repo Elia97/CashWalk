@@ -2,7 +2,6 @@ import { auth } from '@/lib/auth/auth';
 import { TransactionManagement } from './_components/transaction-management';
 import { getUserTransactions } from './actions/transaction-actions';
 import { headers } from 'next/headers';
-import { DEFAULT_PAGE_SIZE } from '@/repo/transaction-repository';
 
 export default async function TransactionsPage({
   searchParams,
@@ -19,7 +18,7 @@ export default async function TransactionsPage({
   if (!session) throw new Error('User session is required');
   const params = await Promise.resolve(searchParams);
   const page = Number(params?.page ?? 1);
-  const pageSize = Number(params?.pageSize ?? DEFAULT_PAGE_SIZE);
+  const pageSize = Number(params?.pageSize ?? 25);
   const from = params?.from
     ? new Date(params.from)
     : new Date(new Date().getFullYear(), new Date().getMonth(), 1);

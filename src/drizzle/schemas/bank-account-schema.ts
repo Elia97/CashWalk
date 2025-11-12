@@ -10,7 +10,12 @@ import {
 } from 'drizzle-orm/pg-core';
 import { user } from './auth-schema';
 import { InferSelectModel, relations } from 'drizzle-orm';
-import { ClientTransaction, Transaction, transaction } from './transaction-schema';
+import {
+  ClientTransactionWithCategory,
+  ClientTransactionWithRelations,
+  Transaction,
+  transaction,
+} from './transaction-schema';
 
 export const accountTypeEnum = pgEnum('account_type', ['checking', 'cash', 'savings']);
 
@@ -20,7 +25,7 @@ export const bankAccount = pgTable(
     id: uuid('id').primaryKey().defaultRandom(),
     userId: text('user_id')
       .notNull()
-      .references(() => user.id),
+      .references(() => user.id, { onDelete: 'cascade' }),
     name: text('name').notNull(),
     accountNumber: text('account_number'),
     accountType: accountTypeEnum('account_type').notNull(),
@@ -59,5 +64,8 @@ export type ClientBankAccount = Omit<BankAccount, 'balance'> & {
   balance: number;
 };
 export type ClientBankAccountWithTransactions = ClientBankAccount & {
-  transactions: ClientTransaction[];
+  transactions: ClientTransactionWithRelations[];
+};
+export type PrimaryBankAccountWithRelations = ClientBankAccount & {
+  transactions: ClientTransactionWithCategory[];
 };

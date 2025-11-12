@@ -1,6 +1,6 @@
 import { decimal, pgEnum, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { user } from './auth-schema';
-import { BankAccount, bankAccount } from './bank-account-schema';
+import { BankAccount, bankAccount, ClientBankAccount } from './bank-account-schema';
 import { Category, category } from './category-schema';
 import { InferSelectModel, relations } from 'drizzle-orm';
 
@@ -10,13 +10,13 @@ export const transaction = pgTable('transactions', {
   id: uuid('id').defaultRandom().primaryKey(),
   userId: text('user_id')
     .notNull()
-    .references(() => user.id),
+    .references(() => user.id, { onDelete: 'cascade' }),
   bankAccountId: uuid('bank_account_id')
     .notNull()
-    .references(() => bankAccount.id),
+    .references(() => bankAccount.id, { onDelete: 'cascade' }),
   categoryId: uuid('category_id')
     .notNull()
-    .references(() => category.id),
+    .references(() => category.id, { onDelete: 'cascade' }),
   transactionType: transactionTypeEnum('transaction_type').notNull(),
   amount: decimal('amount', { precision: 14, scale: 2 }).notNull(),
   date: timestamp('date').notNull(),
@@ -46,8 +46,20 @@ export const transactionRelations = relations(transaction, ({ one }) => ({
 }));
 
 export type Transaction = InferSelectModel<typeof transaction>;
+export type TransactionWithRelations = Transaction & {
+  bankAccount: BankAccount;
+  category: Category & { parent: Category | null };
+};
+export type TransactionWithCategory = Transaction & {
+  category: Category & { parent: Category | null };
+};
 export type ClientTransaction = Omit<Transaction, 'amount'> & {
   amount: number;
-  bankAccount: BankAccount;
+};
+export type ClientTransactionWithRelations = ClientTransaction & {
+  bankAccount: ClientBankAccount;
+  category: Category & { parent: Category | null };
+};
+export type ClientTransactionWithCategory = ClientTransaction & {
   category: Category & { parent: Category | null };
 };

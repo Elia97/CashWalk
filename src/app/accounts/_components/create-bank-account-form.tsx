@@ -12,7 +12,7 @@ import {
   FieldSeparator,
 } from '@/components/ui/field';
 import { Controller, useForm } from 'react-hook-form';
-import { createUserBankAccount } from '../actions/bank-account-actions';
+import { createBankAccount } from '../actions/bank-account-actions';
 import z from 'zod';
 import { ClientBankAccount } from '@/drizzle/schema';
 import { toast } from 'sonner';
@@ -72,7 +72,7 @@ export function CreateBankAccountForm({ closeDialog }: { closeDialog: () => void
   }, [form, session?.user.id]);
 
   const handleAddBankAccount = async (data: BankAccountFormData) => {
-    const res = await createUserBankAccount(data as unknown as ClientBankAccount);
+    const res = await createBankAccount(data as unknown as ClientBankAccount);
     if (res.error) {
       toast.error(res.message || 'Failed to create bank account');
     } else {
