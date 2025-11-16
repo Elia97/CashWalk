@@ -14,8 +14,7 @@
     "auth:generate": "npx @better-auth/cli@latest generate --config ./src/lib/auth/auth.ts --output ./src/drizzle/schemas/new-auth-schema.ts --yes",
     "lint": "eslint",
     "format": "prettier --write .",
-    "test:service": "NODE_ENV=test jest --verbose --coverage src/services",
-    "test:repository": "NODE_ENV=test jest --verbose --coverage src/repo"
+    "test": "NODE_ENV=test jest --verbose --detectOpenHandles --coverage src/"
   },
   "dependencies": {
     "@arcjet/ip": "^1.0.0-beta.13",

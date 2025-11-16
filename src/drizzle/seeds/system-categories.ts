@@ -1,15 +1,7 @@
 import 'dotenv/config';
-import * as schema from '../schema';
-import { drizzle } from 'drizzle-orm/node-postgres';
 import { InferInsertModel } from 'drizzle-orm';
-import { Pool } from 'pg';
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
-
-const db = drizzle(pool, { schema });
-const { category } = schema;
+import { db, pool } from '../db';
+import { category } from '../schema';
 
 const incomeCategories: InferInsertModel<typeof category>[] = [
   {

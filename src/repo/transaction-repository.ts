@@ -83,6 +83,8 @@ export class TransactionRepository {
         .returning()
         .then((rows) => rows[0]);
 
+      if (!updatedTransactions) return undefined;
+
       await tx
         .update(bankAccount)
         .set({ balance: newBalance })
@@ -99,6 +101,8 @@ export class TransactionRepository {
         .where(eq(transaction.id, id))
         .returning()
         .then((rows) => rows[0]);
+
+      if (!deletedTransactions) return undefined;
 
       await tx
         .update(bankAccount)
