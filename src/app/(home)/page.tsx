@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 export default function Home() {
   return (
-    <section>
+    <section className="mt-10">
       <div className="grid lg:grid-cols-2 gap-8">
         <div className="space-y-6 sm:space-y-8 text-center lg:text-right animate-fade-right">
           <div className="inline-flex items-center max-w-max mx-auto lg:mx-0 gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
