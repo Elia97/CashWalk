@@ -233,7 +233,7 @@ export function WelcomeForm() {
                 </FieldContent>
                 <MultiSelect onValuesChange={field.onChange} values={field.value}>
                   <MultiSelectTrigger {...field} id={field.name} aria-invalid={fieldState.invalid}>
-                    <MultiSelectValue placeholder="Choose categories..." />
+                    <MultiSelectValue placeholder="Choose categories..." overflowBehavior="wrap" />
                   </MultiSelectTrigger>
                   <MultiSelectContent>
                     <MultiSelectGroup heading="Income">
