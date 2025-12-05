@@ -11,7 +11,7 @@ import {
   FieldSeparator,
   FieldSet,
 } from '@/components/ui/field';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { updateBankAccount } from '../actions/bank-account-actions';
 import z from 'zod';
 import { ClientBankAccount } from '@/drizzle/schema';
@@ -62,6 +62,11 @@ export function UpdateBankAccountForm({
       currency: account.currency as BankAccountFormData['currency'],
       accountNumber: account.accountNumber ?? '',
     },
+  });
+  const selectedCurrency = useWatch<BankAccountFormData>({
+    control: form.control,
+    name: 'currency',
+    defaultValue: account.currency,
   });
 
   const router = useRouter();
@@ -174,7 +179,7 @@ export function UpdateBankAccountForm({
                 <Field data-invalid={fieldState.invalid} className="relative flex-1">
                   <FieldContent>
                     <FieldLabel htmlFor={field.name}>{capitalize(field.name)}</FieldLabel>
-                    <FieldDescription>Initial balance ({form.watch('currency')}).</FieldDescription>
+                    <FieldDescription>Initial balance ({selectedCurrency}).</FieldDescription>
                   </FieldContent>
                   <NumberInput
                     id="balance"

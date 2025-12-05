@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { FieldGroup, Field, FieldLabel, FieldError, FieldSeparator } from '@/components/ui/field';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import z from 'zod';
 import { toast } from 'sonner';
 import { authClient } from '@/lib/auth/auth-client';
@@ -66,6 +66,11 @@ export function CreateTransactionForm({ closeDialog }: { closeDialog: () => void
         return today;
       })(),
     },
+  });
+  const selectedTransactionType = useWatch({
+    control: form.control,
+    name: 'transactionType',
+    defaultValue: 'expense',
   });
   const [accounts, setAccounts] = useState<{ id: string; name: string; isPrimary: boolean }[]>([]);
   const [categories, setCategories] = useState<
@@ -261,9 +266,8 @@ export function CreateTransactionForm({ closeDialog }: { closeDialog: () => void
             name="categoryId"
             control={form.control}
             render={({ field, fieldState }) => {
-              const selectedType = form.watch('transactionType');
               const filteredCategories = categories.filter(
-                (cat) => cat.categoryType === selectedType,
+                (cat) => cat.categoryType === selectedTransactionType,
               );
               return (
                 <Field data-invalid={fieldState.invalid} className="relative flex-1">

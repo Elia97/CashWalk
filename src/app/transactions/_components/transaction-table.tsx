@@ -116,6 +116,7 @@ export function TransactionTable({ data }: { data: ClientTransactionWithRelation
   ];
 
   const [globalFilter, setGlobalFilter] = useState('');
+  // eslint-disable-next-line react-hooks/incompatible-library -- TanStack Table exposes imperative helpers that remain local to this component
   const table = useReactTable({
     data,
     columns: transactionColumns,

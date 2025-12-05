@@ -104,7 +104,9 @@ export class TransactionService {
       const currentBalance =
         typeof account.balance === 'string' ? parseFloat(account.balance) : account.balance;
       const newBalance = Number(currentBalance) + Number(amountAdjustment);
-      return await this.repository.delete(id, newBalance.toString());
+      const deleted = await this.repository.delete(id, newBalance.toString());
+      if (!deleted) throw new Error('Transaction not found');
+      return deleted;
     }, 'Failed to delete transaction');
   }
 
@@ -123,10 +125,12 @@ export class TransactionService {
       const currentBalance =
         typeof account.balance === 'string' ? parseFloat(account.balance) : account.balance;
       const newBalance = Number(currentBalance) - Number(oldAdjustment) + Number(newAdjustment);
-      return await this.repository.update(id, newBalance.toString(), {
+      const updated = await this.repository.update(id, newBalance.toString(), {
         ...data,
         amount: String(data.amount),
       });
+      if (!updated) throw new Error('Transaction not found');
+      return updated;
     }, 'Failed to update transaction');
   }
 

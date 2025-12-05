@@ -1,7 +1,7 @@
 'use client';
 
 import { FieldGroup, Field, FieldLabel, FieldError, FieldSeparator } from '@/components/ui/field';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import z from 'zod';
 import { toast } from 'sonner';
 import { authClient } from '@/lib/auth/auth-client';
@@ -56,6 +56,11 @@ export function UpdateTransactionForm({
       date: transaction.date,
     },
   });
+  const selectedTransactionType = useWatch({
+    control: form.control,
+    name: 'transactionType',
+    defaultValue: transaction.transactionType,
+  });
   const [accounts, setAccounts] = useState<{ id: string; name: string }[]>([]);
   const [categories, setCategories] = useState<
     { id: string; name: string; categoryType: string }[]
@@ -66,18 +71,29 @@ export function UpdateTransactionForm({
   const router = useRouter();
 
   useEffect(() => {
-    setIsLoading(true);
+    let cancelled = false;
+    const loadingHandle = setTimeout(() => {
+      if (!cancelled) setIsLoading(true);
+    }, 0);
+
     async function fetchData() {
       const { bankAccounts: accountsData, categories: categoriesData } =
         await getTransactionFormData(session?.user.id || '').then(
           (res) => res.data || { bankAccounts: [], categories: [] },
         );
+      if (cancelled) return;
       setAccounts(accountsData);
       setCategories(categoriesData);
       setIsLoading(false);
     }
+
     fetchData();
-  }, [form, session?.user.id]);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(loadingHandle);
+    };
+  }, [session?.user.id]);
 
   const handleUpdateTransaction = async (data: TransactionFormData) => {
     const res = await updateTransaction(transaction.id, data as unknown as ClientTransaction);
@@ -214,9 +230,8 @@ export function UpdateTransactionForm({
             name="categoryId"
             control={form.control}
             render={({ field, fieldState }) => {
-              const selectedType = form.watch('transactionType');
               const filteredCategories = categories.filter(
-                (cat) => cat.categoryType === selectedType,
+                (cat) => cat.categoryType === selectedTransactionType,
               );
               return (
                 <Field data-invalid={fieldState.invalid} className="relative flex-1">

@@ -11,7 +11,7 @@ import {
   FieldSeparator,
   FieldContent,
 } from '@/components/ui/field';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import z from 'zod';
 import { Category } from '@/drizzle/schema';
 import { toast } from 'sonner';
@@ -64,6 +64,11 @@ export function CreateCategoryForm({
       parentId: '',
       categoryType: 'expense',
     },
+  });
+  const selectedCategoryType = useWatch({
+    control: form.control,
+    name: 'categoryType',
+    defaultValue: 'expense',
   });
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
@@ -126,9 +131,8 @@ export function CreateCategoryForm({
               name="parentId"
               control={form.control}
               render={({ field, fieldState }) => {
-                const selectedType = form.watch('categoryType');
                 const filteredCategories = categories.filter(
-                  (cat) => cat.categoryType === selectedType,
+                  (cat) => cat.categoryType === selectedCategoryType,
                 );
 
                 return (

@@ -5,9 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
-import { BetterAuthActionButton } from '@/components/auth/better-auth-action-button';
 import { authClient } from '@/lib/auth/auth-client';
-import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { LoadingSwap } from '@/components/ui/loading-swap';
@@ -33,7 +31,6 @@ export function SignInForm({
   openForgotPasswordTab: () => void;
 }) {
   const router = useRouter();
-  const { refetch } = authClient.useSession();
   const form = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -41,18 +38,6 @@ export function SignInForm({
       password: '',
     },
   });
-
-  useEffect(() => {
-    authClient.signIn.passkey(
-      { autoFill: true },
-      {
-        onSuccess: () => {
-          refetch();
-          router.push('/');
-        },
-      },
-    );
-  }, [refetch, router]);
 
   const handleSignIn = async (data: SignInFormData) => {
     await authClient.signIn.email(
@@ -66,6 +51,7 @@ export function SignInForm({
         },
         onSuccess: () => {
           toast.success('Successfully signed in');
+          router.push('/overview');
         },
       },
     );
@@ -134,20 +120,6 @@ export function SignInForm({
             <Button type="submit" className="flex-1" disabled={form.formState.isSubmitting}>
               <LoadingSwap isLoading={form.formState.isSubmitting}>Sign In</LoadingSwap>
             </Button>
-            <BetterAuthActionButton
-              variant={'outline'}
-              className="flex-1"
-              action={() =>
-                authClient.signIn.passkey(undefined, {
-                  onSuccess: () => {
-                    refetch();
-                    router.push('/overview');
-                  },
-                })
-              }
-            >
-              Use Passkey
-            </BetterAuthActionButton>
           </Field>
         </FieldGroup>
       </form>

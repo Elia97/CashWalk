@@ -2,29 +2,56 @@
 
 import { BetterAuthActionButton } from '@/components/auth/better-auth-action-button';
 import { authClient } from '@/lib/auth/auth-client';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 export function EmailVerification({ email }: { email: string }) {
   const [timeToNextResend, setTimeToNextResend] = useState(30);
   const interval = useRef<NodeJS.Timeout>(undefined);
 
-  useEffect(() => {
-    startEmailVerificationCountdown();
+  const clearCountdown = useCallback(() => {
+    if (interval.current) {
+      clearInterval(interval.current);
+      interval.current = undefined;
+    }
   }, []);
 
-  const startEmailVerificationCountdown = (time = 30) => {
-    setTimeToNextResend(time);
-    interval.current = setInterval(() => {
-      setTimeToNextResend((prev) => {
-        const newT = prev - 1;
-        if (newT <= 0) {
-          clearInterval(interval.current);
-          return 0;
-        }
-        return newT;
-      });
-    }, 1000);
-  };
+  const startEmailVerificationCountdown = useCallback(
+    (time = 30) => {
+      clearCountdown();
+      setTimeToNextResend(time);
+      interval.current = setInterval(() => {
+        setTimeToNextResend((prev) => {
+          const next = prev - 1;
+          if (next <= 0) {
+            clearCountdown();
+            return 0;
+          }
+          return next;
+        });
+      }, 1000);
+    },
+    [clearCountdown],
+  );
+
+  useEffect(() => {
+    const startHandle = setTimeout(() => {
+      startEmailVerificationCountdown();
+    }, 0);
+
+    return () => {
+      clearTimeout(startHandle);
+      clearCountdown();
+    };
+  }, [startEmailVerificationCountdown, clearCountdown]);
+
+  const handleResend = useCallback(() => {
+    startEmailVerificationCountdown();
+    return authClient.sendVerificationEmail({
+      email,
+      callbackURL: '/',
+    });
+  }, [email, startEmailVerificationCountdown]);
+
   return (
     <div className="space-y-4">
       <p className="text-sm text-muted-foreground mt-2">
@@ -36,13 +63,7 @@ export function EmailVerification({ email }: { email: string }) {
         className="w-full"
         successMessage="Verification email sent!"
         disabled={timeToNextResend > 0}
-        action={() => {
-          startEmailVerificationCountdown();
-          return authClient.sendVerificationEmail({
-            email,
-            callbackURL: '/',
-          });
-        }}
+        action={handleResend}
       >
         {timeToNextResend > 0
           ? `Resend verification email in ${timeToNextResend}s`

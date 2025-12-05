@@ -1,19 +1,16 @@
-import type { Account, Passkey } from '../page';
+import type { Account } from '../page';
 import { ChangePasswordForm } from './change-password-form';
 import { SetPasswordButton } from './set-password-button';
 import { TwoFactorAuthForm } from './two-factor-auth-form';
-import { PasskeyManagement } from './passkey-management';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
 export async function SecurityTab({
   accounts,
-  passkeys,
   email,
   isTwoFactorEnabled,
 }: {
   accounts: Account[];
-  passkeys: Passkey[];
   email: string;
   isTwoFactorEnabled: boolean;
 }) {
@@ -40,14 +37,6 @@ export async function SecurityTab({
           </CardHeader>
           <CardContent>
             <TwoFactorAuthForm isEnabled={isTwoFactorEnabled} />
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Passkeys</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <PasskeyManagement passkeys={passkeys} />
           </CardContent>
         </Card>
       </div>

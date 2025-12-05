@@ -12,8 +12,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LoadingSuspense } from '@/components/ui/loading-suspence';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
-export type Passkey = Awaited<ReturnType<typeof auth.api.listPasskeys>>[number];
-
 export type Account = Awaited<ReturnType<typeof auth.api.listUserAccounts>>[number];
 
 export type Session = Awaited<ReturnType<typeof auth.api.listSessions>>[number];
@@ -22,10 +20,7 @@ export default async function ProfilePage() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) throw new Error('User session is required');
 
-  const [passkeys, accounts, sessions] = await Promise.all([
-    auth.api.listPasskeys({
-      headers: await headers(),
-    }),
+  const [accounts, sessions] = await Promise.all([
     auth.api.listUserAccounts({
       headers: await headers(),
     }),
@@ -93,7 +88,6 @@ export default async function ProfilePage() {
           <LoadingSuspense>
             <SecurityTab
               accounts={accounts}
-              passkeys={passkeys}
               email={session.user.email}
               isTwoFactorEnabled={session.user.twoFactorEnabled ?? false}
             />
